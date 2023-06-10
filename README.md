@@ -27,7 +27,7 @@ group/toMap
     // stream
     Map<String, List<Student>> group = Stream.of(list).collect(Collectors.groupingBy(Student::getName));
     // ztream
-    Map<String, List<Student>> group = Stream.of(list).group(Student::getName);
+    Map<String, List<Student>> group = Ztream.of(list).group(Student::getName);
 ```
 
 带索引的遍历 forEach/peek/map
@@ -56,6 +56,22 @@ group/toMap
     String str = Ztream.of(list).max(Student::getAge);
     String str = Ztream.of(list).sum(Student::getAge);
     String str = Ztream.of(list).min(Student::getAge);
+```
+
+过滤/排序
+
+```java
+    //stream略
+    // ztream - 类似mybatis-plus的操作
+    List<Student> list = Ztream.of(list)
+        .eq(Student::getAge, "王武")
+        .like(Student::getName, "朱")
+        .toList();
+    // 按年龄升序
+    List<Student> list = Ztream.of(list).asc(Student::getAge).toList();
+    // 按年龄逆序
+    List<Student> list = Ztream.of(list).desc(Student::getAge).toList();
+    
 ```
 
 就先这么多吧累了
