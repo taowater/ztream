@@ -30,7 +30,7 @@ group/toMap
     Map<String, List<Student>> group = Stream.of(list).group(Student::getName);
 ```
 
-带索引的遍历
+带索引的遍历 forEach/peek/map
 
 ```java
     Ztream.of(list).forEach((e, i) -> {
@@ -38,7 +38,7 @@ group/toMap
     });
 ```
 
-字符join
+字符属性join
 
 ```java
     //stream略
