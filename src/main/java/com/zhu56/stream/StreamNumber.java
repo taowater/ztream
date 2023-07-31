@@ -58,4 +58,13 @@ public interface StreamNumber<T> extends Stream<T> {
                 .map(b -> BigDecimalStrategy.getValue(b, fun))
                 .orElse(null);
     }
+
+    default <N extends Number> N avg(SerFunction<T, N> fun) {
+        return this
+                .map(fun)
+                .map(NumberUtil::toBigDecimal)
+                .reduce((a, b) -> a.compareTo(b) < 0 ? a : b)
+                .map(b -> BigDecimalStrategy.getValue(b, fun))
+                .orElse(null);
+    }
 }

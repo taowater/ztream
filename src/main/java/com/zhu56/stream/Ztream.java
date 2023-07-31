@@ -2,12 +2,10 @@ package com.zhu56.stream;
 
 
 import com.zhu56.optional.Any;
+import com.zhu56.util.ConvertUtil;
 import com.zhu56.util.EmptyUtil;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -21,7 +19,7 @@ import java.util.stream.StreamSupport;
  * @author 朱滔
  * @date 2022/11/13 01:11:56
  */
-public class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements
+public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements
         StreamCollect<T>,
         StreamGroup<T>,
         StreamToMap<T>,
@@ -65,16 +63,6 @@ public class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements
      */
     public static <T> Ztream<T> empty() {
         return new Ztream<>(Stream.empty());
-    }
-
-    /**
-     * 单个元素构建流
-     *
-     * @param t t
-     * @return {@link Ztream}<{@link T}>
-     */
-    public static <T> Ztream<T> of(T t) {
-        return of(Stream.of(t));
     }
 
     /**
@@ -231,5 +219,37 @@ public class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements
         return map(function).hadRepeat();
     }
 
+    /**
+     * 转换
+     *
+     * @param clazz clazz
+     * @return {@link Ztream}<{@link N}>
+     */
+    public <N> Ztream<N> convert(Class<N> clazz) {
+        return map(e -> ConvertUtil.convert(e, clazz));
+    }
 
+    /**
+     * 追加元素
+     *
+     * @param values 值
+     * @return {@link Ztream}<{@link T}>
+     */
+    public Ztream<T> append(T... values) {
+        return this.append(Ztream.of(values).toList());
+    }
+
+    /**
+     * 追加元素
+     *
+     * @param iterable iterable
+     * @return {@link Ztream}<{@link T}>
+     */
+    public Ztream<T> append(Iterable<T> iterable) {
+        List<T> list = this.toList();
+        if (EmptyUtil.isNotEmpty(iterable)) {
+            list.addAll(Ztream.of(iterable).toList());
+        }
+        return Ztream.of(list);
+    }
 }

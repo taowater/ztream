@@ -1,6 +1,7 @@
 package com.zhu56.optional;
 
 import com.zhu56.stream.Ztream;
+import com.zhu56.util.ConvertUtil;
 import com.zhu56.util.EmptyUtil;
 
 import java.util.NoSuchElementException;
@@ -183,5 +184,15 @@ public final class Any<T> {
     @Override
     public String toString() {
         return isPresent() ? value.toString() : null;
+    }
+
+    /**
+     * 转换类型
+     *
+     * @param clazz clazz
+     * @return {@link Any}<{@link N}>
+     */
+    public <N> Any<N> convert(Class<N> clazz) {
+        return this.map(e -> ConvertUtil.convert(e, clazz));
     }
 }

@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ZtreamTest {
 
@@ -150,6 +151,13 @@ public class ZtreamTest {
 
         var stringMapMap = Ztream.of(list).groupBilayer(Student::getAge, Student::getName);
         System.out.println(123);
+    }
+
+    @Test
+    public void test4() {
+        List<Integer> list = ListUtil.toList(1, null, 4);
+        double asDouble = list.stream().flatMapToInt(IntStream::of).average().getAsDouble();
+        System.out.println(asDouble);
     }
 
 }

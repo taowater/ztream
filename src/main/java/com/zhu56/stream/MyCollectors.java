@@ -1,6 +1,9 @@
 package com.zhu56.stream;
 
 
+import cn.hutool.core.util.NumberUtil;
+
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
@@ -75,6 +78,43 @@ class MyCollectors {
         }
     }
 
+    static class AvgCollector<T, N extends Number> implements Collector<T, BigDecimal, N> {
+
+        private final Function<T, N> fun;
+
+        private final Integer count = 0;
+
+        AvgCollector(Function<T, N> fun) {
+            this.fun = fun;
+        }
+
+
+        @Override
+        public BiConsumer<BigDecimal, T> accumulator() {
+            return (sum, t) -> sum.add(NumberUtil.toBigDecimal(fun.apply(t)));
+        }
+
+        @Override
+        public Supplier<BigDecimal> supplier() {
+            return null;
+        }
+
+        @Override
+        public BinaryOperator<BigDecimal> combiner() {
+            return null;
+        }
+
+        @Override
+        public Function<BigDecimal, N> finisher() {
+            return null;
+        }
+
+        @Override
+        public Set<Characteristics> characteristics() {
+            return null;
+        }
+    }
+
     /**
      * 按属性去重
      *
@@ -97,6 +137,11 @@ class MyCollectors {
                 map -> Ztream.of(map.values()),
                 Collections.emptySet()
         );
+    }
+
+
+    public static <T, N extends Number> CollectorImpl<T, Map<Object, T>, Ztream<T>> avg(Function<? super T, N> fun) {
+        return null;
     }
 
     /**
