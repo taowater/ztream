@@ -252,4 +252,22 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements
         }
         return Ztream.of(list);
     }
+
+    /**
+     * 对元素进行洗牌
+     *
+     * @return {@link Ztream}<{@link T}>
+     */
+    public Ztream<T> shuffle() {
+        return Ztream.of(Any.of(toList()).peek(Collections::shuffle).get());
+    }
+
+    /**
+     * 随机取一个
+     *
+     * @return {@link Any}<{@link T}>
+     */
+    public Any<T> randomOne() {
+        return shuffle().first();
+    }
 }

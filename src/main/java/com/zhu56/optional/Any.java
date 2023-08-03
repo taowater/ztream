@@ -195,4 +195,18 @@ public final class Any<T> {
     public <N> Any<N> convert(Class<N> clazz) {
         return this.map(e -> ConvertUtil.convert(e, clazz));
     }
+
+    /**
+     * 偷看
+     *
+     * @param consumer 消费者
+     * @return {@link Any}<{@link T}>
+     */
+    public Any<T> peek(Consumer<T> consumer) {
+        Objects.requireNonNull(consumer);
+        if (Objects.nonNull(value)) {
+            consumer.accept(value);
+        }
+        return this;
+    }
 }
