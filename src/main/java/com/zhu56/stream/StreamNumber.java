@@ -36,11 +36,9 @@ public interface StreamNumber<T> extends Stream<T> {
      * @param fun 函数
      * @return {@link N}
      */
-    default <N extends Number> N max(SerFunction<T, N> fun) {
+    default <N extends Comparable<N>> N max(SerFunction<T, N> fun) {
         return this.map(fun)
-                .map(NumberUtil::toBigDecimal)
                 .reduce((a, b) -> a.compareTo(b) >= 0 ? a : b)
-                .map(b -> BigDecimalStrategy.getValue(b, fun))
                 .orElse(null);
     }
 
@@ -50,12 +48,10 @@ public interface StreamNumber<T> extends Stream<T> {
      * @param fun 函数
      * @return {@link N}
      */
-    default <N extends Number> N min(SerFunction<T, N> fun) {
+    default <N extends Comparable<N>> N min(SerFunction<T, N> fun) {
         return this
                 .map(fun)
-                .map(NumberUtil::toBigDecimal)
                 .reduce((a, b) -> a.compareTo(b) < 0 ? a : b)
-                .map(b -> BigDecimalStrategy.getValue(b, fun))
                 .orElse(null);
     }
 
