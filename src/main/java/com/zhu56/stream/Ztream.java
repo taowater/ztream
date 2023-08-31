@@ -259,7 +259,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements
      * @return {@link Ztream}<{@link T}>
      */
     public Ztream<T> shuffle() {
-        return Ztream.of(Any.of(toList()).peek(Collections::shuffle).get());
+        return Ztream.of(Any.of(toList()).peek(Collections::shuffle).orElse(null));
     }
 
     /**

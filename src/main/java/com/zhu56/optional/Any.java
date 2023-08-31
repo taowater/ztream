@@ -197,6 +197,16 @@ public final class Any<T> {
     }
 
     /**
+     * 获取转换类型后的对象
+     *
+     * @param clazz clazz
+     * @return {@link N}
+     */
+    public <N> N get(Class<N> clazz) {
+        return this.convert(clazz).orElse(null);
+    }
+
+    /**
      * 偷看
      *
      * @param consumer 消费者
