@@ -18,6 +18,7 @@ import java.util.function.Supplier;
  * @author Zhu56
  * @date 2023/03/15 23:19:46
  */
+@SuppressWarnings("unchecked")
 public final class Any<T> {
 
     private static final Any<?> EMPTY = new Any<>(null);

@@ -235,7 +235,8 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements
      * @param values 值
      * @return {@link Ztream}<{@link T}>
      */
-    public Ztream<T> append(T... values) {
+    @SafeVarargs
+    public final Ztream<T> append(T... values) {
         return this.append(Ztream.of(values).toList());
     }
 
@@ -260,6 +261,15 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements
      */
     public Ztream<T> shuffle() {
         return Ztream.of(Any.of(toList()).peek(Collections::shuffle).orElse(null));
+    }
+
+    /**
+     * 收集某个集合类型的属性并展开
+     * @param mapper
+     * @return {@link Ztream}<{@link N}>
+     */
+    public <N, C extends Collection<N>> Ztream<N> flat(Function<T, C> mapper) {
+        return this.map(mapper).flatMap(Ztream::of);
     }
 
     /**

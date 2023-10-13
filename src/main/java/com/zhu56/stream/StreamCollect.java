@@ -48,6 +48,15 @@ public interface StreamCollect<T> extends Stream<T> {
     }
 
     /**
+     * 收集某个元素为无重复集合
+     * @param fun 函数
+     * @return {@link Set}<{@link V}>
+     */
+    default <V> Set<V> toSet(Function<T, V> fun) {
+        return Ztream.of(this).map(fun).toSet();
+    }
+
+    /**
      * 收集
      *
      * @param fun 函数

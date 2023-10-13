@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -158,6 +159,14 @@ public class ZtreamTest {
         List<Integer> list = ListUtil.toList(1, null, 4);
         double asDouble = list.stream().flatMapToInt(IntStream::of).average().getAsDouble();
         System.out.println(asDouble);
+    }
+
+    @Test
+    public void testFlat() {
+        List<Integer> list = ListUtil.toList(1, 2, 4);
+        Function<Integer, Collection<Integer>> fun = e->   ListUtil.toList(1,2,3);
+        List<Integer> list1 = Ztream.of(list).flat(fun).toList();
+        System.out.println(123);
     }
 
 }
