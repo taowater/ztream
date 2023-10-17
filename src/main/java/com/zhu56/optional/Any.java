@@ -4,6 +4,7 @@ import com.zhu56.stream.Ztream;
 import com.zhu56.util.ConvertUtil;
 import com.zhu56.util.EmptyUtil;
 
+import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
@@ -125,6 +126,17 @@ public final class Any<T> {
         @SuppressWarnings("unchecked")
         Any<U> r = (Any<U>) mapper.apply(value);
         return Objects.requireNonNull(r);
+    }
+
+    /**
+     * 收集某个集合类型的属性并展开为流
+     *
+     * @param mapper
+     * @return {@link Ztream}<{@link N}>
+     */
+    public <N, C extends Collection<N>> Ztream<N> ztream(Function<T, C> mapper) {
+        Objects.requireNonNull(mapper);
+        return Ztream.of(this.get(mapper));
     }
 
     public Any<T> or(Supplier<Any<? extends T>> supplier) {
