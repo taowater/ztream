@@ -109,23 +109,46 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements
     }
 
     /**
-     * 按元素某属性升序排序
+     * 按元素若干属性升序排序
      *
-     * @param fun 属性
+     * @param fun 若干个属性
      * @return {@link Ztream}<{@link T}>
      */
-    public <U extends Comparable<? super U>> Ztream<T> asc(Function<? super T, ? extends U> fun) {
-        return sorted(Comparator.comparing(fun));
+    @SafeVarargs
+    public final <U extends Comparable<? super U>> Ztream<T> asc(Function<? super T, ? extends U>... fun) {
+        return sorted(MyComparator.multi(fun));
     }
 
     /**
      * 按元素某属性降序排序
      *
-     * @param fun 有趣
+     * @param funs 属性集合
      * @return {@link Ztream}<{@link T}>
      */
-    public <U extends Comparable<? super U>> Ztream<T> desc(Function<? super T, ? extends U> fun) {
-        return sorted(Comparator.comparing(fun).reversed());
+    @SafeVarargs
+    public final <U extends Comparable<? super U>> Ztream<T> desc(Function<T, ? extends U>... funs) {
+        return sorted(Ztream.of(funs).map(f -> Comparator.comparing(f).reversed()).toList());
+    }
+
+    /**
+     * 排序-多个排序器依次排序
+     *
+     * @param comparators
+     * @return {@link Ztream }<{@link T }>
+     */
+    @SafeVarargs
+    public final Ztream<T> sorted(Comparator<T>... comparators) {
+        return sorted(MyComparator.multi(Ztream.of(comparators).toList()));
+    }
+
+    /**
+     * 排序-多个排序器依次排序
+     *
+     * @param comparators
+     * @return {@link Ztream }<{@link T }>
+     */
+    public Ztream<T> sorted(Collection<Comparator<T>> comparators) {
+        return sorted(MyComparator.multi(comparators));
     }
 
     /**
@@ -265,6 +288,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements
 
     /**
      * 收集某个集合类型的属性并展开
+     *
      * @param mapper
      * @return {@link Ztream}<{@link N}>
      */
