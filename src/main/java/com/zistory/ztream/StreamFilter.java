@@ -1,4 +1,6 @@
-package com.zhu56.stream;
+package com.zistory.ztream;
+
+import com.zistory.Ztream;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -12,7 +14,7 @@ import java.util.stream.Stream;
  * @author 朱滔
  * @date 2022/11/13 20:21:12
  */
-interface StreamFilter<T> extends Stream<T> {
+public interface StreamFilter<T> extends Stream<T> {
 
     /**
      * 等值操作

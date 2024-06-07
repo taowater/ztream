@@ -1,4 +1,4 @@
-package com.zhu56.stream;
+package com.zistory.ztream;
 
 
 import java.util.*;
@@ -11,7 +11,7 @@ import java.util.stream.*;
  * @author 朱滔
  * @date 2022/11/13 21:37:12
  */
-abstract class AbstractZtream<T, S extends Stream<T>> implements Stream<T>, Iterable<T> {
+public abstract class AbstractZtream<T, S extends Stream<T>> implements Stream<T>, Iterable<T> {
 
     protected final Stream<T> stream;
 

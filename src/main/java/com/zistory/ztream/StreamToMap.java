@@ -1,4 +1,6 @@
-package com.zhu56.stream;
+package com.zistory.ztream;
+
+import com.zistory.Ztream;
 
 import java.util.HashMap;
 import java.util.Map;

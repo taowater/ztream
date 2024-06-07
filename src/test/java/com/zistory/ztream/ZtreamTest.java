@@ -1,7 +1,8 @@
-package com.zhu56.stream;
+package com.zistory.ztream;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import com.zistory.Ztream;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
@@ -56,9 +57,9 @@ public class ZtreamTest {
         List<Student> students = Ztream.of(list).distinct().toList();
         students.forEach(System.out::println);
 
-        var group1 = Ztream.of(students).group(Student::getName, Student::getAge, HashMap::new, Collectors.toSet());
+        var group1 = Ztream.of(students).groupBy(Student::getName, Student::getAge, HashMap::new, Collectors.toSet());
         var group3 = students.stream().collect(Collectors.groupingBy(Student::getName));
-        var group4 = Ztream.of(students).group(Student::getName, Student::getAge, LinkedHashMap::new, Collectors.toSet());
+        var group4 = Ztream.of(students).groupBy(Student::getName, Student::getAge, LinkedHashMap::new, Collectors.toSet());
         var map = Ztream.of(students).toMap(Object::toString, Objects::toString);
 
         var sum = Ztream.of(students).sum(Student::getAge);
@@ -112,7 +113,7 @@ public class ZtreamTest {
             System.out.println(MessageFormat.format("{0}:{1}", k, v));
         });
 
-        Map<String, String> group = Ztream.of(list).group(Student::getName, MyCollectors.join(","));
+        Map<String, String> group = Ztream.of(list).groupBy(Student::getName, MyCollectors.join(","));
         group.forEach((k, v) -> {
             System.out.println(MessageFormat.format("{0}:{1}", k, v));
         });

@@ -1,4 +1,4 @@
-package com.zhu56.stream;
+package com.zistory.function;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -11,7 +11,7 @@ import java.util.function.ObjIntConsumer;
  * @version 1.0
  * @date 2023/4/18 16:29
  */
-class IndexedConsumer<T> implements Consumer<T> {
+public class IndexedConsumer<T> implements Consumer<T> {
     private final AtomicInteger index = new AtomicInteger(0);
 
     private final ObjIntConsumer<? super T> consumer;

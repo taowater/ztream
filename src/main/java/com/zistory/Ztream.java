@@ -1,9 +1,11 @@
-package com.zhu56.stream;
+package com.zistory;
 
 
-import com.zhu56.optional.Any;
-import com.zhu56.util.ConvertUtil;
-import com.zhu56.util.EmptyUtil;
+import com.zistory.function.IndexedConsumer;
+import com.zistory.function.IndexedFunction;
+import com.zistory.ztream.*;
+import com.zistory.util.ConvertUtil;
+import com.zistory.util.EmptyUtil;
 
 import java.util.*;
 import java.util.function.BiFunction;

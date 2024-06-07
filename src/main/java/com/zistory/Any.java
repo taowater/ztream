@@ -1,8 +1,7 @@
-package com.zhu56.optional;
+package com.zistory;
 
-import com.zhu56.stream.Ztream;
-import com.zhu56.util.ConvertUtil;
-import com.zhu56.util.EmptyUtil;
+import com.zistory.util.ConvertUtil;
+import com.zistory.util.EmptyUtil;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;

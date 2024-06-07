@@ -1,7 +1,7 @@
-package com.zhu56.util;
+package com.zistory.util;
 
 import cn.hutool.core.util.ReflectUtil;
-import com.zhu56.inter.SerFunction;
+import com.zistory.inter.SerFunction;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 

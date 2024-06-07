@@ -1,7 +1,8 @@
-package com.zhu56.stream;
+package com.zistory.ztream;
 
 
 import cn.hutool.core.util.NumberUtil;
+import com.zistory.Ztream;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
  * @author 朱滔
  * @date 2023/04/23 21:58:06
  */
-class MyCollectors {
+public class MyCollectors {
 
 
     /**

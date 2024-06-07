@@ -1,4 +1,4 @@
-package com.zhu56.util;
+package com.zistory.util;
 
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;

@@ -1,5 +1,6 @@
-package com.zhu56.stream;
+package com.zistory.ztream;
 
+import com.zistory.Ztream;
 import lombok.experimental.UtilityClass;
 
 import java.util.Collection;

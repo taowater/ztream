@@ -1,4 +1,6 @@
-package com.zhu56.stream;
+package com.zistory.ztream;
+
+import com.zistory.Ztream;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +26,7 @@ public interface StreamGroup<T> extends Stream<T> {
      * @param funK funK
      * @return {@link Map}<{@link K}, {@link List}<{@link T}>>
      */
-    default <K> Map<K, List<T>> group(Function<? super T, ? extends K> funK) {
+    default <K> Map<K, List<T>> groupBy(Function<? super T, ? extends K> funK) {
         return this.group(funK, Function.identity());
     }
 
@@ -35,7 +37,7 @@ public interface StreamGroup<T> extends Stream<T> {
      * @param mapFactory map工厂
      * @return {@link M}
      */
-    default <K, M extends Map<K, List<T>>> M group(
+    default <K, M extends Map<K, List<T>>> M groupBy(
             Function<? super T, ? extends K> funK,
             Supplier<M> mapFactory) {
         return this.group(funK, mapFactory, Collectors.toList());
@@ -49,7 +51,7 @@ public interface StreamGroup<T> extends Stream<T> {
      * @return {@link M}
      */
     @SuppressWarnings("unchecked")
-    default <K, A, D, M extends Map<K, D>> M group(
+    default <K, A, D, M extends Map<K, D>> M groupBy(
             Function<? super T, ? extends K> funK,
             Collector<? super T, A, D> downstream) {
         return (M) this.group(funK, Function.identity(), HashMap::new, downstream);
@@ -64,7 +66,7 @@ public interface StreamGroup<T> extends Stream<T> {
      * @param downstream 下游
      * @return {@link M}
      */
-    default <K, A, D, M extends Map<K, D>> M group(
+    default <K, A, D, M extends Map<K, D>> M groupBy(
             Function<? super T, ? extends K> funK,
             Supplier<M> mapFactory,
             Collector<? super T, A, D> downstream) {
@@ -78,7 +80,7 @@ public interface StreamGroup<T> extends Stream<T> {
      * @param funV 值依据
      * @return {@link Map}<{@link K}, {@link List}<{@link V}>>
      */
-    default <K, V> Map<K, List<V>> group(
+    default <K, V> Map<K, List<V>> groupBy(
             Function<? super T, ? extends K> funK,
             Function<? super T, ? extends V> funV) {
         return this.group(funK, funV, HashMap::new);
@@ -92,7 +94,7 @@ public interface StreamGroup<T> extends Stream<T> {
      * @param mapFactory 提供的map
      * @return {@link Map}<{@link K}, {@link List}<{@link V}>>
      */
-    default <K, V, M extends Map<K, List<V>>> M group(
+    default <K, V, M extends Map<K, List<V>>> M groupBy(
             Function<? super T, ? extends K> funK,
             Function<? super T, ? extends V> funV,
             Supplier<M> mapFactory) {
@@ -108,7 +110,7 @@ public interface StreamGroup<T> extends Stream<T> {
      * @return {@link M}
      */
     @SuppressWarnings("unchecked")
-    default <K, V, A, D, M extends Map<K, D>> M group(
+    default <K, V, A, D, M extends Map<K, D>> M groupBy(
             Function<? super T, ? extends K> funK,
             Function<? super T, ? extends V> funV,
             Collector<? super V, A, D> downstream) {
@@ -127,7 +129,7 @@ public interface StreamGroup<T> extends Stream<T> {
      * @param downstream 下游操作(组集合的类型)
      * @return map
      */
-    default <K, V, A, D, M extends Map<K, D>> M group(
+    default <K, V, A, D, M extends Map<K, D>> M groupBy(
             Function<? super T, ? extends K> funK,
             Function<? super T, ? extends V> funV,
             Supplier<M> mapFactory,

@@ -1,4 +1,4 @@
-package com.zhu56.stream;
+package com.zistory.function;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
@@ -11,7 +11,7 @@ import java.util.function.Function;
  * @version 1.0
  * @date 2023/05/11 00:03
  */
-class IndexedFunction<T, R> implements Function<T, R> {
+public class IndexedFunction<T, R> implements Function<T, R> {
     private final AtomicInteger index = new AtomicInteger(0);
 
     private final BiFunction<T, Integer, R> fun;

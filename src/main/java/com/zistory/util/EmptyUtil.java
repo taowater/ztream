@@ -1,7 +1,7 @@
-package com.zhu56.util;
+package com.zistory.util;
 
 import cn.hutool.core.map.MapUtil;
-import com.zhu56.stream.Ztream;
+import com.zistory.Ztream;
 import lombok.experimental.UtilityClass;
 
 import java.lang.reflect.Array;
