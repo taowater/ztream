@@ -2,6 +2,17 @@
 
 java8标准流的增强
 
+### 🍊Maven
+在项目的pom.xml的dependencies中加入以下内容:
+
+```xml
+<dependency>
+    <groupId>io.github.zistory</groupId>
+    <artifactId>ztream</artifactId>
+    <version>0.0.1</version>
+</dependency>
+```
+
 ### 示例
 
 收集
