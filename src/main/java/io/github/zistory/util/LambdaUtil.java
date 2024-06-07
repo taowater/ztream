@@ -1,7 +1,7 @@
-package com.zistory.util;
+package io.github.zistory.util;
 
 import cn.hutool.core.util.ReflectUtil;
-import com.zistory.inter.SerFunction;
+import io.github.zistory.inter.SerFunction;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 

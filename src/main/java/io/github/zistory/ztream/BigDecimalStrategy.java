@@ -1,9 +1,9 @@
-package com.zistory.ztream;
+package io.github.zistory.ztream;
 
 import cn.hutool.core.map.MapUtil;
-import com.zistory.inter.SerFunction;
-import com.zistory.util.EmptyUtil;
-import com.zistory.util.LambdaUtil;
+import io.github.zistory.inter.SerFunction;
+import io.github.zistory.util.EmptyUtil;
+import io.github.zistory.util.LambdaUtil;
 import lombok.experimental.UtilityClass;
 import lombok.var;
 

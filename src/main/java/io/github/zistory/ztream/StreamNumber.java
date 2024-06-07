@@ -1,8 +1,8 @@
-package com.zistory.ztream;
+package io.github.zistory.ztream;
 
 
 import cn.hutool.core.util.NumberUtil;
-import com.zistory.inter.SerFunction;
+import io.github.zistory.inter.SerFunction;
 
 import java.util.stream.Stream;
 

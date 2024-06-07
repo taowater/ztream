@@ -1,4 +1,4 @@
-package com.zistory.util;
+package io.github.zistory.util;
 
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;

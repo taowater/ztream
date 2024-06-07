@@ -5,19 +5,28 @@
     <modelVersion>4.0.0</modelVersion>
 
 
-    <groupId>com.zhu56</groupId>
+    <groupId>io.github.zistory</groupId>
     <artifactId>ztream</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.1</version>
     <packaging>jar</packaging>
 
     <name>Ztream</name>
-    <url>https://github.com/EmperorZhu56/ztream</url>
+    <description>Java Stream Ex</description>
+    <developers>
+        <developer>
+            <name>zistory</name>
+            <email>248771337@qq.com</email>
+        </developer>
+    </developers>
+    <url>https://github.com/zistory/Ztream</url>
 
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.source.plugin.version>3.3.1</maven.source.plugin.version>
     </properties>
 
     <dependencies>
@@ -50,6 +59,21 @@
 
     </dependencies>
 
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://github.com/zistory/Ztream?tab=Apache-2.0-1-ov-file</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <tag>master</tag>
+        <url>https://github.com/zistory/Ztream</url>
+        <connection>scm:git:git@github.com:zistory/Ztream.git</connection>
+        <developerConnection>scm:git:git@github.com:zistory/Ztream.git</developerConnection>
+    </scm>
+
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
@@ -63,6 +87,63 @@
 
     <build>
         <plugins>
+            <!-- Javadoc工具 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- 解决控制台乱码 -->
+                    <additionalJOptions>-Xdoclint:none -J-Dfile.encoding=utf-8</additionalJOptions>
+                    <charset>UTF-8</charset>
+                    <encoding>UTF-8</encoding>
+                    <docencoding>UTF-8</docencoding>
+                </configuration>
+            </plugin>
+            <!--生成源码jar包-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven.source.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- GPG -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <gpgArguments>
+                        <!--表示密码直接输入，不需要弹出密码框-->
+                        <arg>--pinentry-mode</arg>
+                        <arg>loopback</arg>
+                    </gpgArguments>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
@@ -71,6 +152,7 @@
                 <configuration>
                     <publishingServerId>central</publishingServerId>
                     <tokenAuth>true</tokenAuth>
+<!--                    <autoPublish>true</autoPublish>-->
                 </configuration>
             </plugin>
         </plugins>

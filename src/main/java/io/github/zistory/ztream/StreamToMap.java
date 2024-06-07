@@ -1,6 +1,6 @@
-package com.zistory.ztream;
+package io.github.zistory.ztream;
 
-import com.zistory.Ztream;
+import io.github.zistory.Ztream;
 
 import java.util.HashMap;
 import java.util.Map;

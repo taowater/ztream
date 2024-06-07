@@ -1,7 +1,7 @@
-package com.zistory;
+package io.github.zistory;
 
-import com.zistory.util.ConvertUtil;
-import com.zistory.util.EmptyUtil;
+import io.github.zistory.util.ConvertUtil;
+import io.github.zistory.util.EmptyUtil;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
@@ -130,8 +130,8 @@ public final class Any<T> {
     /**
      * 收集某个集合类型的属性并展开为流
      *
-     * @param mapper
-     * @return {@link Ztream}<{@link N}>
+     * @param mapper 属性
+     * @return {@link Ztream}<{@link N}> 结果
      */
     public <N, C extends Collection<N>> Ztream<N> ztream(Function<T, C> mapper) {
         Objects.requireNonNull(mapper);

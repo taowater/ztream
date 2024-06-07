@@ -1,7 +1,7 @@
-package com.zistory.util;
+package io.github.zistory.util;
 
 import cn.hutool.core.map.MapUtil;
-import com.zistory.Ztream;
+import io.github.zistory.Ztream;
 import lombok.experimental.UtilityClass;
 
 import java.lang.reflect.Array;

@@ -1,4 +1,4 @@
-package com.zistory.inter;
+package io.github.zistory.inter;
 
 import java.io.Serializable;
 import java.util.function.Function;

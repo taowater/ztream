@@ -1,11 +1,11 @@
-package com.zistory;
+package io.github.zistory;
 
 
-import com.zistory.function.IndexedConsumer;
-import com.zistory.function.IndexedFunction;
-import com.zistory.ztream.*;
-import com.zistory.util.ConvertUtil;
-import com.zistory.util.EmptyUtil;
+import io.github.zistory.function.IndexedConsumer;
+import io.github.zistory.function.IndexedFunction;
+import io.github.zistory.util.ConvertUtil;
+import io.github.zistory.util.EmptyUtil;
+import io.github.zistory.ztream.*;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -285,7 +285,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements
      * @return {@link Ztream}<{@link T}>
      */
     public Ztream<T> shuffle() {
-        return Ztream.of(Any.of(toList()).peek(Collections::shuffle).orElse(null));
+        return of(Any.of(toList()).peek(Collections::shuffle).orElse(null));
     }
 
     /**

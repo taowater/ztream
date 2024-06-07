@@ -1,8 +1,8 @@
-package com.zistory.ztream;
+package io.github.zistory.ztream;
 
 
 import cn.hutool.core.util.NumberUtil;
-import com.zistory.Ztream;
+import io.github.zistory.Ztream;
 
 import java.math.BigDecimal;
 import java.util.*;

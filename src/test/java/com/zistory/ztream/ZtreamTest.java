@@ -2,8 +2,10 @@ package com.zistory.ztream;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
-import com.zistory.Ztream;
+import io.github.zistory.Ztream;
+import io.github.zistory.ztream.MyCollectors;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
 import lombok.var;
@@ -13,12 +15,12 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class ZtreamTest {
 
     @Data
     @Accessors(chain = true)
+    @EqualsAndHashCode(callSuper = true)
     public static class Student extends Person {
         private String name;
         private Integer age;
@@ -30,6 +32,7 @@ public class ZtreamTest {
     }
 
     @Data
+    @EqualsAndHashCode(callSuper = true)
     public static class Teacher extends Person {
         private String name;
         private Long money;
@@ -153,13 +156,6 @@ public class ZtreamTest {
 
         var stringMapMap = Ztream.of(list).groupBilayer(Student::getAge, Student::getName);
         System.out.println(123);
-    }
-
-    @Test
-    public void test4() {
-        List<Integer> list = ListUtil.toList(1, null, 4);
-        double asDouble = list.stream().flatMapToInt(IntStream::of).average().getAsDouble();
-        System.out.println(asDouble);
     }
 
     @Test

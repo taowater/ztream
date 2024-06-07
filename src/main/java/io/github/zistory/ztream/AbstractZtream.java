@@ -1,4 +1,4 @@
-package com.zistory.ztream;
+package io.github.zistory.ztream;
 
 
 import java.util.*;

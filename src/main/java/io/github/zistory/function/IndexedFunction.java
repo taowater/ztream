@@ -1,4 +1,4 @@
-package com.zistory.function;
+package io.github.zistory.function;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;

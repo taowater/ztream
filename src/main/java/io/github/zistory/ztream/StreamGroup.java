@@ -1,6 +1,6 @@
-package com.zistory.ztream;
+package io.github.zistory.ztream;
 
-import com.zistory.Ztream;
+import io.github.zistory.Ztream;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ public interface StreamGroup<T> extends Stream<T> {
      * @return {@link Map}<{@link K}, {@link List}<{@link T}>>
      */
     default <K> Map<K, List<T>> groupBy(Function<? super T, ? extends K> funK) {
-        return this.group(funK, Function.identity());
+        return this.groupBy(funK, Function.identity());
     }
 
     /**
@@ -40,7 +40,7 @@ public interface StreamGroup<T> extends Stream<T> {
     default <K, M extends Map<K, List<T>>> M groupBy(
             Function<? super T, ? extends K> funK,
             Supplier<M> mapFactory) {
-        return this.group(funK, mapFactory, Collectors.toList());
+        return this.groupBy(funK, mapFactory, Collectors.toList());
     }
 
     /**
@@ -54,7 +54,7 @@ public interface StreamGroup<T> extends Stream<T> {
     default <K, A, D, M extends Map<K, D>> M groupBy(
             Function<? super T, ? extends K> funK,
             Collector<? super T, A, D> downstream) {
-        return (M) this.group(funK, Function.identity(), HashMap::new, downstream);
+        return (M) this.groupBy(funK, Function.identity(), HashMap::new, downstream);
     }
 
     /**
@@ -70,7 +70,7 @@ public interface StreamGroup<T> extends Stream<T> {
             Function<? super T, ? extends K> funK,
             Supplier<M> mapFactory,
             Collector<? super T, A, D> downstream) {
-        return this.group(funK, Function.identity(), mapFactory, downstream);
+        return this.groupBy(funK, Function.identity(), mapFactory, downstream);
     }
 
     /**
@@ -83,7 +83,7 @@ public interface StreamGroup<T> extends Stream<T> {
     default <K, V> Map<K, List<V>> groupBy(
             Function<? super T, ? extends K> funK,
             Function<? super T, ? extends V> funV) {
-        return this.group(funK, funV, HashMap::new);
+        return this.groupBy(funK, funV, HashMap::new);
     }
 
     /**
@@ -98,7 +98,7 @@ public interface StreamGroup<T> extends Stream<T> {
             Function<? super T, ? extends K> funK,
             Function<? super T, ? extends V> funV,
             Supplier<M> mapFactory) {
-        return this.group(funK, funV, mapFactory, Collectors.toList());
+        return this.groupBy(funK, funV, mapFactory, Collectors.toList());
     }
 
     /**
@@ -114,7 +114,7 @@ public interface StreamGroup<T> extends Stream<T> {
             Function<? super T, ? extends K> funK,
             Function<? super T, ? extends V> funV,
             Collector<? super V, A, D> downstream) {
-        return (M) this.group(funK, funV, HashMap::new, downstream);
+        return (M) this.groupBy(funK, funV, HashMap::new, downstream);
     }
 
 
