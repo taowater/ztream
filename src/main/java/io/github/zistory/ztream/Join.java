@@ -13,7 +13,7 @@ import java.util.stream.Stream;
  * @author 朱滔
  * @date 2022/11/13 19:12:35
  */
-public interface StreamJoin<T> extends Stream<T> {
+public interface Join<T> extends Stream<T> {
 
     /**
      * 返回拼接后的字符串

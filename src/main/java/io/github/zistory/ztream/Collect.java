@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  * @author 朱滔
  * @date 2022/11/13 19:12:35
  */
-public interface StreamCollect<T> extends Stream<T> {
+public interface Collect<T> extends Stream<T> {
 
     /**
      * 转换成集合
@@ -27,7 +27,7 @@ public interface StreamCollect<T> extends Stream<T> {
      * @param <C>               集合类型
      * @return 集合
      */
-    default <C extends Collection<T>> C collect(Supplier<C> collectionFactory) {
+    default <C extends Collection<T>> C toCollection(Supplier<C> collectionFactory) {
         return collect(Collectors.toCollection(collectionFactory));
     }
 
@@ -38,6 +38,25 @@ public interface StreamCollect<T> extends Stream<T> {
      */
     default List<T> toList() {
         return collect(Collectors.toList());
+    }
+
+    /**
+     * 收集某个元素为list
+     * @param fun 函数
+     * @return {@link Set}<{@link V}>
+     */
+    default <V> List<V> toList(Function<T, V> fun) {
+        return Ztream.of(this).map(fun).toList();
+    }
+
+    /**
+     * 转换类型收集
+     *
+     * @param clazz clazz
+     * @return {@link List}<{@link N}>
+     */
+    default <N> List<N> toList(Class<N> clazz) {
+        return Ztream.of(this).convert(clazz).toList();
     }
 
     /**
@@ -59,22 +78,14 @@ public interface StreamCollect<T> extends Stream<T> {
     }
 
     /**
-     * 收集
-     *
-     * @param fun 函数
-     * @return {@link List}<{@link V}>
-     */
-    default <V> List<V> collect(Function<T, V> fun) {
-        return Ztream.of(this).map(fun).nonNull().toList();
-    }
-
-    /**
      * 转换类型收集
      *
      * @param clazz clazz
      * @return {@link List}<{@link N}>
      */
-    default <N> List<N> collect(Class<N> clazz) {
-        return Ztream.of(this).convert(clazz).toList();
+    default <N> Set<N> toSet(Class<N> clazz) {
+        return Ztream.of(this).convert(clazz).toSet();
     }
+
+
 }

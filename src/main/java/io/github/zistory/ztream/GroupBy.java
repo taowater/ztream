@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  * @author 朱滔
  * @date 2022/11/13 20:21:12
  */
-public interface StreamGroup<T> extends Stream<T> {
+public interface GroupBy<T> extends Stream<T> {
 
     /**
      * 分组-缺省值类型、Map类型及组集合类型，默认为元素本身、HashMap及ArrayList

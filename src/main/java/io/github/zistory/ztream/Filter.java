@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  * @author 朱滔
  * @date 2022/11/13 20:21:12
  */
-public interface StreamFilter<T> extends Stream<T> {
+public interface Filter<T> extends Stream<T> {
 
     /**
      * 等值操作

@@ -6,6 +6,7 @@ import io.github.zistory.function.IndexedFunction;
 import io.github.zistory.util.ConvertUtil;
 import io.github.zistory.util.EmptyUtil;
 import io.github.zistory.ztream.*;
+import io.github.zistory.ztream.Math;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -22,12 +23,12 @@ import java.util.stream.StreamSupport;
  * @date 2022/11/13 01:11:56
  */
 public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements
-        StreamCollect<T>,
-        StreamGroup<T>,
-        StreamToMap<T>,
-        StreamNumber<T>,
-        StreamJoin<T>,
-        StreamFilter<T> {
+        Collect<T>,
+        GroupBy<T>,
+        ToMap<T>,
+        Math<T>,
+        Join<T>,
+        Filter<T> {
 
     Ztream(Stream<T> stream) {
         super(stream);
