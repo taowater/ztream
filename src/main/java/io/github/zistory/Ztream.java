@@ -9,10 +9,7 @@ import io.github.zistory.ztream.*;
 import io.github.zistory.ztream.Math;
 
 import java.util.*;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.ObjIntConsumer;
+import java.util.function.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -253,6 +250,21 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements
      */
     public <N> Ztream<N> convert(Class<N> clazz) {
         return map(e -> ConvertUtil.convert(e, clazz));
+    }
+
+    /**
+     * 转换元素类型，按新旧元素入参的消费方法处理元素
+     *
+     * @param clazz    clazz
+     * @param consumer 消费者
+     * @return {@link Ztream}<{@link N}>
+     */
+    public <N> Ztream<N> convert(Class<N> clazz, BiConsumer<T, N> consumer) {
+        return map(e -> {
+            N n = ConvertUtil.convert(e, clazz);
+            consumer.accept(e, n);
+            return n;
+        });
     }
 
     /**

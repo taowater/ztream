@@ -180,7 +180,7 @@ public final class Any<T> {
             return true;
         }
 
-        if (!(obj instanceof Optional)) {
+        if (!(obj instanceof Any)) {
             return false;
         }
 
