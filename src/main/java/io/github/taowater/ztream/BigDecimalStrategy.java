@@ -1,11 +1,11 @@
-package io.github.zistory.ztream;
+package io.github.taowater.ztream;
 
-import cn.hutool.core.map.MapUtil;
-import io.github.zistory.inter.SerFunction;
-import io.github.zistory.util.EmptyUtil;
-import io.github.zistory.util.LambdaUtil;
+import io.github.taowater.inter.SerFunction;
+import io.github.taowater.util.EmptyUtil;
+import io.github.taowater.util.LambdaUtil;
 import lombok.experimental.UtilityClass;
 import lombok.var;
+import org.dromara.hutool.core.map.MapUtil;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

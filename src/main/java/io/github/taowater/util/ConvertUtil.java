@@ -1,4 +1,4 @@
-package io.github.zistory.util;
+package io.github.taowater.util;
 
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;

@@ -1,6 +1,5 @@
-package io.github.zistory.ztream;
+package io.github.taowater.ztream;
 
-import io.github.zistory.Ztream;
 import lombok.experimental.UtilityClass;
 
 import java.util.Collection;
@@ -23,11 +22,11 @@ public class MyComparator {
      * @param funs
      * @return {@link Comparator }<{@link T }>
      */
-    public static <T, U extends Comparable<? super U>, F extends Function<? super T, ? extends U>> Comparator<T> multi(F... funs) {
+    public static <T, U extends Comparable<? super U>> Comparator<T> multi(Function<? super T, ? extends U>... funs) {
         return Ztream.of(funs).reduce(
                 null,
                 (c, f) -> {
-                    Function<F, Comparator<T>> method = Objects.isNull(c) ? Comparator::comparing : c::thenComparing;
+                    Function<Function<? super T, ? extends U>, Comparator<T>> method = Objects.isNull(c) ? Comparator::comparing : c::thenComparing;
                     return method.apply(f);
                 },
                 Comparator::thenComparing

@@ -1,8 +1,8 @@
-package io.github.zistory.util;
+package io.github.taowater.util;
 
-import cn.hutool.core.map.MapUtil;
-import io.github.zistory.Ztream;
+import io.github.taowater.ztream.Ztream;
 import lombok.experimental.UtilityClass;
+import org.dromara.hutool.core.map.MapUtil;
 
 import java.lang.reflect.Array;
 import java.util.Iterator;

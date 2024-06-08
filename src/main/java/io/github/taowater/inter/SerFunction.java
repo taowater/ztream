@@ -1,4 +1,4 @@
-package io.github.zistory.inter;
+package io.github.taowater.inter;
 
 import java.io.Serializable;
 import java.util.function.Function;

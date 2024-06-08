@@ -1,4 +1,4 @@
-package io.github.zistory.function;
+package io.github.taowater.function;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;

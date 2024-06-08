@@ -1,9 +1,8 @@
-package io.github.zistory.ztream;
+package io.github.taowater.ztream;
 
 
-import cn.hutool.core.util.NumberUtil;
-import io.github.zistory.Ztream;
-import io.github.zistory.inter.SerFunction;
+import io.github.taowater.inter.SerFunction;
+import org.dromara.hutool.core.math.NumberUtil;
 
 import java.util.stream.Stream;
 
@@ -37,7 +36,7 @@ public interface Math<T> extends Stream<T> {
         return Ztream.of(this)
                 .nonNull()
                 .map(fun)
-                .map(NumberUtil::toBigDecimal)
+                .map(e -> NumberUtil.toBigDecimal(e))
                 .reduce(NumberUtil::add)
                 .map(b -> BigDecimalStrategy.getValue(b, fun))
                 .orElse(defaultValue);
@@ -64,6 +63,7 @@ public interface Math<T> extends Stream<T> {
         return Ztream.of(this)
                 .nonNull()
                 .map(fun)
+                .nonNull()
                 .reduce((a, b) -> a.compareTo(b) >= 0 ? a : b)
                 .orElse(defaultValue);
     }
@@ -89,7 +89,12 @@ public interface Math<T> extends Stream<T> {
         return Ztream.of(this)
                 .nonNull()
                 .map(fun)
+                .nonNull()
                 .reduce((a, b) -> a.compareTo(b) < 0 ? a : b)
                 .orElse(defaultValue);
+    }
+
+    default <N extends Number> N avg(SerFunction<T, N> fun, N defaultValue) {
+        return Any.of(this.collect(MyCollectors.avg(fun))).orElse(defaultValue);
     }
 }

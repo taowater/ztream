@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
 
-    <groupId>io.github.zistory</groupId>
+    <groupId>io.github.taowater</groupId>
     <artifactId>ztream</artifactId>
     <version>0.0.2</version>
     <packaging>jar</packaging>
@@ -14,7 +14,7 @@
     <description>Java Stream Ex</description>
     <developers>
         <developer>
-            <name>zistory</name>
+            <name>taowater</name>
             <email>248771337@qq.com</email>
         </developer>
     </developers>
@@ -24,9 +24,15 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
         <maven.source.plugin.version>3.3.1</maven.source.plugin.version>
+        <maven.javadoc.plugin.version>3.7.0</maven.javadoc.plugin.version>
+        <cglib.version>3.3.0</cglib.version>
+        <lombok.version>1.18.30</lombok.version>
+        <hutool.version>6.0.0-M13</hutool.version>
+        <ztream.version>0.0.1</ztream.version>
+        <mybatis-plus.version>3.5.6</mybatis-plus.version>
     </properties>
 
     <dependencies>
@@ -34,20 +40,20 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.28</version>
+            <version>${lombok.version}</version>
         </dependency>
 
         <!--hutool-->
         <dependency>
-            <groupId>cn.hutool</groupId>
+            <groupId>org.dromara.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.27</version>
+            <version>${hutool.version}</version>
         </dependency>
 
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
-            <version>3.3.0</version>
+            <version>${cglib.version}</version>
         </dependency>
 
         <dependency>
@@ -69,9 +75,9 @@
 
     <scm>
         <tag>master</tag>
-        <url>https://github.com/zistory/Ztream</url>
-        <connection>scm:git:git@github.com:zistory/ztream.git</connection>
-        <developerConnection>scm:git:git@github.com:zistory/ztream.git</developerConnection>
+        <url>https://github.com/taowater/Ztream</url>
+        <connection>scm:git:git@github.com:taowater/ztream.git</connection>
+        <developerConnection>scm:git:git@github.com:taowater/ztream.git</developerConnection>
     </scm>
 
     <distributionManagement>
@@ -91,7 +97,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9.1</version>
+                <version>${maven.javadoc.plugin.version}</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -103,9 +109,6 @@
                 <configuration>
                     <!-- 解决控制台乱码 -->
                     <additionalJOptions>-Xdoclint:none -J-Dfile.encoding=utf-8</additionalJOptions>
-                    <charset>UTF-8</charset>
-                    <encoding>UTF-8</encoding>
-                    <docencoding>UTF-8</docencoding>
                 </configuration>
             </plugin>
             <!--生成源码jar包-->

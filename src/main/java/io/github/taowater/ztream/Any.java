@@ -1,12 +1,11 @@
-package io.github.zistory;
+package io.github.taowater.ztream;
 
-import io.github.zistory.util.ConvertUtil;
-import io.github.zistory.util.EmptyUtil;
+import io.github.taowater.util.ConvertUtil;
+import io.github.taowater.util.EmptyUtil;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;

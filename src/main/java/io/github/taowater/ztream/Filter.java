@@ -1,6 +1,4 @@
-package io.github.zistory.ztream;
-
-import io.github.zistory.Ztream;
+package io.github.taowater.ztream;
 
 import java.util.Collection;
 import java.util.Objects;

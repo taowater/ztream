@@ -1,12 +1,10 @@
-package io.github.zistory;
+package io.github.taowater.ztream;
 
 
-import io.github.zistory.function.IndexedConsumer;
-import io.github.zistory.function.IndexedFunction;
-import io.github.zistory.util.ConvertUtil;
-import io.github.zistory.util.EmptyUtil;
-import io.github.zistory.ztream.*;
-import io.github.zistory.ztream.Math;
+import io.github.taowater.function.IndexedConsumer;
+import io.github.taowater.function.IndexedFunction;
+import io.github.taowater.util.ConvertUtil;
+import io.github.taowater.util.EmptyUtil;
 
 import java.util.*;
 import java.util.function.*;

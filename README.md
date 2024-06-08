@@ -5,8 +5,9 @@ Java Stream 增强
 ### 🍊Maven
 
 ```xml
+
 <dependency>
-    <groupId>io.github.zistory</groupId>
+    <groupId>io.github.taowaterio.github.taowater</groupId>
     <artifactId>ztream</artifactId>
     <version>0.0.2</version>
 </dependency>

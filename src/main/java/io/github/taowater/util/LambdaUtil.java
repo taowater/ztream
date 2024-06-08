@@ -1,9 +1,9 @@
-package io.github.zistory.util;
+package io.github.taowater.util;
 
-import cn.hutool.core.util.ReflectUtil;
-import io.github.zistory.inter.SerFunction;
+import io.github.taowater.inter.SerFunction;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 
 import java.io.Serializable;
 import java.lang.invoke.SerializedLambda;
@@ -53,8 +53,8 @@ public class LambdaUtil {
     public SerializedLambda getSerializedLambda(Serializable fun) {
         Class<?> funClazz = fun.getClass();
         return CLASS_LAMBDA_CACHE.computeIfAbsent(funClazz, c -> {
-            Method method = ReflectUtil.getMethodByName(funClazz, "writeReplace");
-            return ReflectUtil.invoke(fun, method);
+            Method method = MethodUtil.getMethodByName(funClazz, "writeReplace");
+            return MethodUtil.invoke(fun, method);
         });
     }
 

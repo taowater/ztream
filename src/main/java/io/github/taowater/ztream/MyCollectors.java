@@ -1,8 +1,8 @@
-package io.github.zistory.ztream;
+package io.github.taowater.ztream;
 
 
-import cn.hutool.core.util.NumberUtil;
-import io.github.zistory.Ztream;
+import io.github.taowater.inter.SerFunction;
+import org.dromara.hutool.core.math.NumberUtil;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -79,43 +79,6 @@ public class MyCollectors {
         }
     }
 
-    static class AvgCollector<T, N extends Number> implements Collector<T, BigDecimal, N> {
-
-        private final Function<T, N> fun;
-
-        private final Integer count = 0;
-
-        AvgCollector(Function<T, N> fun) {
-            this.fun = fun;
-        }
-
-
-        @Override
-        public BiConsumer<BigDecimal, T> accumulator() {
-            return (sum, t) -> sum.add(NumberUtil.toBigDecimal(fun.apply(t)));
-        }
-
-        @Override
-        public Supplier<BigDecimal> supplier() {
-            return null;
-        }
-
-        @Override
-        public BinaryOperator<BigDecimal> combiner() {
-            return null;
-        }
-
-        @Override
-        public Function<BigDecimal, N> finisher() {
-            return null;
-        }
-
-        @Override
-        public Set<Characteristics> characteristics() {
-            return null;
-        }
-    }
-
     /**
      * 按属性去重
      *
@@ -141,8 +104,25 @@ public class MyCollectors {
     }
 
 
-    public static <T, N extends Number> CollectorImpl<T, Map<Object, T>, Ztream<T>> avg(Function<? super T, N> fun) {
-        return null;
+    public static <T, N extends Number> CollectorImpl<T, List<T>, N> avg(SerFunction<? super T, N> fun) {
+        return new CollectorImpl<>(
+                ArrayList::new,
+                List::add,
+                (l1, l2) -> {
+                    l1.addAll(l2);
+                    return l1;
+                },
+                list -> {
+                    N sum = Ztream.of(list).sum(fun::apply);
+                    long count = Ztream.of(list).nonNull().map(fun).nonNull().count();
+                    if (Objects.isNull(sum) || count == 0) {
+                        return null;
+                    }
+                    BigDecimal avgValue = NumberUtil.toBigDecimal(sum).divide(BigDecimal.valueOf(count));
+                    return BigDecimalStrategy.getValue(avgValue, fun);
+                },
+                Collections.emptySet()
+        );
     }
 
     /**

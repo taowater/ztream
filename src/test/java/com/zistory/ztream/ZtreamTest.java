@@ -1,14 +1,14 @@
 package com.zistory.ztream;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.ListUtil;
-import io.github.zistory.Ztream;
-import io.github.zistory.ztream.MyCollectors;
+import io.github.taowater.ztream.Ztream;
+import io.github.taowater.ztream.MyCollectors;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
 import lombok.var;
+import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.collection.ListUtil;
 import org.junit.Test;
 
 import java.text.MessageFormat;
@@ -42,7 +42,7 @@ public class ZtreamTest {
     @SneakyThrows
     public void test() {
 
-        List<Student> list = ListUtil.toList(
+        List<Student> list = ListUtil.of(
                 new Student().setName("小猪").setAge(23),
                 new Student().setName("小狗").setAge(24),
                 new Student().setName("小猪").setAge(25),
@@ -82,7 +82,7 @@ public class ZtreamTest {
     public void test2() {
 
         List<String> list = null;
-        List<String> list2 = ListUtil.toList(null, "123");
+        List<String> list2 = ListUtil.of(null, "123");
 
         Ztream.of(list).forEach(e -> System.out.println(e.toString()));
         Ztream.of(list2).filter(Objects::nonNull).forEach(System.out::println);
@@ -91,7 +91,7 @@ public class ZtreamTest {
 
     @Test
     public void distinct() {
-        List<Integer> list = ListUtil.toList(1, 2, 3, 4, 5, 6, 7, 8);
+        List<Integer> list = ListUtil.of(1, 2, 3, 4, 5, 6, 7, 8);
         Ztream.of(list).distinct(i -> i % 3, true).forEach(System.out::println);
         System.out.println("==========");
         Ztream.of(list).distinct(i -> i % 3, false).forEach(System.out::println);
@@ -103,7 +103,7 @@ public class ZtreamTest {
 
     @Test
     public void testToMap() {
-        List<Student> list = ListUtil.toList(
+        List<Student> list = ListUtil.of(
                 new Student().setName(null).setAge(23),
                 new Student().setName("小狗").setAge(24),
                 new Student().setName("小猪").setAge(54),
@@ -128,7 +128,7 @@ public class ZtreamTest {
     @Test
     public void testMapIdx() {
 
-        List<Student> list = ListUtil.toList(
+        List<Student> list = ListUtil.of(
                 new Student().setName(null).setAge(23),
                 new Student().setName("小狗").setAge(24),
                 new Student().setName("小猪").setAge(54),
@@ -143,7 +143,7 @@ public class ZtreamTest {
 
     @Test
     public void ttt() {
-        List<Student> list = ListUtil.toList(
+        List<Student> list = ListUtil.of(
                 new Student().setName("小猪").setAge(23),
                 new Student().setName("小狗").setAge(24),
                 new Student().setName("小狗").setAge(23),
@@ -160,8 +160,8 @@ public class ZtreamTest {
 
     @Test
     public void testFlat() {
-        List<Integer> list = ListUtil.toList(1, 2, 4);
-        Function<Integer, Collection<Integer>> fun = e->   ListUtil.toList(1,2,3);
+        List<Integer> list = ListUtil.of(1, 2, 4);
+        Function<Integer, Collection<Integer>> fun = e->   ListUtil.of(1,2,3);
         List<Integer> list1 = Ztream.of(list).flat(fun).toList();
         System.out.println(123);
     }
