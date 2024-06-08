@@ -1,9 +1,8 @@
 # Ztream
 
-java8标准流的增强
+Java Stream 增强
 
 ### 🍊Maven
-在项目的pom.xml的dependencies中加入以下内容:
 
 ```xml
 <dependency>
