@@ -10,7 +10,7 @@
     <version>0.0.1</version>
     <packaging>jar</packaging>
 
-    <name>Ztream</name>
+    <name>ztream</name>
     <description>Java Stream Ex</description>
     <developers>
         <developer>
@@ -18,7 +18,7 @@
             <email>248771337@qq.com</email>
         </developer>
     </developers>
-    <url>https://github.com/zistory/Ztream</url>
+    <url>https://github.com/zistory/ztream</url>
 
 
     <properties>
@@ -62,7 +62,7 @@
     <licenses>
         <license>
             <name>MIT License</name>
-            <url>https://github.com/zistory/Ztream?tab=Apache-2.0-1-ov-file</url>
+            <url>https://github.com/zistory/ztream?tab=Apache-2.0-1-ov-file</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -70,8 +70,8 @@
     <scm>
         <tag>master</tag>
         <url>https://github.com/zistory/Ztream</url>
-        <connection>scm:git:git@github.com:zistory/Ztream.git</connection>
-        <developerConnection>scm:git:git@github.com:zistory/Ztream.git</developerConnection>
+        <connection>scm:git:git@github.com:zistory/ztream.git</connection>
+        <developerConnection>scm:git:git@github.com:zistory/ztream.git</developerConnection>
     </scm>
 
     <distributionManagement>
