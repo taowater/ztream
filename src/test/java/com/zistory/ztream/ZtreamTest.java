@@ -1,7 +1,7 @@
 package com.zistory.ztream;
 
-import io.github.taowater.ztream.Ztream;
 import io.github.taowater.ztream.MyCollectors;
+import io.github.taowater.ztream.Ztream;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.SneakyThrows;
@@ -161,9 +161,29 @@ public class ZtreamTest {
     @Test
     public void testFlat() {
         List<Integer> list = ListUtil.of(1, 2, 4);
-        Function<Integer, Collection<Integer>> fun = e->   ListUtil.of(1,2,3);
+        Function<Integer, Collection<Integer>> fun = e -> ListUtil.of(1, 2, 3);
         List<Integer> list1 = Ztream.of(list).flat(fun).toList();
         System.out.println(123);
+    }
+
+    @Test
+    public void testSort() {
+        List<Student> list = ListUtil.of(
+                new Student().setName("小猪").setAge(123),
+                new Student().setName("小狗").setAge(45),
+                new Student().setName(null).setAge(564),
+                new Student().setName("小狗").setAge(null),
+                new Student().setName(null).setAge(70),
+                new Student().setName("小猪").setAge(4),
+                new Student().setName("小猪").setAge(null)
+        );
+        Ztream.of(list).sort(r -> r
+                .desc(Student::getName, false)
+                .asc(Student::getAge)
+        ).forEach(System.out::println);
+
+        List<Integer> list2 = ListUtil.of(12, 6, null, 8, 23, 5, 0);
+        Ztream.of(list2).desc(false).forEach(System.out::println);
     }
 
 }

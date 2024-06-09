@@ -17,6 +17,7 @@ import java.util.stream.StreamSupport;
  * @author 朱滔
  * @date 2022/11/13 01:11:56
  */
+@SuppressWarnings("unchecked")
 public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Collect<T>,
         GroupBy<T>,
         ToMap<T>,
@@ -105,46 +106,94 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     }
 
     /**
-     * 按元素若干属性升序排序
+     * 升序
      *
-     * @param fun 若干个属性
+     * @param fun 属性
      * @return {@link Ztream}<{@link T}>
      */
-    @SafeVarargs
-    public final <U extends Comparable<? super U>> Ztream<T> asc(Function<? super T, ? extends U>... fun) {
-        return sorted(MyComparator.multi(fun));
+    public <U extends Comparable<? super U>> Ztream<T> asc(Function<? super T, U> fun) {
+        return asc(fun, true);
     }
 
     /**
-     * 按元素某属性降序排序
+     * 升序
      *
-     * @param funs 属性集合
+     * @param fun       属性
+     * @param nullFirst 是否null值前置
+     * @return {@link Ztream }<{@link T }>
+     */
+    public <U extends Comparable<? super U>> Ztream<T> asc(Function<? super T, U> fun, boolean nullFirst) {
+        return sort(r -> r.asc(fun, nullFirst));
+    }
+
+    /**
+     * 升序
+     *
+     * @return {@link Ztream }<{@link T }>
+     */
+    public Ztream<T> asc() {
+        return asc(true);
+    }
+
+    /**
+     * 升序
+     *
+     * @param nullFirst 是否null值前置
+     * @return {@link Ztream }<{@link T }>
+     */
+    public Ztream<T> asc(boolean nullFirst) {
+        return sort(r -> r.then((Comparator<T>) Comparator.naturalOrder(), nullFirst));
+    }
+
+    /**
+     * 降序
+     *
      * @return {@link Ztream}<{@link T}>
      */
-    @SafeVarargs
-    public final <U extends Comparable<? super U>> Ztream<T> desc(Function<T, ? extends U>... funs) {
-        return sorted(Ztream.of(funs).map(f -> Comparator.comparing(f).reversed()).toList());
+    public <U extends Comparable<? super U>> Ztream<T> desc(Function<T, ? extends U> fun) {
+        return desc(fun, true);
     }
 
     /**
-     * 排序-多个排序器依次排序
+     * 降序
      *
-     * @param comparators
+     * @param fun       属性
+     * @param nullFirst 是否null值前置
      * @return {@link Ztream }<{@link T }>
      */
-    @SafeVarargs
-    public final Ztream<T> sorted(Comparator<T>... comparators) {
-        return sorted(MyComparator.multi(Ztream.of(comparators).toList()));
+    public <U extends Comparable<? super U>> Ztream<T> desc(Function<T, ? extends U> fun, boolean nullFirst) {
+        return sort(r -> r.desc(fun, nullFirst));
     }
 
     /**
-     * 排序-多个排序器依次排序
+     * 降序
      *
-     * @param comparators
+     * @return {@link Ztream}<{@link T}>
+     */
+    public Ztream<T> desc() {
+        return desc(true);
+    }
+
+    /**
+     * 降序
+     *
+     * @param nullFirst 是否null值前置
      * @return {@link Ztream }<{@link T }>
      */
-    public Ztream<T> sorted(Collection<Comparator<T>> comparators) {
-        return sorted(MyComparator.multi(comparators));
+    public Ztream<T> desc(boolean nullFirst) {
+        return sort(r -> r.then((Comparator<T>) Comparator.reverseOrder(), nullFirst));
+    }
+
+    /**
+     * 排序
+     *
+     * @param consumer 排序上下分的消费函数
+     * @return {@link Ztream}<{@link T}>
+     */
+    public <U extends Comparable<? super U>> Ztream<T> sort(Consumer<Sorter<T>> consumer) {
+        Sorter<T> sorter = new Sorter<>();
+        consumer.accept(sorter);
+        return sorted(sorter.getComparator());
     }
 
     /**
@@ -191,7 +240,6 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      *
      * @param consumer 消费者
      */
-    @SuppressWarnings("unchecked")
     public <C extends Collection<T>> void ifNotEmpty(Consumer<C> consumer) {
         C list = (C) this.toList();
         if (EmptyUtil.isNotEmpty(list)) {

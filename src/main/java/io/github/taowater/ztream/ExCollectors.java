@@ -2,6 +2,7 @@ package io.github.taowater.ztream;
 
 
 import io.github.taowater.inter.SerFunction;
+import lombok.experimental.UtilityClass;
 import org.dromara.hutool.core.math.NumberUtil;
 
 import java.math.BigDecimal;
@@ -11,7 +12,6 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 /**
  * 自定义收集器
@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
  * @author 朱滔
  * @date 2023/04/23 21:58:06
  */
-public class MyCollectors {
-
+@UtilityClass
+public class ExCollectors {
 
     /**
      * 收集器实现
@@ -164,7 +164,7 @@ public class MyCollectors {
      * 标准流的分组不允许key为null，故改
      *
      * @return {@link Collector}<{@link T}, {@link ?}, {@link M}>
-     * @see Collectors#groupingBy(Function, Supplier, Collector)
+     * @see ExCollectors#groupingBy(Function, Supplier, Collector)
      */
     public static <T, K, D, A, M extends Map<K, D>>
     Collector<T, ?, M> groupingBy(Function<? super T, ? extends K> classifier,
@@ -177,7 +177,7 @@ public class MyCollectors {
             A container = m.computeIfAbsent(key, k -> downstreamSupplier.get());
             downstreamAccumulator.accept(container, t);
         };
-        BinaryOperator<Map<K, A>> merger = MyCollectors.mapMerger(downstream.combiner());
+        BinaryOperator<Map<K, A>> merger = ExCollectors.mapMerger(downstream.combiner());
         @SuppressWarnings("unchecked")
         Supplier<Map<K, A>> mangledFactory = (Supplier<Map<K, A>>) mapFactory;
 
