@@ -184,6 +184,15 @@ public class ZtreamTest {
 
         List<Integer> list2 = ListUtil.of(12, 6, null, 8, 23, 5, 0);
         Ztream.of(list2).desc(false).forEach(System.out::println);
+        System.out.println("avg");
+        System.out.println(Ztream.of(list).avg(Student::getAge, 0));
+    }
+
+    @Test
+    public void testAvg() {
+
+        List<Integer> list = ListUtil.of(12, 6, null, 8, 23, 5, 0);
+        System.out.println(Ztream.of(list).avg(e -> e, 0));
     }
 
 }

@@ -104,7 +104,14 @@ public class ExCollectors {
     }
 
 
-    public static <T, N extends Number> CollectorImpl<T, List<T>, N> avg(SerFunction<? super T, N> fun) {
+    /**
+     * 平均值收集器
+     *
+     * @param fun       属性
+     * @param nullCount null是否计数
+     * @return {@link CollectorImpl }<{@link T }, {@link List }<{@link T }>, {@link N }>
+     */
+    public static <T, N extends Number> CollectorImpl<T, List<T>, N> avg(SerFunction<? super T, N> fun, boolean nullCount) {
         return new CollectorImpl<>(
                 ArrayList::new,
                 List::add,
@@ -113,12 +120,12 @@ public class ExCollectors {
                     return l1;
                 },
                 list -> {
-                    N sum = Ztream.of(list).sum(fun::apply);
-                    long count = Ztream.of(list).nonNull().map(fun).nonNull().count();
+                    N sum = Ztream.of(list).sum(fun);
+                    long count = nullCount ? Ztream.of(list).count() : Ztream.of(list).nonNull().map(fun).nonNull().count();
                     if (Objects.isNull(sum) || count == 0) {
                         return null;
                     }
-                    BigDecimal avgValue = NumberUtil.toBigDecimal(sum).divide(BigDecimal.valueOf(count));
+                    BigDecimal avgValue = NumberUtil.toBigDecimal(sum).divide(BigDecimal.valueOf(count), 4, BigDecimal.ROUND_HALF_UP);
                     return BigDecimalStrategy.getValue(avgValue, fun);
                 },
                 Collections.emptySet()

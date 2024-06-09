@@ -22,7 +22,7 @@ interface Math<T> extends Stream<T> {
      * @param fun 属性
      * @return 统计值
      */
-    default <N extends Number> N sum(SerFunction<T, N> fun) {
+    default <N extends Number> N sum(SerFunction<? super T, N> fun) {
         return this.sum(fun, null);
     }
 
@@ -33,7 +33,7 @@ interface Math<T> extends Stream<T> {
      * @param defaultValue 默认值
      * @return 统计值
      */
-    default <N extends Number> N sum(SerFunction<T, N> fun, N defaultValue) {
+    default <N extends Number> N sum(SerFunction<? super T, N> fun, N defaultValue) {
         return this
                 .filter(Objects::nonNull)
                 .map(fun)
@@ -50,7 +50,7 @@ interface Math<T> extends Stream<T> {
      * @param fun 函数
      * @return {@link N}
      */
-    default <N extends Comparable<N>> N max(SerFunction<T, N> fun) {
+    default <N extends Comparable<N>> N max(SerFunction<? super T, N> fun) {
         return this.max(fun, null);
     }
 
@@ -61,7 +61,7 @@ interface Math<T> extends Stream<T> {
      * @param defaultValue 默认值
      * @return {@link N}
      */
-    default <N extends Comparable<N>> N max(SerFunction<T, N> fun, N defaultValue) {
+    default <N extends Comparable<N>> N max(SerFunction<? super T, N> fun, N defaultValue) {
         return this
                 .filter(Objects::nonNull)
                 .map(fun)
@@ -76,7 +76,7 @@ interface Math<T> extends Stream<T> {
      * @param fun 函数
      * @return {@link N}
      */
-    default <N extends Comparable<N>> N min(SerFunction<T, N> fun) {
+    default <N extends Comparable<N>> N min(SerFunction<? super T, N> fun) {
         return this.min(fun, null);
     }
 
@@ -87,7 +87,7 @@ interface Math<T> extends Stream<T> {
      * @param defaultValue 默认值
      * @return {@link N}
      */
-    default <N extends Comparable<N>> N min(SerFunction<T, N> fun, N defaultValue) {
+    default <N extends Comparable<N>> N min(SerFunction<? super T, N> fun, N defaultValue) {
         return this
                 .filter(Objects::nonNull)
                 .map(fun)
@@ -96,7 +96,26 @@ interface Math<T> extends Stream<T> {
                 .orElse(defaultValue);
     }
 
-    default <N extends Number> N avg(SerFunction<T, N> fun, N defaultValue) {
-        return Any.of(this.collect(ExCollectors.avg(fun))).orElse(defaultValue);
+    /**
+     * 平均值
+     *
+     * @param fun          属性
+     * @param defaultValue 默认值
+     * @param nullCount    null是否计数
+     * @return {@link N }
+     */
+    default <N extends Number> N avg(SerFunction<? super T, N> fun, N defaultValue, boolean nullCount) {
+        return Any.of(this.collect(ExCollectors.avg(fun, nullCount))).orElse(defaultValue);
+    }
+
+    /**
+     * 平均值
+     *
+     * @param fun          属性
+     * @param defaultValue 默认值
+     * @return {@link N }
+     */
+    default <N extends Number> N avg(SerFunction<? super T, N> fun, N defaultValue) {
+        return avg(fun, defaultValue, true);
     }
 }
