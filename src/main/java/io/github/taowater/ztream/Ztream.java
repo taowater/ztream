@@ -111,7 +111,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @param fun 属性
      * @return {@link Ztream}<{@link T}>
      */
-    public <U extends Comparable<? super U>> Ztream<T> asc(Function<? super T, U> fun) {
+    public <U extends Comparable<? super U>> Ztream<T> asc(Function<? super T, ? extends U> fun) {
         return asc(fun, true);
     }
 
@@ -122,7 +122,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @param nullFirst 是否null值前置
      * @return {@link Ztream }<{@link T }>
      */
-    public <U extends Comparable<? super U>> Ztream<T> asc(Function<? super T, U> fun, boolean nullFirst) {
+    public <U extends Comparable<? super U>> Ztream<T> asc(Function<? super T, ? extends U> fun, boolean nullFirst) {
         return sort(r -> r.asc(fun, nullFirst));
     }
 
@@ -150,7 +150,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      *
      * @return {@link Ztream}<{@link T}>
      */
-    public <U extends Comparable<? super U>> Ztream<T> desc(Function<T, ? extends U> fun) {
+    public <U extends Comparable<? super U>> Ztream<T> desc(Function<? super T, ? extends U> fun) {
         return desc(fun, true);
     }
 
@@ -161,7 +161,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @param nullFirst 是否null值前置
      * @return {@link Ztream }<{@link T }>
      */
-    public <U extends Comparable<? super U>> Ztream<T> desc(Function<T, ? extends U> fun, boolean nullFirst) {
+    public <U extends Comparable<? super U>> Ztream<T> desc(Function<? super T, ? extends U> fun, boolean nullFirst) {
         return sort(r -> r.desc(fun, nullFirst));
     }
 

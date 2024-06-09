@@ -110,7 +110,7 @@ interface GroupBy<T> extends Stream<T> {
      * @return map
      */
     default <K, V, A, D, M extends Map<K, D>> M groupBy(Function<? super T, ? extends K> funK, Function<? super T, ? extends V> funV, Supplier<M> mapFactory, Collector<? super V, A, D> downstream) {
-        return this.filter(Objects::nonNull).collect(MyCollectors.groupingBy(funK, mapFactory, Collectors.mapping(funV, downstream)));
+        return this.filter(Objects::nonNull).collect(ExCollectors.groupingBy(funK, mapFactory, Collectors.mapping(funV, downstream)));
     }
 
     /**

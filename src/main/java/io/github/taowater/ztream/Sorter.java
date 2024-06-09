@@ -10,7 +10,7 @@ import java.util.function.UnaryOperator;
  * @author zhu56
  * @date 2024/05/22 00:56
  */
-class Sorter<T> {
+public class Sorter<T> {
 
     /**
      * 默认排序不改变顺序
@@ -29,7 +29,7 @@ class Sorter<T> {
      * @param nullFirst    是否null值前置
      * @return {@link Sorter }<{@link T }>
      */
-    public <U extends Comparable<? super U>> Sorter<T> sort(Function<? super T, U> keyExtractor, boolean desc, boolean nullFirst) {
+    public <U extends Comparable<? super U>> Sorter<T> sort(Function<? super T, ? extends U> keyExtractor, boolean desc, boolean nullFirst) {
         if (desc) {
             nullFirst = !nullFirst;
         }
@@ -47,7 +47,7 @@ class Sorter<T> {
      * @param keyExtractor 属性
      * @return {@link Sorter }<{@link T }>
      */
-    public <U extends Comparable<? super U>> Sorter<T> asc(Function<? super T, U> keyExtractor) {
+    public <U extends Comparable<? super U>> Sorter<T> asc(Function<? super T, ? extends U> keyExtractor) {
         return sort(keyExtractor, false, true);
     }
 
@@ -58,7 +58,7 @@ class Sorter<T> {
      * @param nullFirst    是否null值前置
      * @return {@link Sorter }<{@link T }>
      */
-    public <U extends Comparable<? super U>> Sorter<T> asc(Function<? super T, U> keyExtractor, boolean nullFirst) {
+    public <U extends Comparable<? super U>> Sorter<T> asc(Function<? super T, ? extends U> keyExtractor, boolean nullFirst) {
         return sort(keyExtractor, false, nullFirst);
     }
 
@@ -68,7 +68,7 @@ class Sorter<T> {
      * @param keyExtractor 属性
      * @return {@link Sorter }<{@link T }>
      */
-    public <U extends Comparable<? super U>> Sorter<T> desc(Function<? super T, U> keyExtractor) {
+    public <U extends Comparable<? super U>> Sorter<T> desc(Function<? super T, ? extends U> keyExtractor) {
         return sort(keyExtractor, true, true);
     }
 
@@ -79,7 +79,7 @@ class Sorter<T> {
      * @param nullFirst    是否null值前置
      * @return {@link Sorter }<{@link T }>
      */
-    public <U extends Comparable<? super U>> Sorter<T> desc(Function<? super T, U> keyExtractor, boolean nullFirst) {
+    public <U extends Comparable<? super U>> Sorter<T> desc(Function<? super T, ? extends U> keyExtractor, boolean nullFirst) {
         return sort(keyExtractor, true, nullFirst);
     }
 
@@ -90,8 +90,8 @@ class Sorter<T> {
      * @param nullFirst       是否null值前置
      * @return {@link Sorter }<{@link T }>
      */
-    public <U extends Comparable<? super U>> Sorter<T> then(Comparator<T> otherComparator, boolean nullFirst) {
-        UnaryOperator<Comparator<T>> base = nullFirst ? Comparator::nullsFirst : Comparator::nullsLast;
+    public Sorter<T> then(Comparator<T> otherComparator, boolean nullFirst) {
+        UnaryOperator<Comparator<? super T>> base = nullFirst ? Comparator::nullsFirst : Comparator::nullsLast;
         comparator = comparator.thenComparing(base.apply(otherComparator));
         return this;
     }

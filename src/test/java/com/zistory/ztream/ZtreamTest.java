@@ -1,6 +1,6 @@
 package com.zistory.ztream;
 
-import io.github.taowater.ztream.MyCollectors;
+import io.github.taowater.ztream.ExCollectors;
 import io.github.taowater.ztream.Ztream;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -116,7 +116,7 @@ public class ZtreamTest {
             System.out.println(MessageFormat.format("{0}:{1}", k, v));
         });
 
-        Map<String, String> group = Ztream.of(list).groupBy(Student::getName, MyCollectors.join(","));
+        Map<String, String> group = Ztream.of(list).groupBy(Student::getName, ExCollectors.join(","));
         group.forEach((k, v) -> {
             System.out.println(MessageFormat.format("{0}:{1}", k, v));
         });

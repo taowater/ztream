@@ -97,6 +97,6 @@ interface Math<T> extends Stream<T> {
     }
 
     default <N extends Number> N avg(SerFunction<T, N> fun, N defaultValue) {
-        return Any.of(this.collect(MyCollectors.avg(fun))).orElse(defaultValue);
+        return Any.of(this.collect(ExCollectors.avg(fun))).orElse(defaultValue);
     }
 }

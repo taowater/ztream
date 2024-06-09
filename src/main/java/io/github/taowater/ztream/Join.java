@@ -50,7 +50,7 @@ interface Join<T> extends Stream<T> {
      * @return {@link String}
      */
     default String join(Function<T, ?> fun, CharSequence delimiter) {
-        return this.map(fun).collect(MyCollectors.join(delimiter, "", ""));
+        return this.map(fun).collect(ExCollectors.join(delimiter, "", ""));
     }
 
     /**
@@ -67,6 +67,6 @@ interface Join<T> extends Stream<T> {
         if (Objects.isNull(delimiter)) {
             delimiter = ",";
         }
-        return collect(MyCollectors.join(delimiter, prefix, suffix));
+        return collect(ExCollectors.join(delimiter, prefix, suffix));
     }
 }
