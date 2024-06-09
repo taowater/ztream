@@ -11,7 +11,7 @@ import java.util.stream.Stream;
  * @author 朱滔
  * @date 2022/11/13 19:12:35
  */
-public interface Join<T> extends Stream<T> {
+interface Join<T> extends Stream<T> {
 
     /**
      * 返回拼接后的字符串
@@ -50,7 +50,7 @@ public interface Join<T> extends Stream<T> {
      * @return {@link String}
      */
     default String join(Function<T, ?> fun, CharSequence delimiter) {
-        return Ztream.of(this).map(fun).join(delimiter, "", "");
+        return this.map(fun).collect(MyCollectors.join(delimiter, "", ""));
     }
 
     /**

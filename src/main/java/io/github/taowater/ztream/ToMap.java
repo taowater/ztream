@@ -2,6 +2,7 @@ package io.github.taowater.ztream;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -12,7 +13,7 @@ import java.util.stream.Stream;
  * @author 朱滔
  * @date 2022/11/13 20:21:12
  */
-public interface ToMap<T> extends Stream<T> {
+interface ToMap<T> extends Stream<T> {
 
 
     /**
@@ -63,6 +64,6 @@ public interface ToMap<T> extends Stream<T> {
             Function<? super T, ? extends K> funK,
             Function<? super T, ? extends V> funV,
             Supplier<M> mapFactory) {
-        return Ztream.of(this).nonNull().collect(mapFactory, (map, item) -> map.put(funK.apply(item), funV.apply(item)), Map::putAll);
+        return this.filter(Objects::nonNull).collect(mapFactory, (map, item) -> map.put(funK.apply(item), funV.apply(item)), Map::putAll);
     }
 }

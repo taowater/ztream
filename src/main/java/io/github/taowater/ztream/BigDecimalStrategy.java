@@ -21,7 +21,7 @@ import java.util.function.Function;
  * @date 2022/4/29 17:14
  */
 @UtilityClass
-public class BigDecimalStrategy {
+class BigDecimalStrategy {
 
     private final Map<Class<?>, Function<BigDecimal, ?>> TYPE_FUN = MapUtil.builder(new HashMap<Class<?>, Function<BigDecimal, ?>>())
             .put(Byte.class, BigDecimal::byteValue)

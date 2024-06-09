@@ -1,6 +1,5 @@
 package io.github.taowater.util;
 
-import io.github.taowater.ztream.Ztream;
 import lombok.experimental.UtilityClass;
 import org.dromara.hutool.core.map.MapUtil;
 
@@ -10,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * 判空工具类
@@ -41,7 +41,8 @@ public class EmptyUtil {
      * @return 判断结果
      */
     public boolean isEmpty(Object obj) {
-        return Ztream.of(STRATEGY_MAP.entrySet())
+        return STRATEGY_MAP.entrySet()
+                .stream()
                 .filter(e -> e.getKey().test(obj))
                 .findFirst()
                 .map(Map.Entry::getValue)
@@ -66,7 +67,7 @@ public class EmptyUtil {
      * @return 判断结果
      */
     public boolean isHadEmpty(Object... objs) {
-        return Ztream.of(objs).anyMatch(EmptyUtil::isEmpty);
+        return Stream.of(objs).anyMatch(EmptyUtil::isEmpty);
     }
 
     /**
@@ -76,7 +77,7 @@ public class EmptyUtil {
      * @return 判断结果
      */
     public boolean isHadNotEmpty(Object... objs) {
-        return Ztream.of(objs).anyMatch(EmptyUtil::isNotEmpty);
+        return Stream.of(objs).anyMatch(EmptyUtil::isNotEmpty);
     }
 
     /**
@@ -108,5 +109,4 @@ public class EmptyUtil {
     public boolean isHadBoth(Object... objs) {
         return isHadEmpty(objs) && isHadNotEmpty(objs);
     }
-
 }

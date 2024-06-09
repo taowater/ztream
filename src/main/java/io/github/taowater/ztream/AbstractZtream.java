@@ -1,7 +1,10 @@
 package io.github.taowater.ztream;
 
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.Spliterator;
 import java.util.function.*;
 import java.util.stream.*;
 
@@ -11,13 +14,21 @@ import java.util.stream.*;
  * @author 朱滔
  * @date 2022/11/13 21:37:12
  */
-public abstract class AbstractZtream<T, S extends Stream<T>> implements Stream<T>, Iterable<T> {
+abstract class AbstractZtream<T, S extends Stream<T>> implements Stream<T>, Iterable<T> {
 
     protected final Stream<T> stream;
 
     protected AbstractZtream(Stream<T> stream) {
         this.stream = stream;
     }
+
+    /**
+     * 将标准流包装为增强流
+     *
+     * @param stream 流
+     * @return 包装的结果
+     */
+    protected abstract S wrap(Stream<T> stream);
 
     @Override
     public S filter(Predicate<? super T> predicate) {
@@ -131,10 +142,6 @@ public abstract class AbstractZtream<T, S extends Stream<T>> implements Stream<T
         return stream.collect(collector);
     }
 
-    public List<T> toList() {
-        return this.collect(Collectors.toList());
-    }
-
     @Override
     public Optional<T> min(Comparator<? super T> comparator) {
         return stream.min(comparator);
@@ -214,12 +221,4 @@ public abstract class AbstractZtream<T, S extends Stream<T>> implements Stream<T
     public void close() {
         stream.close();
     }
-
-    /**
-     * 将标准流包装为增强流
-     *
-     * @param stream 流
-     * @return 实现类
-     */
-    protected abstract S wrap(Stream<T> stream);
 }

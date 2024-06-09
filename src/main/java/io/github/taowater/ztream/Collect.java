@@ -1,6 +1,8 @@
 package io.github.taowater.ztream;
 
 
+import io.github.taowater.util.ConvertUtil;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -16,7 +18,7 @@ import java.util.stream.Stream;
  * @author 朱滔
  * @date 2022/11/13 19:12:35
  */
-public interface Collect<T> extends Stream<T> {
+interface Collect<T> extends Stream<T> {
 
     /**
      * 转换成集合
@@ -25,7 +27,7 @@ public interface Collect<T> extends Stream<T> {
      * @param <C>               集合类型
      * @return 集合
      */
-    default <C extends Collection<T>> C toCollection(Supplier<C> collectionFactory) {
+    default <C extends Collection<T>> C collect(Supplier<C> collectionFactory) {
         return collect(Collectors.toCollection(collectionFactory));
     }
 
@@ -40,11 +42,12 @@ public interface Collect<T> extends Stream<T> {
 
     /**
      * 收集某个元素为list
+     *
      * @param fun 函数
      * @return {@link Set}<{@link V}>
      */
     default <V> List<V> toList(Function<T, V> fun) {
-        return Ztream.of(this).map(fun).toList();
+        return this.map(fun).collect(Collectors.toList());
     }
 
     /**
@@ -54,7 +57,7 @@ public interface Collect<T> extends Stream<T> {
      * @return {@link List}<{@link N}>
      */
     default <N> List<N> toList(Class<N> clazz) {
-        return Ztream.of(this).convert(clazz).toList();
+        return this.map(e -> ConvertUtil.convert(e, clazz)).collect(Collectors.toList());
     }
 
     /**
@@ -68,11 +71,12 @@ public interface Collect<T> extends Stream<T> {
 
     /**
      * 收集某个元素为无重复集合
+     *
      * @param fun 函数
      * @return {@link Set}<{@link V}>
      */
     default <V> Set<V> toSet(Function<T, V> fun) {
-        return Ztream.of(this).map(fun).toSet();
+        return this.map(fun).collect(Collectors.toSet());
     }
 
     /**
@@ -82,8 +86,6 @@ public interface Collect<T> extends Stream<T> {
      * @return {@link List}<{@link N}>
      */
     default <N> Set<N> toSet(Class<N> clazz) {
-        return Ztream.of(this).convert(clazz).toSet();
+        return this.map(e -> ConvertUtil.convert(e, clazz)).collect(Collectors.toSet());
     }
-
-
 }

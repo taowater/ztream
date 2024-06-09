@@ -17,13 +17,11 @@ import java.util.stream.StreamSupport;
  * @author 朱滔
  * @date 2022/11/13 01:11:56
  */
-public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements
-        Collect<T>,
+public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Collect<T>,
         GroupBy<T>,
         ToMap<T>,
         Math<T>,
-        Join<T>,
-        Filter<T> {
+        Join<T> {
 
     Ztream(Stream<T> stream) {
         super(stream);
@@ -296,7 +294,9 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements
      * @return {@link Ztream}<{@link T}>
      */
     public Ztream<T> shuffle() {
-        return of(Any.of(toList()).peek(Collections::shuffle).orElse(null));
+        List<T> list = toList();
+        Collections.shuffle(list);
+        return of(list);
     }
 
     /**
@@ -316,5 +316,164 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements
      */
     public Any<T> randomOne() {
         return shuffle().first();
+    }
+
+    /**
+     * 等值操作
+     *
+     * @param fun   字段
+     * @param value 值
+     * @return {@link Ztream}<{@link T}>
+     */
+    public <V> Ztream<T> eq(Function<T, V> fun, V value) {
+        return Objects.isNull(value)
+                ? filter(e -> Any.of(e).map(fun).isEmpty())
+                : this.filter(e -> Objects.equals(fun.apply(e), value));
+    }
+
+    /**
+     * 过滤指定字符属性以value开头的元素
+     *
+     * @param fun   字段
+     * @param value 值
+     * @return {@link Ztream}<{@link T}>
+     */
+    public Ztream<T> rightLike(Function<T, String> fun, String value) {
+        return this.filter(e -> {
+            String str = fun.apply(e);
+            if (EmptyUtil.isEmpty(str)) {
+                return EmptyUtil.isEmpty(value);
+            }
+            if (EmptyUtil.isEmpty(value)) {
+                return true;
+            }
+            return str.startsWith(value);
+        });
+    }
+
+    /**
+     * 不等操作
+     *
+     * @param fun   字段
+     * @param value 价
+     * @return {@link Ztream}<{@link T}>
+     */
+    public <V> Ztream<T> ne(Function<T, V> fun, V value) {
+        return Objects.isNull(value)
+                ? filter(e -> Any.of(e).map(fun).isPresent())
+                : this.filter(e -> Objects.equals(fun.apply(e), value));
+    }
+
+    /**
+     * in操作
+     *
+     * @param fun    字段
+     * @param values 值
+     * @return {@link Ztream}<{@link T}>
+     */
+    public <V> Ztream<T> in(Function<T, V> fun, Collection<V> values) {
+        return EmptyUtil.isEmpty(values) ? Ztream.empty() : this.filter(e -> values.contains(fun.apply(e)));
+    }
+
+    /**
+     * in操作
+     *
+     * @param fun    字段
+     * @param values 值
+     * @return {@link Ztream}<{@link T}>
+     */
+    public <V> Ztream<T> in(Function<T, V> fun, V... values) {
+        return in(fun, Ztream.of(values).toList());
+    }
+
+    /**
+     * notin操作
+     *
+     * @param fun    字段
+     * @param values 值
+     * @return {@link Ztream}<{@link T}>
+     */
+    public <V> Ztream<T> notIn(Function<T, V> fun, Collection<V> values) {
+        return EmptyUtil.isEmpty(values) ? this : this.filter(e -> !values.contains(fun.apply(e)));
+    }
+
+    /**
+     * notin操作
+     *
+     * @param fun    字段
+     * @param values 值
+     * @return {@link Ztream}<{@link T}>
+     */
+    public <V> Ztream<T> notIn(Function<T, V> fun, V... values) {
+        return notIn(fun, Ztream.of(values).toList());
+    }
+
+    /**
+     * 过滤在指定集合中的元素
+     *
+     * @param c c
+     * @return {@link Ztream}<{@link T}>
+     */
+    public Ztream<T> in(Collection<T> c) {
+        return EmptyUtil.isEmpty(c) ? Ztream.empty() : this.filter(c::contains);
+    }
+
+    /**
+     * 过滤在指定集合中的元素
+     *
+     * @param c c
+     * @return {@link Ztream}<{@link T}>
+     */
+    public Ztream<T> in(T... c) {
+        return in(Ztream.of(c).toSet());
+    }
+
+    /**
+     * 过滤不在指定集合中的元素
+     *
+     * @param c c
+     * @return {@link Ztream}<{@link T}>
+     */
+    public Ztream<T> notIn(Collection<T> c) {
+        return EmptyUtil.isEmpty(c) ? this : this.filter(e -> !c.contains(e));
+    }
+
+    /**
+     * 过滤不在指定集合中的元素
+     *
+     * @param c c
+     * @return {@link Ztream}<{@link T}>
+     */
+    public Ztream<T> notIn(T... c) {
+        return notIn(Ztream.of(c).toSet());
+    }
+
+    /**
+     * 过滤某字段为空的元素
+     *
+     * @param fun 函数
+     * @return {@link Ztream}<{@link T}>
+     */
+    public Ztream<T> isNull(Function<T, ?> fun) {
+        return this.filter(e -> Any.of(e).map(fun).isEmpty());
+    }
+
+    /**
+     * 过滤某字段不为空的元素
+     *
+     * @param fun 字段
+     * @return {@link Ztream}<{@link T}>
+     */
+    public Ztream<T> nonNull(Function<T, ?> fun) {
+        return this.filter(e -> Any.of(e).map(fun).isPresent());
+    }
+
+    /**
+     * 过滤元素非空
+     *
+     * @return {@link Ztream}<{@link T}>
+     */
+    public Ztream<T> nonNull() {
+        return this.filter(Objects::nonNull);
     }
 }

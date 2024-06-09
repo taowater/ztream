@@ -4,6 +4,7 @@ package io.github.taowater.ztream;
 import io.github.taowater.inter.SerFunction;
 import org.dromara.hutool.core.math.NumberUtil;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -13,7 +14,7 @@ import java.util.stream.Stream;
  * @version 1.0
  * @date 2022/11/14 9:53
  */
-public interface Math<T> extends Stream<T> {
+interface Math<T> extends Stream<T> {
 
     /**
      * 累加
@@ -33,10 +34,11 @@ public interface Math<T> extends Stream<T> {
      * @return 统计值
      */
     default <N extends Number> N sum(SerFunction<T, N> fun, N defaultValue) {
-        return Ztream.of(this)
-                .nonNull()
+        return this
+                .filter(Objects::nonNull)
                 .map(fun)
-                .map(e -> NumberUtil.toBigDecimal(e))
+                .filter(Objects::nonNull)
+                .map(NumberUtil::toBigDecimal)
                 .reduce(NumberUtil::add)
                 .map(b -> BigDecimalStrategy.getValue(b, fun))
                 .orElse(defaultValue);
@@ -60,10 +62,10 @@ public interface Math<T> extends Stream<T> {
      * @return {@link N}
      */
     default <N extends Comparable<N>> N max(SerFunction<T, N> fun, N defaultValue) {
-        return Ztream.of(this)
-                .nonNull()
+        return this
+                .filter(Objects::nonNull)
                 .map(fun)
-                .nonNull()
+                .filter(Objects::nonNull)
                 .reduce((a, b) -> a.compareTo(b) >= 0 ? a : b)
                 .orElse(defaultValue);
     }
@@ -86,10 +88,10 @@ public interface Math<T> extends Stream<T> {
      * @return {@link N}
      */
     default <N extends Comparable<N>> N min(SerFunction<T, N> fun, N defaultValue) {
-        return Ztream.of(this)
-                .nonNull()
+        return this
+                .filter(Objects::nonNull)
                 .map(fun)
-                .nonNull()
+                .filter(Objects::nonNull)
                 .reduce((a, b) -> a.compareTo(b) < 0 ? a : b)
                 .orElse(defaultValue);
     }

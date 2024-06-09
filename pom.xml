@@ -31,7 +31,6 @@
         <cglib.version>3.3.0</cglib.version>
         <lombok.version>1.18.30</lombok.version>
         <hutool.version>6.0.0-M13</hutool.version>
-        <ztream.version>0.0.1</ztream.version>
         <mybatis-plus.version>3.5.6</mybatis-plus.version>
     </properties>
 
@@ -155,7 +154,7 @@
                 <configuration>
                     <publishingServerId>central</publishingServerId>
                     <tokenAuth>true</tokenAuth>
-<!--                    <autoPublish>true</autoPublish>-->
+                    <!--                    <autoPublish>true</autoPublish>-->
                 </configuration>
             </plugin>
         </plugins>

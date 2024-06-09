@@ -1,9 +1,6 @@
 package io.github.taowater.ztream;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
@@ -16,7 +13,7 @@ import java.util.stream.Stream;
  * @author 朱滔
  * @date 2022/11/13 20:21:12
  */
-public interface GroupBy<T> extends Stream<T> {
+interface GroupBy<T> extends Stream<T> {
 
     /**
      * 分组-缺省值类型、Map类型及组集合类型，默认为元素本身、HashMap及ArrayList
@@ -35,9 +32,7 @@ public interface GroupBy<T> extends Stream<T> {
      * @param mapFactory map工厂
      * @return {@link M}
      */
-    default <K, M extends Map<K, List<T>>> M groupBy(
-            Function<? super T, ? extends K> funK,
-            Supplier<M> mapFactory) {
+    default <K, M extends Map<K, List<T>>> M groupBy(Function<? super T, ? extends K> funK, Supplier<M> mapFactory) {
         return this.groupBy(funK, mapFactory, Collectors.toList());
     }
 
@@ -49,9 +44,7 @@ public interface GroupBy<T> extends Stream<T> {
      * @return {@link M}
      */
     @SuppressWarnings("unchecked")
-    default <K, A, D, M extends Map<K, D>> M groupBy(
-            Function<? super T, ? extends K> funK,
-            Collector<? super T, A, D> downstream) {
+    default <K, A, D, M extends Map<K, D>> M groupBy(Function<? super T, ? extends K> funK, Collector<? super T, A, D> downstream) {
         return (M) this.groupBy(funK, Function.identity(), HashMap::new, downstream);
     }
 
@@ -64,10 +57,7 @@ public interface GroupBy<T> extends Stream<T> {
      * @param downstream 下游
      * @return {@link M}
      */
-    default <K, A, D, M extends Map<K, D>> M groupBy(
-            Function<? super T, ? extends K> funK,
-            Supplier<M> mapFactory,
-            Collector<? super T, A, D> downstream) {
+    default <K, A, D, M extends Map<K, D>> M groupBy(Function<? super T, ? extends K> funK, Supplier<M> mapFactory, Collector<? super T, A, D> downstream) {
         return this.groupBy(funK, Function.identity(), mapFactory, downstream);
     }
 
@@ -78,9 +68,7 @@ public interface GroupBy<T> extends Stream<T> {
      * @param funV 值依据
      * @return {@link Map}<{@link K}, {@link List}<{@link V}>>
      */
-    default <K, V> Map<K, List<V>> groupBy(
-            Function<? super T, ? extends K> funK,
-            Function<? super T, ? extends V> funV) {
+    default <K, V> Map<K, List<V>> groupBy(Function<? super T, ? extends K> funK, Function<? super T, ? extends V> funV) {
         return this.groupBy(funK, funV, HashMap::new);
     }
 
@@ -92,10 +80,7 @@ public interface GroupBy<T> extends Stream<T> {
      * @param mapFactory 提供的map
      * @return {@link Map}<{@link K}, {@link List}<{@link V}>>
      */
-    default <K, V, M extends Map<K, List<V>>> M groupBy(
-            Function<? super T, ? extends K> funK,
-            Function<? super T, ? extends V> funV,
-            Supplier<M> mapFactory) {
+    default <K, V, M extends Map<K, List<V>>> M groupBy(Function<? super T, ? extends K> funK, Function<? super T, ? extends V> funV, Supplier<M> mapFactory) {
         return this.groupBy(funK, funV, mapFactory, Collectors.toList());
     }
 
@@ -108,10 +93,7 @@ public interface GroupBy<T> extends Stream<T> {
      * @return {@link M}
      */
     @SuppressWarnings("unchecked")
-    default <K, V, A, D, M extends Map<K, D>> M groupBy(
-            Function<? super T, ? extends K> funK,
-            Function<? super T, ? extends V> funV,
-            Collector<? super V, A, D> downstream) {
+    default <K, V, A, D, M extends Map<K, D>> M groupBy(Function<? super T, ? extends K> funK, Function<? super T, ? extends V> funV, Collector<? super V, A, D> downstream) {
         return (M) this.groupBy(funK, funV, HashMap::new, downstream);
     }
 
@@ -127,12 +109,8 @@ public interface GroupBy<T> extends Stream<T> {
      * @param downstream 下游操作(组集合的类型)
      * @return map
      */
-    default <K, V, A, D, M extends Map<K, D>> M groupBy(
-            Function<? super T, ? extends K> funK,
-            Function<? super T, ? extends V> funV,
-            Supplier<M> mapFactory,
-            Collector<? super V, A, D> downstream) {
-        return Ztream.of(this).nonNull().collect(MyCollectors.groupingBy(funK, mapFactory, Collectors.mapping(funV, downstream)));
+    default <K, V, A, D, M extends Map<K, D>> M groupBy(Function<? super T, ? extends K> funK, Function<? super T, ? extends V> funV, Supplier<M> mapFactory, Collector<? super V, A, D> downstream) {
+        return this.filter(Objects::nonNull).collect(MyCollectors.groupingBy(funK, mapFactory, Collectors.mapping(funV, downstream)));
     }
 
     /**
@@ -142,9 +120,7 @@ public interface GroupBy<T> extends Stream<T> {
      * @param funK2 有趣k2
      * @return {@link M}
      */
-    default <K, K2, M extends Map<K, Map<K2, List<T>>>> M groupBilayer(
-            Function<? super T, ? extends K> funK,
-            Function<? super T, ? extends K2> funK2) {
+    default <K, K2, M extends Map<K, Map<K2, List<T>>>> M groupBilayer(Function<? super T, ? extends K> funK, Function<? super T, ? extends K2> funK2) {
         return groupBilayer(funK, funK2, Function.identity());
     }
 
@@ -157,33 +133,27 @@ public interface GroupBy<T> extends Stream<T> {
      * @return {@link M}
      */
     @SuppressWarnings("unchecked")
-    default <K, K2, V, M extends Map<K, Map<K2, List<V>>>> M groupBilayer(
-            Function<? super T, ? extends K> funK,
-            Function<? super T, ? extends K2> funK2,
-            Function<? super T, ? extends V> funV) {
-        return (M) this.reduce(
-                new HashMap<K, Map<K2, List<V>>>(),
-                (map, e) -> {
-                    Map<K2, List<V>> subMap = map.computeIfAbsent(funK.apply(e), k -> new HashMap<>());
-                    List<V> list = subMap.computeIfAbsent(funK2.apply(e), k -> new ArrayList<>());
-                    list.add(funV.apply(e));
-                    return map;
-                },
-                (map1, map2) -> {
-                    map1.forEach((k, v) -> {
-                        Map<K2, List<V>> v2 = map2.get(k);
-                        map1.merge(k, v2, (o, n) -> {
-                            o.forEach((sk, sv) -> {
-                                List<V> sv2 = v2.get(sk);
-                                o.merge(sk, sv2, (so, sn) -> {
-                                    so.addAll(sn);
-                                    return so;
-                                });
-                            });
-                            return o;
+    default <K, K2, V, M extends Map<K, Map<K2, List<V>>>> M groupBilayer(Function<? super T, ? extends K> funK, Function<? super T, ? extends K2> funK2, Function<? super T, ? extends V> funV) {
+        return (M) this.reduce(new HashMap<K, Map<K2, List<V>>>(), (map, e) -> {
+            Map<K2, List<V>> subMap = map.computeIfAbsent(funK.apply(e), k -> new HashMap<>());
+            List<V> list = subMap.computeIfAbsent(funK2.apply(e), k -> new ArrayList<>());
+            list.add(funV.apply(e));
+            return map;
+        }, (map1, map2) -> {
+            map1.forEach((k, v) -> {
+                Map<K2, List<V>> v2 = map2.get(k);
+                map1.merge(k, v2, (o, n) -> {
+                    o.forEach((sk, sv) -> {
+                        List<V> sv2 = v2.get(sk);
+                        o.merge(sk, sv2, (so, sn) -> {
+                            so.addAll(sn);
+                            return so;
                         });
                     });
-                    return map1;
+                    return o;
                 });
+            });
+            return map1;
+        });
     }
 }
