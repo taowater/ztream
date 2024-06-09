@@ -214,7 +214,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @return {@link Ztream}<{@link T}>
      */
     public Ztream<T> distinct(Function<? super T, ?> fun, boolean override) {
-        return collect(MyCollectors.distinct(fun, override));
+        return collect(ExCollectors.distinct(fun, override));
     }
 
     /**
