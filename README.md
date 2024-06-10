@@ -7,9 +7,9 @@ Java Stream 增强
 ```xml
 
 <dependency>
-    <groupId>io.github.taowaterio.github.taowater</groupId>
+    <groupId>io.github.taowater</groupId>
     <artifactId>ztream</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
 </dependency>
 ```
 
