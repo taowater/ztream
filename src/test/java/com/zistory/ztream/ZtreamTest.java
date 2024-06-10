@@ -195,4 +195,28 @@ public class ZtreamTest {
         System.out.println(Ztream.of(list).avg(e -> e, 0));
     }
 
+    @Test
+    public void testFilter() {
+
+        List<Student> list = ListUtil.of(
+                new Student().setName("小猪").setAge(123),
+                new Student().setName("小狗").setAge(45),
+                new Student().setName(null).setAge(564),
+                new Student().setName("小狗").setAge(null),
+                new Student().setName(null).setAge(70),
+                new Student().setName("小猪").setAge(4),
+                new Student().setName("小猪").setAge(null)
+        );
+        System.out.println("------");
+        Ztream.of(list).lt(Student::getAge, 4).forEach(System.out::println);
+        System.out.println("------");
+        Ztream.of(list).le(Student::getAge, 4).forEach(System.out::println);
+        System.out.println("------");
+        Ztream.of(list).gt(Student::getAge, 70).forEach(System.out::println);
+        System.out.println("------");
+        Ztream.of(list).ge(Student::getAge, 70).forEach(System.out::println);
+        System.out.println("------");
+        Ztream.of(list).between(Student::getAge, 69, 71).forEach(System.out::println);
+    }
+
 }

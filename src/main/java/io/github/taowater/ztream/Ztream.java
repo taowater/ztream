@@ -5,6 +5,7 @@ import io.github.taowater.function.IndexedConsumer;
 import io.github.taowater.function.IndexedFunction;
 import io.github.taowater.util.ConvertUtil;
 import io.github.taowater.util.EmptyUtil;
+import lombok.var;
 
 import java.util.*;
 import java.util.function.*;
@@ -380,6 +381,76 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     }
 
     /**
+     * 小于
+     *
+     * @param fun   属性
+     * @param value 值
+     * @return {@link Ztream }<{@link T }>
+     */
+    public <N extends Comparable<? super N>> Ztream<T> lt(Function<? super T, ? extends N> fun, N value) {
+        Objects.requireNonNull(value);
+        return this.nonNull(fun).filter(e -> fun.apply(e).compareTo(value) < 0);
+    }
+
+    /**
+     * 小于等于
+     *
+     * @param fun   属性
+     * @param value 值
+     * @return {@link Ztream }<{@link T }>
+     */
+    public <N extends Comparable<? super N>> Ztream<T> le(Function<? super T, ? extends N> fun, N value) {
+        Objects.requireNonNull(value);
+        return this.nonNull(fun).filter(e -> fun.apply(e).compareTo(value) <= 0);
+    }
+
+    /**
+     * 大于
+     *
+     * @param fun   属性
+     * @param value 值
+     * @return {@link Ztream }<{@link T }>
+     */
+    public <N extends Comparable<? super N>> Ztream<T> gt(Function<? super T, ? extends N> fun, N value) {
+        Objects.requireNonNull(value);
+        return this.nonNull(fun).filter(e -> fun.apply(e).compareTo(value) > 0);
+    }
+
+    /**
+     * 大于等于
+     *
+     * @param fun   属性
+     * @param value 值
+     * @return {@link Ztream }<{@link T }>
+     */
+    public <N extends Comparable<? super N>> Ztream<T> ge(Function<? super T, ? extends N> fun, N value) {
+        Objects.requireNonNull(value);
+        return this.nonNull(fun).filter(e -> fun.apply(e).compareTo(value) >= 0);
+    }
+
+    /**
+     * 区间
+     *
+     * @param fun        属性
+     * @param leftValue  左值
+     * @param rightValue 右值
+     * @return {@link Ztream }<{@link T }>
+     */
+    public <N extends Comparable<? super N>> Ztream<T> between(Function<? super T, ? extends N> fun, N leftValue, N rightValue) {
+        if (EmptyUtil.isAllEmpty(leftValue, rightValue)) {
+            return this;
+        }
+        var s = this.nonNull(fun);
+        if (Objects.nonNull(leftValue)) {
+            s = s.ge(fun, leftValue);
+        }
+        if (Objects.nonNull(rightValue)) {
+            s = s.le(fun, rightValue);
+        }
+        return s;
+    }
+
+    /**
      * 过滤指定字符属性以value开头的元素
      *
      * @param fun   字段
@@ -512,7 +583,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @param fun 字段
      * @return {@link Ztream}<{@link T}>
      */
-    public Ztream<T> nonNull(Function<T, ?> fun) {
+    public Ztream<T> nonNull(Function<? super T, ?> fun) {
         return this.filter(e -> Any.of(e).map(fun).isPresent());
     }
 
