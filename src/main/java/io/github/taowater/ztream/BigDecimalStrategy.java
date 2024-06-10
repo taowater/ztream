@@ -16,7 +16,7 @@ import java.util.function.Function;
 /**
  * 数字策略
  *
- * @author 朱滔
+ * @author Zhu56
  * @version 1.0
  * @date 2022/4/29 17:14
  */

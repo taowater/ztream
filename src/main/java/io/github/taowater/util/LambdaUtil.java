@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 /**
  * λ表达式工具类
  *
- * @author 朱滔
+ * @author Zhu56
  * @date 2021/10/10 23:42
  */
 @UtilityClass

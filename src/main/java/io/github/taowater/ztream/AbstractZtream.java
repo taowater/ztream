@@ -11,7 +11,7 @@ import java.util.stream.*;
 /**
  * 抽象增强流
  *
- * @author 朱滔
+ * @author Zhu56
  * @date 2022/11/13 21:37:12
  */
 abstract class AbstractZtream<T, S extends Stream<T>> implements Stream<T>, Iterable<T> {

@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 /**
  * 流的转Map操作
  *
- * @author 朱滔
+ * @author Zhu56
  * @date 2022/11/13 20:21:12
  */
 interface ToMap<T> extends Stream<T> {

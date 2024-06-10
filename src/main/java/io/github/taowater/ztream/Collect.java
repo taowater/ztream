@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 /**
  * 流的收集操作
  *
- * @author 朱滔
+ * @author Zhu56
  * @date 2022/11/13 19:12:35
  */
 interface Collect<T> extends Stream<T> {

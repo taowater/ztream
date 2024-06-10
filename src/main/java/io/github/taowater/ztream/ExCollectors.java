@@ -16,7 +16,7 @@ import java.util.stream.Collector;
 /**
  * 自定义收集器
  *
- * @author 朱滔
+ * @author Zhu56
  * @date 2023/04/23 21:58:06
  */
 @UtilityClass
