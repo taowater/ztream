@@ -7,18 +7,18 @@
 
     <groupId>io.github.taowater</groupId>
     <artifactId>ztream</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <packaging>jar</packaging>
 
     <name>ztream</name>
-    <description>Java Stream Ex</description>
+    <description>Java Stream 增强</description>
     <developers>
         <developer>
             <name>taowater</name>
             <email>248771337@qq.com</email>
         </developer>
     </developers>
-    <url>https://github.com/zistory/ztream</url>
+    <url>https://github.com/taowater/ztream</url>
 
 
     <properties>
@@ -31,7 +31,6 @@
         <cglib.version>3.3.0</cglib.version>
         <lombok.version>1.18.30</lombok.version>
         <hutool.version>6.0.0-M13</hutool.version>
-        <mybatis-plus.version>3.5.6</mybatis-plus.version>
     </properties>
 
     <dependencies>
@@ -41,11 +40,10 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
         </dependency>
-
         <!--hutool-->
         <dependency>
             <groupId>org.dromara.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
+            <artifactId>hutool-core</artifactId>
             <version>${hutool.version}</version>
         </dependency>
 
@@ -67,7 +65,7 @@
     <licenses>
         <license>
             <name>MIT License</name>
-            <url>https://github.com/zistory/ztream?tab=Apache-2.0-1-ov-file</url>
+            <url>https://github.com/taowater/ztream?tab=Apache-2.0-1-ov-file</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
