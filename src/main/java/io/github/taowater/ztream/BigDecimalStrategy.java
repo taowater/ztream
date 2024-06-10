@@ -31,7 +31,6 @@ class BigDecimalStrategy {
             .put(Long.class, BigDecimal::longValue)
             .put(Float.class, BigDecimal::floatValue)
             .put(Double.class, BigDecimal::doubleValue)
-            .put(null, Function.identity())
             .build();
 
     /**
@@ -52,7 +51,7 @@ class BigDecimalStrategy {
      * @param function   函数
      * @return {@link N}
      */
-    public <N extends Number> N getValue(BigDecimal bigDecimal, SerFunction<?, N> function) {
+    public <N extends Number> N getValue(BigDecimal bigDecimal, SerFunction<?, ? extends N> function) {
         if (EmptyUtil.isHadEmpty(bigDecimal, function)) {
             return null;
         }

@@ -90,7 +90,7 @@ public class Sorter<T> {
      * @param nullFirst       是否null值前置
      * @return {@link Sorter }<{@link T }>
      */
-    public Sorter<T> then(Comparator<T> otherComparator, boolean nullFirst) {
+    public Sorter<T> then(Comparator<? super T> otherComparator, boolean nullFirst) {
         UnaryOperator<Comparator<? super T>> base = nullFirst ? Comparator::nullsFirst : Comparator::nullsLast;
         comparator = comparator.thenComparing(base.apply(otherComparator));
         return this;

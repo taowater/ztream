@@ -191,7 +191,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @param consumer 排序上下分的消费函数
      * @return {@link Ztream}<{@link T}>
      */
-    public <U extends Comparable<? super U>> Ztream<T> sort(Consumer<Sorter<T>> consumer) {
+    public Ztream<T> sort(Consumer<Sorter<T>> consumer) {
         Sorter<T> sorter = new Sorter<>();
         consumer.accept(sorter);
         return sorted(sorter.getComparator());
@@ -263,7 +263,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      *
      * @param action 当前元素及遍历下标
      */
-    public void forEach(ObjIntConsumer<T> action) {
+    public void forEach(ObjIntConsumer<? super T> action) {
         forEach(new IndexedConsumer<>(action));
     }
 
@@ -329,7 +329,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @param iterable iterable
      * @return {@link Ztream}<{@link T}>
      */
-    public Ztream<T> append(Iterable<T> iterable) {
+    public Ztream<T> append(Iterable<? extends T> iterable) {
         List<T> list = this.toList();
         if (EmptyUtil.isNotEmpty(iterable)) {
             list.addAll(Ztream.of(iterable).toList());
@@ -354,7 +354,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @param mapper
      * @return {@link Ztream}<{@link N}>
      */
-    public <N, C extends Collection<N>> Ztream<N> flat(Function<T, C> mapper) {
+    public <N, C extends Collection<N>> Ztream<N> flat(Function<? super T, ? extends C> mapper) {
         return this.map(mapper).flatMap(Ztream::of);
     }
 
@@ -374,7 +374,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @param value 值
      * @return {@link Ztream}<{@link T}>
      */
-    public <V> Ztream<T> eq(Function<T, V> fun, V value) {
+    public <V> Ztream<T> eq(Function<? super T, ? extends V> fun, V value) {
         return Objects.isNull(value)
                 ? filter(e -> Any.of(e).map(fun).isEmpty())
                 : this.filter(e -> Objects.equals(fun.apply(e), value));
@@ -457,7 +457,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @param value 值
      * @return {@link Ztream}<{@link T}>
      */
-    public Ztream<T> rightLike(Function<T, String> fun, String value) {
+    public Ztream<T> rightLike(Function<? super T, String> fun, String value) {
         return this.filter(e -> {
             String str = fun.apply(e);
             if (EmptyUtil.isEmpty(str)) {
@@ -477,7 +477,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @param value 价
      * @return {@link Ztream}<{@link T}>
      */
-    public <V> Ztream<T> ne(Function<T, V> fun, V value) {
+    public <V> Ztream<T> ne(Function<? super T, ? extends V> fun, V value) {
         return Objects.isNull(value)
                 ? filter(e -> Any.of(e).map(fun).isPresent())
                 : this.filter(e -> Objects.equals(fun.apply(e), value));
@@ -490,7 +490,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @param values 值
      * @return {@link Ztream}<{@link T}>
      */
-    public <V> Ztream<T> in(Function<T, V> fun, Collection<V> values) {
+    public <V> Ztream<T> in(Function<? super T, ? extends V> fun, Collection<? extends V> values) {
         return EmptyUtil.isEmpty(values) ? Ztream.empty() : this.filter(e -> values.contains(fun.apply(e)));
     }
 
@@ -501,7 +501,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @param values 值
      * @return {@link Ztream}<{@link T}>
      */
-    public <V> Ztream<T> in(Function<T, V> fun, V... values) {
+    public <V> Ztream<T> in(Function<? super T, ? extends V> fun, V... values) {
         return in(fun, Ztream.of(values).toList());
     }
 
@@ -512,7 +512,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @param values 值
      * @return {@link Ztream}<{@link T}>
      */
-    public <V> Ztream<T> notIn(Function<T, V> fun, Collection<V> values) {
+    public <V> Ztream<T> notIn(Function<? super T, ? extends V> fun, Collection<? extends V> values) {
         return EmptyUtil.isEmpty(values) ? this : this.filter(e -> !values.contains(fun.apply(e)));
     }
 
@@ -523,7 +523,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @param values 值
      * @return {@link Ztream}<{@link T}>
      */
-    public <V> Ztream<T> notIn(Function<T, V> fun, V... values) {
+    public <V> Ztream<T> notIn(Function<? super T, ? extends V> fun, V... values) {
         return notIn(fun, Ztream.of(values).toList());
     }
 
@@ -573,7 +573,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @param fun 函数
      * @return {@link Ztream}<{@link T}>
      */
-    public Ztream<T> isNull(Function<T, ?> fun) {
+    public Ztream<T> isNull(Function<? super T, ?> fun) {
         return this.filter(e -> Any.of(e).map(fun).isEmpty());
     }
 

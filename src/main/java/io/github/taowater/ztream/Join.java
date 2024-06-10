@@ -38,7 +38,7 @@ interface Join<T> extends Stream<T> {
      * @param fun 函数
      * @return {@link String}
      */
-    default String join(Function<T, ?> fun) {
+    default String join(Function<? super T, ?> fun) {
         return this.join(fun, ",");
     }
 
@@ -49,7 +49,7 @@ interface Join<T> extends Stream<T> {
      * @param delimiter 分隔符
      * @return {@link String}
      */
-    default String join(Function<T, ?> fun, CharSequence delimiter) {
+    default String join(Function<? super T, ?> fun, CharSequence delimiter) {
         return this.map(fun).collect(ExCollectors.join(delimiter, "", ""));
     }
 

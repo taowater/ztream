@@ -27,7 +27,7 @@ interface Collect<T> extends Stream<T> {
      * @param <C>               集合类型
      * @return 集合
      */
-    default <C extends Collection<T>> C collect(Supplier<C> collectionFactory) {
+    default <C extends Collection<T>> C collect(Supplier<? extends C> collectionFactory) {
         return collect(Collectors.toCollection(collectionFactory));
     }
 
@@ -46,7 +46,7 @@ interface Collect<T> extends Stream<T> {
      * @param fun 函数
      * @return {@link Set}<{@link V}>
      */
-    default <V> List<V> toList(Function<T, V> fun) {
+    default <V> List<V> toList(Function<? super T, ? extends V> fun) {
         return this.map(fun).collect(Collectors.toList());
     }
 
@@ -75,7 +75,7 @@ interface Collect<T> extends Stream<T> {
      * @param fun 函数
      * @return {@link Set}<{@link V}>
      */
-    default <V> Set<V> toSet(Function<T, V> fun) {
+    default <V> Set<V> toSet(Function<? super T, ? extends V> fun) {
         return this.map(fun).collect(Collectors.toSet());
     }
 

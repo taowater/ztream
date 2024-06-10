@@ -116,8 +116,8 @@ interface GroupBy<T> extends Stream<T> {
     /**
      * 两层分组
      *
-     * @param funK  恐慌
-     * @param funK2 有趣k2
+     * @param funK  一重键
+     * @param funK2 二重键
      * @return {@link M}
      */
     default <K, K2, M extends Map<K, Map<K2, List<T>>>> M groupBilayer(Function<? super T, ? extends K> funK, Function<? super T, ? extends K2> funK2) {
@@ -127,9 +127,9 @@ interface GroupBy<T> extends Stream<T> {
     /**
      * 两层分组
      *
-     * @param funK  恐慌
-     * @param funK2 有趣k2
-     * @param funV  funv
+     * @param funK  一重键
+     * @param funK2 二重键
+     * @param funV  值属性
      * @return {@link M}
      */
     @SuppressWarnings("unchecked")
