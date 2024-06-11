@@ -230,4 +230,15 @@ public final class Any<T> {
         }
         return this;
     }
+
+    /**
+     * 强转元素类型
+     *
+     * @param clazz 目标类型
+     * @return {@link Any}<{@link N}>
+     */
+    public <N> Any<N> cast(Class<N> clazz) {
+        return map(clazz::cast);
+    }
+    
 }

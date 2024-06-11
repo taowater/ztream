@@ -8,6 +8,7 @@ import io.github.taowater.util.EmptyUtil;
 import lombok.var;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -349,6 +350,26 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     }
 
     /**
+     * 找到符合条件的第一个元素的下标
+     *
+     * @param predicate 判断函数
+     * @return int 下标
+     */
+    public int firstIdx(Predicate<T> predicate) {
+        AtomicInteger index = new AtomicInteger(-1);
+        try {
+            this.forEach((e, i) -> {
+                if (predicate.test(e)) {
+                    index.set(i);
+                    throw new BreakException();
+                }
+            });
+        } catch (BreakException ignore) {
+        }
+        return index.get();
+    }
+
+    /**
      * 收集某个集合类型的属性并展开
      *
      * @param mapper
@@ -356,6 +377,16 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      */
     public <N, C extends Collection<N>> Ztream<N> flat(Function<? super T, ? extends C> mapper) {
         return this.map(mapper).flatMap(Ztream::of);
+    }
+
+    /**
+     * 强转元素类型
+     *
+     * @param clazz 目标类型
+     * @return {@link Ztream}<{@link N}>
+     */
+    public <N> Ztream<N> cast(Class<N> clazz) {
+        return map(clazz::cast);
     }
 
     /**
