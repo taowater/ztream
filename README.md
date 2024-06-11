@@ -24,7 +24,7 @@ Java Stream 增强
 <dependency>
     <groupId>io.github.taowater</groupId>
     <artifactId>ztream</artifactId>
-    <version>0.0.4</version>
+    <version>LATEST</version>
 </dependency>
 ```
 
