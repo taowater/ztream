@@ -18,11 +18,10 @@ import java.util.stream.Stream;
 interface Collect<T> extends Stream<T> {
 
     /**
-     * 转换成集合
+     * 收集为集合
      *
-     * @param collectionFactory 集合工厂(可以是集合构造器)
-     * @param <C>               集合类型
-     * @return 集合
+     * @param collectionFactory 集合工厂
+     * @return {@link C }
      */
     default <C extends Collection<T>> C collect(Supplier<? extends C> collectionFactory) {
         return collect(Collectors.toCollection(collectionFactory));
@@ -31,8 +30,9 @@ interface Collect<T> extends Stream<T> {
     /**
      * 收集属性
      *
-     * @param fun 函数
-     * @return {@link Set}<{@link V}>
+     * @param fun               属性
+     * @param collectionFactory 集合工厂
+     * @return {@link C }
      */
     default <V, C extends Collection<V>> C collect(Function<? super T, ? extends V> fun, Supplier<? extends C> collectionFactory) {
         return this.map(fun).collect(Collectors.toCollection(collectionFactory));
@@ -41,15 +41,36 @@ interface Collect<T> extends Stream<T> {
     /**
      * 转换类型收集
      *
-     * @param clazz clazz
-     * @return {@link List}<{@link N}>
+     * @param clazz             clazz
+     * @param collectionFactory 收集工厂
+     * @return {@link C }
      */
     default <N, C extends Collection<N>> C collect(Class<N> clazz, Supplier<? extends C> collectionFactory) {
         return this.map(e -> ConvertUtil.convert(e, clazz)).collect(Collectors.toCollection(collectionFactory));
     }
 
     /**
-     * 转换为{@link ArrayList}
+     * 收集属性
+     *
+     * @param fun 属性
+     * @return {@link List }<{@link V }>
+     */
+    default <V> List<V> collect(Function<? super T, ? extends V> fun) {
+        return this.collect(fun, ArrayList::new);
+    }
+
+    /**
+     * 转换元素类型并收集
+     *
+     * @param clazz clazz
+     * @return {@link List}<{@link N}>
+     */
+    default <N> List<N> collect(Class<N> clazz) {
+        return this.collect(clazz, ArrayList::new);
+    }
+
+    /**
+     * 收集为{@link ArrayList}
      *
      * @return 集合
      */
@@ -58,10 +79,10 @@ interface Collect<T> extends Stream<T> {
     }
 
     /**
-     * 收集某个元素为list
+     * 收集某属性为list
      *
      * @param fun 函数
-     * @return {@link Set}<{@link V}>
+     * @return {@link List }<{@link V }>
      */
     default <V> List<V> toList(Function<? super T, ? extends V> fun) {
         return this.collect(fun, ArrayList::new);
@@ -78,7 +99,7 @@ interface Collect<T> extends Stream<T> {
     }
 
     /**
-     * 转换为HashSet
+     * 收集为{@link HashSet}
      *
      * @return 集合
      */
@@ -87,7 +108,7 @@ interface Collect<T> extends Stream<T> {
     }
 
     /**
-     * 收集某个元素为set
+     * 收集某属性为set
      *
      * @param fun 函数
      * @return {@link Set}<{@link V}>
