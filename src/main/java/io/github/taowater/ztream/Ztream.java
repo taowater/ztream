@@ -370,7 +370,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     /**
      * 等值操作
      *
-     * @param fun   字段
+     * @param fun   属性
      * @param value 值
      * @return {@link Ztream}<{@link T}>
      */
@@ -453,7 +453,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     /**
      * 过滤指定字符属性以value开头的元素
      *
-     * @param fun   字段
+     * @param fun   属性
      * @param value 值
      * @return {@link Ztream}<{@link T}>
      */
@@ -473,7 +473,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     /**
      * 不等操作
      *
-     * @param fun   字段
+     * @param fun   属性
      * @param value 值
      * @return {@link Ztream}<{@link T}>
      */
@@ -496,7 +496,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     /**
      * in操作
      *
-     * @param fun    字段
+     * @param fun    属性
      * @param values 值
      * @return {@link Ztream}<{@link T}>
      */
@@ -507,7 +507,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     /**
      * in操作
      *
-     * @param fun    字段
+     * @param fun    属性
      * @param values 值
      * @return {@link Ztream}<{@link T}>
      */
@@ -518,7 +518,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     /**
      * notin操作
      *
-     * @param fun    字段
+     * @param fun    属性
      * @param values 值
      * @return {@link Ztream}<{@link T}>
      */
@@ -529,7 +529,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     /**
      * notin操作
      *
-     * @param fun    字段
+     * @param fun    属性
      * @param values 值
      * @return {@link Ztream}<{@link T}>
      */
@@ -578,7 +578,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     }
 
     /**
-     * 过滤某字段为空的元素
+     * 过滤某属性为空的元素
      *
      * @param fun 函数
      * @return {@link Ztream}<{@link T}>
@@ -588,9 +588,9 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     }
 
     /**
-     * 过滤某字段不为空的元素
+     * 过滤某属性不为空的元素
      *
-     * @param fun 字段
+     * @param fun 属性
      * @return {@link Ztream}<{@link T}>
      */
     public Ztream<T> nonNull(Function<? super T, ?> fun) {
