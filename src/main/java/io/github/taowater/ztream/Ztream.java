@@ -474,13 +474,23 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * 不等操作
      *
      * @param fun   字段
-     * @param value 价
+     * @param value 值
      * @return {@link Ztream}<{@link T}>
      */
     public <V> Ztream<T> ne(Function<? super T, ? extends V> fun, V value) {
         return Objects.isNull(value)
                 ? filter(e -> Any.of(e).map(fun).isPresent())
                 : this.filter(e -> Objects.equals(fun.apply(e), value));
+    }
+
+    /**
+     * 不等操作
+     *
+     * @param value 值
+     * @return {@link Ztream}<{@link T}>
+     */
+    public Ztream<T> ne(T value) {
+        return this.filter(e -> !Objects.equals(e, value));
     }
 
     /**

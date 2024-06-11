@@ -3,10 +3,7 @@ package io.github.taowater.ztream;
 
 import io.github.taowater.util.ConvertUtil;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -32,6 +29,26 @@ interface Collect<T> extends Stream<T> {
     }
 
     /**
+     * 收集属性
+     *
+     * @param fun 函数
+     * @return {@link Set}<{@link V}>
+     */
+    default <V, C extends Collection<V>> C collect(Function<? super T, ? extends V> fun, Supplier<? extends C> collectionFactory) {
+        return this.map(fun).collect(Collectors.toCollection(collectionFactory));
+    }
+
+    /**
+     * 转换类型收集
+     *
+     * @param clazz clazz
+     * @return {@link List}<{@link N}>
+     */
+    default <N, C extends Collection<N>> C collect(Class<N> clazz, Supplier<? extends C> collectionFactory) {
+        return this.map(e -> ConvertUtil.convert(e, clazz)).collect(Collectors.toCollection(collectionFactory));
+    }
+
+    /**
      * 转换为{@link ArrayList}
      *
      * @return 集合
@@ -47,17 +64,17 @@ interface Collect<T> extends Stream<T> {
      * @return {@link Set}<{@link V}>
      */
     default <V> List<V> toList(Function<? super T, ? extends V> fun) {
-        return this.map(fun).collect(Collectors.toList());
+        return this.collect(fun, ArrayList::new);
     }
 
     /**
-     * 转换类型收集
+     * 转换类型收集为list
      *
      * @param clazz clazz
      * @return {@link List}<{@link N}>
      */
     default <N> List<N> toList(Class<N> clazz) {
-        return this.map(e -> ConvertUtil.convert(e, clazz)).collect(Collectors.toList());
+        return this.collect(clazz, ArrayList::new);
     }
 
     /**
@@ -70,22 +87,22 @@ interface Collect<T> extends Stream<T> {
     }
 
     /**
-     * 收集某个元素为无重复集合
+     * 收集某个元素为set
      *
      * @param fun 函数
      * @return {@link Set}<{@link V}>
      */
     default <V> Set<V> toSet(Function<? super T, ? extends V> fun) {
-        return this.map(fun).collect(Collectors.toSet());
+        return this.collect(fun, HashSet::new);
     }
 
     /**
-     * 转换类型收集
+     * 转换类型收集set
      *
      * @param clazz clazz
      * @return {@link List}<{@link N}>
      */
     default <N> Set<N> toSet(Class<N> clazz) {
-        return this.map(e -> ConvertUtil.convert(e, clazz)).collect(Collectors.toSet());
+        return this.collect(clazz, HashSet::new);
     }
 }
