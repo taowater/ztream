@@ -1,11 +1,11 @@
 # Ztream
 
 <p align="center">
-	<a target="_blank" href="https://github.com/taowater/ztream/blob/main/LICENSE">
-		<img src="https://img.shields.io/github/license/taowater/ztream.svg" />
-	</a>
 	<a target="_blank" href="https://central.sonatype.com/artifact/io.github.taowater/ztream">
 		<img src="https://img.shields.io/maven-central/v/io.github.taowater/ztream.svg?label=Maven%20Central" />
+	</a>
+	<a target="_blank" href="https://github.com/taowater/ztream/blob/main/LICENSE">
+		<img src="https://img.shields.io/github/license/taowater/ztream.svg" />
 	</a>
 	<a target="_blank" href="https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html">
 		<img src="https://img.shields.io/badge/JDK-8+-green.svg" />
