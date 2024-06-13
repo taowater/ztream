@@ -511,7 +511,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     public <V> Ztream<T> ne(Function<? super T, ? extends V> fun, V value) {
         return Objects.isNull(value)
                 ? filter(e -> Any.of(e).map(fun).isPresent())
-                : this.filter(e -> Objects.equals(fun.apply(e), value));
+                : this.filter(e -> !Objects.equals(fun.apply(e), value));
     }
 
     /**
