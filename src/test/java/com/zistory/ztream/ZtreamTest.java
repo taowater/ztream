@@ -9,7 +9,7 @@ import lombok.experimental.Accessors;
 import lombok.var;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.text.MessageFormat;
 import java.util.*;

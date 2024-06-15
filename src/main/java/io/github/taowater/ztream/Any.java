@@ -1,7 +1,8 @@
 package io.github.taowater.ztream;
 
-import io.github.taowater.util.ConvertUtil;
-import io.github.taowater.util.EmptyUtil;
+
+import io.github.taowater.core.util.ConvertUtil;
+import io.github.taowater.core.util.EmptyUtil;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
@@ -240,5 +241,5 @@ public final class Any<T> {
     public <N> Any<N> cast(Class<N> clazz) {
         return map(clazz::cast);
     }
-    
+
 }

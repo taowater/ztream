@@ -1,10 +1,7 @@
 package io.github.taowater.ztream;
 
-
-import io.github.taowater.function.IndexedConsumer;
-import io.github.taowater.function.IndexedFunction;
-import io.github.taowater.util.ConvertUtil;
-import io.github.taowater.util.EmptyUtil;
+import io.github.taowater.core.util.ConvertUtil;
+import io.github.taowater.core.util.EmptyUtil;
 import lombok.var;
 
 import java.util.*;
@@ -635,5 +632,49 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      */
     public Ztream<T> nonNull() {
         return this.filter(Objects::nonNull);
+    }
+
+    /**
+     * 索引消费者
+     *
+     * @author zhu56
+     * @version 1.0
+     * @date 2023/4/18 16:29
+     */
+    private static class IndexedConsumer<T> implements Consumer<T> {
+        private final AtomicInteger index = new AtomicInteger(0);
+
+        private final ObjIntConsumer<? super T> consumer;
+
+        public IndexedConsumer(ObjIntConsumer<T> consumer) {
+            this.consumer = consumer;
+        }
+
+        @Override
+        public void accept(T t) {
+            consumer.accept(t, index.getAndAdd(1));
+        }
+    }
+
+    /**
+     * 索引功能
+     *
+     * @author zhu56
+     * @version 1.0
+     * @date 2023/05/11 00:03
+     */
+    private static class IndexedFunction<T, R> implements Function<T, R> {
+        private final AtomicInteger index = new AtomicInteger(0);
+
+        private final BiFunction<T, Integer, R> fun;
+
+        public IndexedFunction(BiFunction<T, Integer, R> fun) {
+            this.fun = fun;
+        }
+
+        @Override
+        public R apply(T t) {
+            return fun.apply(t, index.getAndAdd(1));
+        }
     }
 }
