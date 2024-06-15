@@ -7,7 +7,7 @@
 
     <groupId>io.github.taowater</groupId>
     <artifactId>ztream</artifactId>
-    <version>0.0.6</version>
+    <version>${revision}</version>
     <packaging>jar</packaging>
 
     <name>ztream</name>
@@ -22,12 +22,13 @@
 
 
     <properties>
+        <revision>0.0.6</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <maven.source.plugin.version>3.3.1</maven.source.plugin.version>
-        <maven.javadoc.plugin.version>3.7.0</maven.javadoc.plugin.version>
+        <java.version>8</java.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.7.0</maven-javadoc-plugin.version>
+        <maven-gpg-plugin.version>3.2.4</maven-gpg-plugin.version>
         <lombok.version>1.18.32</lombok.version>
         <junit.version>5.11.0-M2</junit.version>
         <taol.version>0.0.1</taol.version>
@@ -71,14 +72,14 @@
     <licenses>
         <license>
             <name>MIT License</name>
-            <url>https://github.com/taowater/ztream?tab=Apache-2.0-1-ov-file</url>
+            <url>https://github.com/taowater/ztream?tab=MIT-1-ov-file</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
 
     <scm>
         <tag>master</tag>
-        <url>https://github.com/taowater/Ztream</url>
+        <url>https://github.com/taowater/ztream</url>
         <connection>scm:git:git@github.com:taowater/ztream.git</connection>
         <developerConnection>scm:git:git@github.com:taowater/ztream.git</developerConnection>
     </scm>
@@ -96,14 +97,24 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <compilerArgument>-Xlint:unchecked</compilerArgument>
+                </configuration>
+            </plugin>
             <!-- Javadoc工具 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven.javadoc.plugin.version}</version>
+                <version>${maven-javadoc-plugin.version}</version>
                 <executions>
                     <execution>
-                        <id>attach-javadocs</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>jar</goal>
                         </goals>
@@ -118,10 +129,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>${maven.source.plugin.version}</version>
+                <version>${maven-source-plugin.version}</version>
+                <configuration>
+                    <attach>true</attach>
+                </configuration>
                 <executions>
                     <execution>
-                        <id>attach-sources</id>
+                        <phase>compile</phase>
                         <goals>
                             <goal>jar</goal>
                         </goals>
@@ -132,10 +146,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
+                <version>${maven-gpg-plugin.version}</version>
                 <executions>
                     <execution>
-                        <id>sign-artifacts</id>
                         <phase>verify</phase>
                         <goals>
                             <goal>sign</goal>
