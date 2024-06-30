@@ -1,4 +1,4 @@
-package io.github.taowater.ztream;
+package com.taowater.ztream;
 
 /**
  * 用于跳出forEach

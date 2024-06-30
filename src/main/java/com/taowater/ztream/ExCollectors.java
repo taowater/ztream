@@ -1,11 +1,12 @@
-package io.github.taowater.ztream;
+package com.taowater.ztream;
 
 
-import io.github.taowater.core.function.SerFunction;
+import com.taowater.taol.core.function.SerFunction;
 import lombok.experimental.UtilityClass;
 import org.dromara.hutool.core.math.NumberUtil;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
@@ -20,13 +21,14 @@ import java.util.stream.Collector;
  * @date 2023/04/23 21:58:06
  */
 @UtilityClass
+@SuppressWarnings("unchecked")
 public class ExCollectors {
 
     /**
      * 收集器实现
      * Collectors.CollectorImpl 不给我用我不会抄一个过来吗
      */
-    static class CollectorImpl<T, A, R> implements Collector<T, A, R> {
+    public static class CollectorImpl<T, A, R> implements Collector<T, A, R> {
         private final Supplier<A> supplier;
         private final BiConsumer<A, T> accumulator;
         private final BinaryOperator<A> combiner;
@@ -125,7 +127,7 @@ public class ExCollectors {
                     if (Objects.isNull(sum) || count == 0) {
                         return null;
                     }
-                    BigDecimal avgValue = NumberUtil.toBigDecimal(sum).divide(BigDecimal.valueOf(count), 4, BigDecimal.ROUND_HALF_UP);
+                    BigDecimal avgValue = NumberUtil.toBigDecimal(sum).divide(BigDecimal.valueOf(count), 4, RoundingMode.HALF_UP);
                     return BigDecimalStrategy.getValue(avgValue, fun);
                 },
                 Collections.emptySet()

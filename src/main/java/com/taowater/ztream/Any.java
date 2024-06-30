@@ -1,8 +1,8 @@
-package io.github.taowater.ztream;
+package com.taowater.ztream;
 
 
-import io.github.taowater.core.util.ConvertUtil;
-import io.github.taowater.core.util.EmptyUtil;
+import com.taowater.taol.core.util.ConvertUtil;
+import com.taowater.taol.core.util.EmptyUtil;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;

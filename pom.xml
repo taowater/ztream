@@ -22,7 +22,7 @@
 
 
     <properties>
-        <revision>0.0.6</revision>
+        <revision>0.0.7</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>8</java.version>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
@@ -31,7 +31,7 @@
         <maven-gpg-plugin.version>3.2.4</maven-gpg-plugin.version>
         <lombok.version>1.18.32</lombok.version>
         <junit.version>5.11.0-M2</junit.version>
-        <taol.version>0.0.1</taol.version>
+        <taol.version>0.0.3</taol.version>
         <cglib.version>3.3.0</cglib.version>
         <hutool.version>6.0.0-M13</hutool.version>
     </properties>

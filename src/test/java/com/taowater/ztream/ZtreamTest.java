@@ -1,7 +1,5 @@
-package com.zistory.ztream;
+package com.taowater.ztream;
 
-import io.github.taowater.ztream.ExCollectors;
-import io.github.taowater.ztream.Ztream;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.SneakyThrows;

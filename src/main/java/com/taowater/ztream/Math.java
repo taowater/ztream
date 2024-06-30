@@ -1,7 +1,7 @@
-package io.github.taowater.ztream;
+package com.taowater.ztream;
 
 
-import io.github.taowater.core.function.SerFunction;
+import com.taowater.taol.core.function.SerFunction;
 import lombok.var;
 import org.dromara.hutool.core.math.NumberUtil;
 

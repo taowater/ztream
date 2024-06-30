@@ -1,4 +1,4 @@
-package io.github.taowater.ztream;
+package com.taowater.ztream;
 
 import java.util.HashMap;
 import java.util.Map;

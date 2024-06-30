@@ -1,7 +1,7 @@
-package io.github.taowater.ztream;
+package com.taowater.ztream;
 
 
-import io.github.taowater.core.util.ConvertUtil;
+import com.taowater.taol.core.util.ConvertUtil;
 
 import java.util.*;
 import java.util.function.Function;

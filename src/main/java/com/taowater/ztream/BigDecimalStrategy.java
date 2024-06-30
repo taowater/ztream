@@ -1,8 +1,8 @@
-package io.github.taowater.ztream;
+package com.taowater.ztream;
 
-import io.github.taowater.core.function.LambdaUtil;
-import io.github.taowater.core.function.SerFunction;
-import io.github.taowater.core.util.EmptyUtil;
+import com.taowater.taol.core.function.LambdaUtil;
+import com.taowater.taol.core.function.SerFunction;
+import com.taowater.taol.core.util.EmptyUtil;
 import lombok.experimental.UtilityClass;
 import lombok.var;
 import org.dromara.hutool.core.map.MapUtil;
