@@ -4,6 +4,7 @@ import com.taowater.taol.core.util.ConvertUtil;
 import com.taowater.taol.core.util.EmptyUtil;
 import lombok.var;
 
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
@@ -44,7 +45,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @return {@link Ztream}<{@link R}>
      */
     public <R> Ztream<R> map(BiFunction<? super T, Integer, ? extends R> mapper) {
-        return new Ztream<>(stream.map(new IndexedFunction<>(mapper)));
+        return new Ztream<>(stream.map(new Functions.IndexedFunction<>(mapper)));
     }
 
     @Override
@@ -59,6 +60,10 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      */
     public static <T> Ztream<T> empty() {
         return new Ztream<>(Stream.empty());
+    }
+
+    public static <K, V> EntryZtream<K, V> of(Map<K, V> map) {
+        return EmptyUtil.isEmpty(map) ? EntryZtream.empty() : EntryZtream.of(map.entrySet());
     }
 
     /**
@@ -196,27 +201,6 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     }
 
     /**
-     * 按某元素去重
-     *
-     * @param fun 函数
-     * @return {@link Ztream}<{@link T}>
-     */
-    public Ztream<T> distinct(Function<? super T, ?> fun) {
-        return distinct(fun, true);
-    }
-
-    /**
-     * 按某元素去重
-     *
-     * @param fun      属性
-     * @param override 是否向前覆盖
-     * @return {@link Ztream}<{@link T}>
-     */
-    public Ztream<T> distinct(Function<? super T, ?> fun, boolean override) {
-        return collect(ExCollectors.distinct(fun, override));
-    }
-
-    /**
      * 第一个
      *
      * @return {@link Any}<{@link T}>
@@ -253,7 +237,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @return {@link Ztream}<{@link T}>
      */
     public Ztream<T> peek(ObjIntConsumer<? super T> action) {
-        return peek(new IndexedConsumer<>(action));
+        return peek(new Functions.IndexedConsumer<>(action));
     }
 
     /**
@@ -262,7 +246,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @param action 当前元素及遍历下标
      */
     public void forEach(ObjIntConsumer<? super T> action) {
-        forEach(new IndexedConsumer<>(action));
+        forEach(new Functions.IndexedConsumer<>(action));
     }
 
     /**
@@ -635,46 +619,68 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     }
 
     /**
-     * 索引消费者
+     * 映射
      *
-     * @author zhu56
-     * @version 1.0
-     * @date 2023/4/18 16:29
+     * @param funK 键函数
+     * @return {@link EntryZtream }<{@link K }, {@link T }>
      */
-    private static class IndexedConsumer<T> implements Consumer<T> {
-        private final AtomicInteger index = new AtomicInteger(0);
-
-        private final ObjIntConsumer<? super T> consumer;
-
-        public IndexedConsumer(ObjIntConsumer<T> consumer) {
-            this.consumer = consumer;
-        }
-
-        @Override
-        public void accept(T t) {
-            consumer.accept(t, index.getAndAdd(1));
-        }
+    public <K> EntryZtream<K, T> hash(Function<? super T, K> funK) {
+        return hash(funK, Function.identity());
     }
 
     /**
-     * 索引功能
+     * 映射
      *
-     * @author zhu56
-     * @version 1.0
-     * @date 2023/05/11 00:03
+     * @param funK 键函数
+     * @param funV 值函数
+     * @return {@link EntryZtream }<{@link K }, {@link V }>
      */
-    private static class IndexedFunction<T, R> implements Function<T, R> {
-        private final AtomicInteger index = new AtomicInteger(0);
-
-        private final BiFunction<T, Integer, R> fun;
-
-        public IndexedFunction(BiFunction<T, Integer, R> fun) {
-            this.fun = fun;
-        }
-
-        @Override
-        public R apply(T t) {
-            return fun.apply(t, index.getAndAdd(1));
-        }
+    public <K, V> EntryZtream<K, V> hash(Function<? super T, K> funK, Function<? super T, V> funV) {
+        return EntryZtream.of(map(e -> new SimpleImmutableEntry<>(funK.apply(e), funV.apply(e))).distinct(Map.Entry::getKey));
     }
+
+    /**
+     * 分组
+     *
+     * @param funK      键函数
+     * @param funV      值函数
+     * @param handleFun 处理组元素方法
+     * @return {@link EntryZtream }<{@link K }, {@link D }>
+     */
+    public <K, V, D> EntryZtream<K, D> group(Function<? super T, K> funK, Function<? super T, V> funV, Function<List<V>, D> handleFun) {
+        Map<K, List<V>> map = new LinkedHashMap<>();
+        return EntryZtream.of(map(e -> {
+                    synchronized (map) {
+                        var key = funK.apply(e);
+                        var value = funV.apply(e);
+                        var data = map.computeIfAbsent(key, k -> new ArrayList<>());
+                        data.add(value);
+                        return new SimpleImmutableEntry<>(key, handleFun.apply(data));
+                    }
+                }
+        ).distinct(Map.Entry::getKey));
+    }
+
+    /**
+     * 分组
+     *
+     * @param funK 键函数
+     * @param funV 值函数
+     * @return {@link EntryZtream }<{@link K }, {@link List }<{@link V }>>
+     */
+    public <K, V> EntryZtream<K, List<V>> group(Function<? super T, K> funK, Function<? super T, V> funV) {
+        return group(funK, funV, Function.identity());
+    }
+
+    /**
+     * 分组
+     *
+     * @param funK 键函数
+     * @return {@link EntryZtream }<{@link K }, {@link List }<{@link T }>>
+     */
+    public <K> EntryZtream<K, List<T>> group(Function<? super T, K> funK) {
+        return group(funK, Function.identity());
+    }
+
+
 }

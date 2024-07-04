@@ -90,9 +90,9 @@ public class ZtreamTest {
     @Test
     public void distinct() {
         List<Integer> list = ListUtil.of(1, 2, 3, 4, 5, 6, 7, 8);
-        Ztream.of(list).distinct(i -> i % 3, true).forEach(System.out::println);
+        Ztream.of(list).distinct(i -> i % 3).forEach(System.out::println);
         System.out.println("==========");
-        Ztream.of(list).distinct(i -> i % 3, false).forEach(System.out::println);
+        Ztream.of(list).distinct(i -> i % 3).forEach(System.out::println);
 
         CollUtil.distinct(list, i -> i % 3, true).forEach(System.out::println);
         System.out.println("==========");
@@ -120,7 +120,7 @@ public class ZtreamTest {
         });
 
         Ztream.of(list).distinct(Student::getName).forEach(System.out::println);
-        Ztream.of(list).distinct(Student::getName, false).forEach(System.out::println);
+        Ztream.of(list).distinct(Student::getName).forEach(System.out::println);
     }
 
     @Test
@@ -215,6 +215,22 @@ public class ZtreamTest {
         Ztream.of(list).ge(Student::getAge, 70).forEach(System.out::println);
         System.out.println("------");
         Ztream.of(list).between(Student::getAge, 69, 71).forEach(System.out::println);
+    }
+
+    @Test
+    public void testMapZtream() {
+
+        List<Student> list = ListUtil.of(
+                new Student().setName("小猪").setAge(123),
+                new Student().setName("小狗").setAge(45),
+                new Student().setName(null).setAge(564),
+                new Student().setName("小狗").setAge(null),
+                new Student().setName(null).setAge(70),
+                new Student().setName("小猪").setAge(4),
+                new Student().setName("小猪").setAge(null)
+        );
+
+        var map = Ztream.of(list).hash(Student::getName).toMap();
     }
 
 }

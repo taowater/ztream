@@ -22,7 +22,7 @@
 
 
     <properties>
-        <revision>0.0.8</revision>
+        <revision>0.1.0</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>8</java.version>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>

@@ -1,10 +1,7 @@
 package com.taowater.ztream;
 
 
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.Spliterator;
+import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
 
@@ -220,5 +217,48 @@ abstract class AbstractZtream<T, S extends Stream<T>> implements Stream<T>, Iter
     @Override
     public void close() {
         stream.close();
+    }
+
+    public S distinct(Function<? super T, ?> fun) {
+        return wrap(map(t -> new PairBox<>(t, fun.apply(t))).distinct().map(box -> box.a));
+    }
+
+    static class Box<A> implements Consumer<A> {
+        A a;
+
+        Box() {
+        }
+
+        Box(A obj) {
+            this.a = obj;
+        }
+
+        @Override
+        public void accept(A a) {
+            this.a = a;
+        }
+    }
+
+    static class PairBox<A, B> extends Box<A> {
+        B b;
+
+        PairBox(A a, B b) {
+            super(a);
+            this.b = b;
+        }
+
+        static <T> PairBox<T, T> single(T a) {
+            return new PairBox<>(a, a);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(b);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj != null && obj.getClass() == PairBox.class && Objects.equals(b, ((PairBox<?, ?>) obj).b);
+        }
     }
 }
