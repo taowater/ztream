@@ -8,6 +8,8 @@ import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -198,24 +200,6 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
         Sorter<T> sorter = new Sorter<>();
         consumer.accept(sorter);
         return sorted(sorter.getComparator());
-    }
-
-    /**
-     * 第一个
-     *
-     * @return {@link Any}<{@link T}>
-     */
-    public Any<T> first() {
-        return Any.of(findFirst().orElse(null));
-    }
-
-    /**
-     * 任意一个
-     *
-     * @return {@link Any}<{@link T}>
-     */
-    public Any<T> any() {
-        return Any.of(findAny().orElse(null));
     }
 
     /**
@@ -642,23 +626,21 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     /**
      * 分组
      *
-     * @param funK      键函数
-     * @param funV      值函数
-     * @param handleFun 处理组元素方法
+     * @param funK       键函数
+     * @param funV       值函数
+     * @param downstream 组元素处理
      * @return {@link EntryZtream }<{@link K }, {@link D }>
      */
-    public <K, V, D> EntryZtream<K, D> group(Function<? super T, K> funK, Function<? super T, V> funV, Function<List<V>, D> handleFun) {
+    public <K, V, A, D> EntryZtream<K, D> group(Function<? super T, K> funK, Function<? super T, V> funV, Collector<? super V, A, D> downstream) {
         Map<K, List<V>> map = new LinkedHashMap<>();
         return EntryZtream.of(map(e -> {
-                    synchronized (map) {
-                        var key = funK.apply(e);
-                        var value = funV.apply(e);
-                        var data = map.computeIfAbsent(key, k -> new ArrayList<>());
-                        data.add(value);
-                        return new SimpleImmutableEntry<>(key, handleFun.apply(data));
-                    }
+                    var key = funK.apply(e);
+                    var value = funV.apply(e);
+                    var data = map.computeIfAbsent(key, k -> new ArrayList<>());
+                    data.add(value);
+                    return new SimpleImmutableEntry<>(key, Ztream.of(data).collect(downstream));
                 }
-        ).distinct(Map.Entry::getKey));
+        ));
     }
 
     /**
@@ -669,7 +651,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @return {@link EntryZtream }<{@link K }, {@link List }<{@link V }>>
      */
     public <K, V> EntryZtream<K, List<V>> group(Function<? super T, K> funK, Function<? super T, V> funV) {
-        return group(funK, funV, Function.identity());
+        return group(funK, funV, Collectors.toList());
     }
 
     /**

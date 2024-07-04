@@ -135,9 +135,15 @@ public final class EntryZtream<K, V> extends AbstractZtream<Entry<K, V>, EntryZt
         return new EntryZtream<>(map(e -> new SimpleImmutableEntry<>(e.getKey(), funV.apply(e.getKey(), e.getValue()))));
     }
 
+
     public <R> Ztream<R> map(BiFunction<? super K, ? super V, ? extends R> fun) {
         return map(e -> fun.apply(e.getKey(), e.getValue()));
     }
+
+    public EntryZtream<V, K> flip() {
+        return new EntryZtream<>(map(e -> new SimpleImmutableEntry<>(e.getValue(), e.getKey())));
+    }
+
 
     public EntryZtream<K, V> distinctKeys() {
         return distinct(Entry::getKey);

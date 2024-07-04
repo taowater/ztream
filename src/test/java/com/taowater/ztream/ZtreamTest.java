@@ -230,7 +230,13 @@ public class ZtreamTest {
                 new Student().setName("小猪").setAge(null)
         );
 
-        var map = Ztream.of(list).hash(Student::getName).toMap();
+        Ztream.of(list).group(Student::getName, Student::getAge).forEach((k, v) -> {
+            System.out.print(k);
+            System.out.print("=");
+            System.out.print(v);
+            System.out.println("\n");
+        });
+
     }
 
 }

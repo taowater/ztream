@@ -223,6 +223,24 @@ abstract class AbstractZtream<T, S extends Stream<T>> implements Stream<T>, Iter
         return wrap(map(t -> new PairBox<>(t, fun.apply(t))).distinct().map(box -> box.a));
     }
 
+    /**
+     * 第一个
+     *
+     * @return {@link Any}<{@link T}>
+     */
+    public Any<T> first() {
+        return Any.of(findFirst().orElse(null));
+    }
+
+    /**
+     * 任意一个
+     *
+     * @return {@link Any}<{@link T}>
+     */
+    public Any<T> any() {
+        return Any.of(findAny().orElse(null));
+    }
+
     static class Box<A> implements Consumer<A> {
         A a;
 
