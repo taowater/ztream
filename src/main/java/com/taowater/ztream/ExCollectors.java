@@ -82,31 +82,6 @@ public class ExCollectors {
     }
 
     /**
-     * 按属性去重
-     *
-     * @param fun      属性
-     * @param override 去重
-     * @return {@link CollectorImpl}<{@link T}, {@link Map}<{@link Object}, {@link T}>, {@link Ztream}<{@link T}>>
-     */
-    public static <T> CollectorImpl<T, Map<Object, T>, Ztream<T>> distinct(Function<? super T, ?> fun, boolean override) {
-        return new CollectorImpl<>(
-                LinkedHashMap::new,
-                (map, o) -> {
-                    BiConsumer<Object, T> consumer = override ? map::put : map::putIfAbsent;
-                    consumer.accept(fun.apply(o), o);
-                },
-                (m1, m2) -> {
-                    BiConsumer<Object, T> consumer = override ? m1::put : m1::putIfAbsent;
-                    m2.values().forEach(o -> consumer.accept(fun.apply(o), o));
-                    return m1;
-                },
-                map -> Ztream.of(map.values()),
-                Collections.emptySet()
-        );
-    }
-
-
-    /**
      * 平均值收集器
      *
      * @param fun       属性

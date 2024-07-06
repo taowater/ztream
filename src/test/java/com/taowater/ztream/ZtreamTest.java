@@ -239,4 +239,21 @@ public class ZtreamTest {
 
     }
 
+    @Test
+    public void testShuffle() {
+
+        List<Student> list = ListUtil.of(
+                new Student().setName("小猪").setAge(123),
+                new Student().setName("小狗").setAge(45),
+                new Student().setName(null).setAge(564),
+                new Student().setName("小狗").setAge(null),
+                new Student().setName(null).setAge(70),
+                new Student().setName("小猪").setAge(4),
+                new Student().setName("小猪").setAge(null)
+        );
+
+        Ztream.of(list).shuffle().limit(3).map(Student::getAge).forEach(e -> System.out.println(e));
+
+    }
+
 }

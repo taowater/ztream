@@ -1,6 +1,8 @@
 package com.taowater.ztream;
 
 
+import org.dromara.hutool.core.util.RandomUtil;
+
 import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
@@ -11,6 +13,7 @@ import java.util.stream.*;
  * @author Zhu56
  * @date 2022/11/13 21:37:12
  */
+@SuppressWarnings("unchecked")
 abstract class AbstractZtream<T, S extends Stream<T>> implements Stream<T>, Iterable<T> {
 
     protected final Stream<T> stream;
@@ -240,6 +243,144 @@ abstract class AbstractZtream<T, S extends Stream<T>> implements Stream<T>, Iter
     public Any<T> any() {
         return Any.of(findAny().orElse(null));
     }
+
+    /**
+     * 对元素进行洗牌
+     *
+     * @return {@link Ztream}<{@link T}>
+     */
+    public S shuffle() {
+        return wrap(map(e -> new PairBox<>(e, RandomUtil.randomInt())).sorted(Comparator.comparing(e -> e.b)).map(e -> e.a));
+    }
+
+    /**
+     * 反转顺序
+     *
+     * @return {@link S }
+     */
+    public S reverse() {
+        return sorted((Comparator<? super T>) Comparator.reverseOrder());
+    }
+
+    /**
+     * 随机取一个
+     *
+     * @return {@link Any}<{@link T}>
+     */
+    public Any<T> random() {
+        return Any.of(shuffle().findFirst().orElse(null));
+    }
+
+    /**
+     * 过滤元素非空
+     *
+     * @return {@link Ztream}<{@link T}>
+     */
+    public S nonNull() {
+        return this.filter(Objects::nonNull);
+    }
+
+    /**
+     * 判断元素是否有重复
+     *
+     * @return boolean
+     */
+    public boolean hadRepeat() {
+        Set<T> set = new HashSet<>();
+        return anyMatch(x -> !set.add(x));
+    }
+
+    /**
+     * 升序
+     *
+     * @param fun 属性
+     * @return {@link Ztream}<{@link T}>
+     */
+    public <U extends Comparable<? super U>> S asc(Function<? super T, ? extends U> fun) {
+        return asc(fun, true);
+    }
+
+    /**
+     * 升序
+     *
+     * @param fun       属性
+     * @param nullFirst 是否null值前置
+     * @return {@link Ztream }<{@link T }>
+     */
+    public <U extends Comparable<? super U>> S asc(Function<? super T, ? extends U> fun, boolean nullFirst) {
+        return sort(r -> r.asc(fun, nullFirst));
+    }
+
+    /**
+     * 升序
+     *
+     * @return {@link Ztream }<{@link T }>
+     */
+    public S asc() {
+        return asc(true);
+    }
+
+    /**
+     * 升序
+     *
+     * @param nullFirst 是否null值前置
+     * @return {@link Ztream }<{@link T }>
+     */
+    public S asc(boolean nullFirst) {
+        return sort(r -> r.then((Comparator<T>) Comparator.naturalOrder(), nullFirst));
+    }
+
+    /**
+     * 降序
+     *
+     * @return {@link Ztream}<{@link T}>
+     */
+    public <U extends Comparable<? super U>> S desc(Function<? super T, ? extends U> fun) {
+        return desc(fun, true);
+    }
+
+    /**
+     * 降序
+     *
+     * @param fun       属性
+     * @param nullFirst 是否null值前置
+     * @return {@link Ztream }<{@link T }>
+     */
+    public <U extends Comparable<? super U>> S desc(Function<? super T, ? extends U> fun, boolean nullFirst) {
+        return sort(r -> r.desc(fun, nullFirst));
+    }
+
+    /**
+     * 降序
+     *
+     * @return {@link Ztream}<{@link T}>
+     */
+    public S desc() {
+        return desc(true);
+    }
+
+    /**
+     * 降序
+     *
+     * @param nullFirst 是否null值前置
+     * @return {@link Ztream }<{@link T }>
+     */
+    public S desc(boolean nullFirst) {
+        return sort(r -> r.then((Comparator<T>) Comparator.reverseOrder(), nullFirst));
+    }
+
+    /**
+     * 排序
+     *
+     * @param consumer 排序上下分的消费函数
+     * @return {@link Ztream}<{@link T}>
+     */
+    public S sort(Consumer<Sorter<T>> consumer) {
+        Sorter<T> sorter = new Sorter<>();
+        consumer.accept(sorter);
+        return sorted(sorter.getComparator());
+    }
+
 
     static class Box<A> implements Consumer<A> {
         A a;

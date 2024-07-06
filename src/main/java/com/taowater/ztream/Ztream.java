@@ -5,7 +5,10 @@ import com.taowater.taol.core.util.EmptyUtil;
 import lombok.var;
 
 import java.util.AbstractMap.SimpleImmutableEntry;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
 import java.util.stream.Collector;
@@ -112,97 +115,6 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     }
 
     /**
-     * 升序
-     *
-     * @param fun 属性
-     * @return {@link Ztream}<{@link T}>
-     */
-    public <U extends Comparable<? super U>> Ztream<T> asc(Function<? super T, ? extends U> fun) {
-        return asc(fun, true);
-    }
-
-    /**
-     * 升序
-     *
-     * @param fun       属性
-     * @param nullFirst 是否null值前置
-     * @return {@link Ztream }<{@link T }>
-     */
-    public <U extends Comparable<? super U>> Ztream<T> asc(Function<? super T, ? extends U> fun, boolean nullFirst) {
-        return sort(r -> r.asc(fun, nullFirst));
-    }
-
-    /**
-     * 升序
-     *
-     * @return {@link Ztream }<{@link T }>
-     */
-    public Ztream<T> asc() {
-        return asc(true);
-    }
-
-    /**
-     * 升序
-     *
-     * @param nullFirst 是否null值前置
-     * @return {@link Ztream }<{@link T }>
-     */
-    public Ztream<T> asc(boolean nullFirst) {
-        return sort(r -> r.then((Comparator<T>) Comparator.naturalOrder(), nullFirst));
-    }
-
-    /**
-     * 降序
-     *
-     * @return {@link Ztream}<{@link T}>
-     */
-    public <U extends Comparable<? super U>> Ztream<T> desc(Function<? super T, ? extends U> fun) {
-        return desc(fun, true);
-    }
-
-    /**
-     * 降序
-     *
-     * @param fun       属性
-     * @param nullFirst 是否null值前置
-     * @return {@link Ztream }<{@link T }>
-     */
-    public <U extends Comparable<? super U>> Ztream<T> desc(Function<? super T, ? extends U> fun, boolean nullFirst) {
-        return sort(r -> r.desc(fun, nullFirst));
-    }
-
-    /**
-     * 降序
-     *
-     * @return {@link Ztream}<{@link T}>
-     */
-    public Ztream<T> desc() {
-        return desc(true);
-    }
-
-    /**
-     * 降序
-     *
-     * @param nullFirst 是否null值前置
-     * @return {@link Ztream }<{@link T }>
-     */
-    public Ztream<T> desc(boolean nullFirst) {
-        return sort(r -> r.then((Comparator<T>) Comparator.reverseOrder(), nullFirst));
-    }
-
-    /**
-     * 排序
-     *
-     * @param consumer 排序上下分的消费函数
-     * @return {@link Ztream}<{@link T}>
-     */
-    public Ztream<T> sort(Consumer<Sorter<T>> consumer) {
-        Sorter<T> sorter = new Sorter<>();
-        consumer.accept(sorter);
-        return sorted(sorter.getComparator());
-    }
-
-    /**
      * 如果流集合不为空，则执行以所有元素收集成List为入参的消费函数
      *
      * @param consumer 消费者
@@ -231,16 +143,6 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      */
     public void forEach(ObjIntConsumer<? super T> action) {
         forEach(new Functions.IndexedConsumer<>(action));
-    }
-
-    /**
-     * 判断元素是否有重复
-     *
-     * @return boolean
-     */
-    public boolean hadRepeat() {
-        Set<T> set = new HashSet<>();
-        return anyMatch(x -> !set.add(x));
     }
 
     /**
@@ -304,17 +206,6 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     }
 
     /**
-     * 对元素进行洗牌
-     *
-     * @return {@link Ztream}<{@link T}>
-     */
-    public Ztream<T> shuffle() {
-        List<T> list = toList();
-        Collections.shuffle(list);
-        return of(list);
-    }
-
-    /**
      * 找到符合条件的第一个元素的下标
      *
      * @param predicate 判断函数
@@ -352,15 +243,6 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      */
     public <N> Ztream<N> cast(Class<N> clazz) {
         return map(clazz::cast);
-    }
-
-    /**
-     * 随机取一个
-     *
-     * @return {@link Any}<{@link T}>
-     */
-    public Any<T> randomOne() {
-        return shuffle().first();
     }
 
     /**
@@ -594,15 +476,6 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     }
 
     /**
-     * 过滤元素非空
-     *
-     * @return {@link Ztream}<{@link T}>
-     */
-    public Ztream<T> nonNull() {
-        return this.filter(Objects::nonNull);
-    }
-
-    /**
      * 映射
      *
      * @param funK 键函数
@@ -632,15 +505,8 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @return {@link EntryZtream }<{@link K }, {@link D }>
      */
     public <K, V, A, D> EntryZtream<K, D> group(Function<? super T, K> funK, Function<? super T, V> funV, Collector<? super V, A, D> downstream) {
-        Map<K, List<V>> map = new LinkedHashMap<>();
-        return EntryZtream.of(map(e -> {
-                    var key = funK.apply(e);
-                    var value = funV.apply(e);
-                    var data = map.computeIfAbsent(key, k -> new ArrayList<>());
-                    data.add(value);
-                    return new SimpleImmutableEntry<>(key, Ztream.of(data).collect(downstream));
-                }
-        ));
+        var spliterator = new Spliterators.GroupSpliterator<>(spliterator(), funK, funV, downstream);
+        return EntryZtream.of(StreamSupport.stream(spliterator, isParallel()));
     }
 
     /**
@@ -663,6 +529,4 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     public <K> EntryZtream<K, List<T>> group(Function<? super T, K> funK) {
         return group(funK, Function.identity());
     }
-
-
 }
