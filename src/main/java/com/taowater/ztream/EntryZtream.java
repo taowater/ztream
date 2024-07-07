@@ -31,11 +31,7 @@ public final class EntryZtream<K, V> extends AbstractZtream<Entry<K, V>, EntryZt
         return new EntryZtream<>(Ztream.of(collection));
     }
 
-    public static <K, V> EntryZtream<K, V> of(Ztream<? extends Entry<K, V>> stream) {
-        return new EntryZtream<>(stream);
-    }
-
-    public static <K, V> EntryZtream<K, V> of(Stream<? extends Entry<K, V>> stream) {
+    public static <K, V, S extends Stream<? extends Entry<K, V>>> EntryZtream<K, V> of(S stream) {
         return new EntryZtream<>(stream);
     }
 
