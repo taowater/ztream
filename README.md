@@ -58,6 +58,15 @@ Map<String, Integer> map = Ztream.of(list).toMap(Student::getName, Student::getA
 Map<String, List<Student>> group = Stream.of(list).collect(Collectors.groupingBy(Student::getName));
 // ztream
 Map<String, List<Student>> group = Ztream.of(list).groupBy(Student::getName);
+
+v0.1.0 支持分组和映射的中间操作
+Ztream.of(list)
+.hash(Student::getName, Student::getAge)
+.flip() // 对key value进行反转
+.forEach((k, v) -> {
+	// doSomeThing
+});
+
 ```
 
 带索引的遍历 forEach/peek/map
