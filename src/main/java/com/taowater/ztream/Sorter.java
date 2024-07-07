@@ -17,8 +17,24 @@ public class Sorter<T> {
      */
     private Comparator<T> comparator = (o1, o2) -> 0;
 
+    /**
+     * 元素为null时是否前置
+     */
+    private boolean nullFirst = true;
+
+    @SuppressWarnings("unchecked")
     Comparator<T> getComparator() {
-        return comparator;
+        return (Comparator<T>) Sorter.<T>nullOrder(nullFirst).apply(comparator);
+    }
+
+    /**
+     * 空值排序处理
+     *
+     * @param nullFirst 是否null值前置
+     * @return {@link UnaryOperator }<{@link Comparator }<{@link T }>>
+     */
+    private static <T> UnaryOperator<Comparator<? super T>> nullOrder(boolean nullFirst) {
+        return nullFirst ? Comparator::nullsFirst : Comparator::nullsLast;
     }
 
     /**
@@ -30,16 +46,29 @@ public class Sorter<T> {
      * @return {@link Sorter }<{@link T }>
      */
     public <U extends Comparable<? super U>> Sorter<T> sort(Function<? super T, ? extends U> keyExtractor, boolean desc, boolean nullFirst) {
-        if (desc) {
-            nullFirst = !nullFirst;
-        }
-        comparator = comparator.thenComparing(build(keyExtractor, nullFirst));
-        if (desc) {
-            comparator = comparator.reversed();
-        }
+        comparator = comparator.thenComparing(build(keyExtractor, desc, nullFirst));
         return this;
     }
 
+    /**
+     * null前置
+     *
+     * @return {@link Sorter }<{@link T }>
+     */
+    public Sorter<T> nullFirst() {
+        this.nullFirst = true;
+        return this;
+    }
+
+    /**
+     * null后置
+     *
+     * @return {@link Sorter }<{@link T }>
+     */
+    public Sorter<T> nullLast() {
+        this.nullFirst = false;
+        return this;
+    }
 
     /**
      * 升序
@@ -86,19 +115,6 @@ public class Sorter<T> {
     /**
      * 追加排序
      *
-     * @param otherComparator 其他比较器
-     * @param nullFirst       是否null值前置
-     * @return {@link Sorter }<{@link T }>
-     */
-    public Sorter<T> then(Comparator<? super T> otherComparator, boolean nullFirst) {
-        UnaryOperator<Comparator<? super T>> base = nullFirst ? Comparator::nullsFirst : Comparator::nullsLast;
-        comparator = comparator.thenComparing(base.apply(otherComparator));
-        return this;
-    }
-
-    /**
-     * 追加排序
-     *
      * @param keyExtractor  属性
      * @param keyComparator 排序器
      * @return {@link Sorter }<{@link T }>
@@ -108,24 +124,39 @@ public class Sorter<T> {
     }
 
     /**
+     * 追加排序
+     *
+     * @param otherComparator 其他比较器
+     * @param nullFirst       null值前置
+     * @return {@link Sorter }<{@link T }>
+     */
+    public Sorter<T> then(Comparator<? super T> otherComparator, boolean nullFirst) {
+        comparator = comparator.thenComparing(Sorter.<T>nullOrder(nullFirst).apply(otherComparator));
+        return this;
+    }
+
+    /**
+     * 排序
+     *
+     * @param keyExtractor  属性
+     * @param keyComparator 比较器
+     * @return {@link Sorter }<{@link T }>
+     */
+    public <U extends Comparable<? super U>> Sorter<T> sort(Function<? super T, ? extends U> keyExtractor, Comparator<? super U> keyComparator) {
+        comparator = comparator.thenComparing(keyExtractor, keyComparator);
+        return this;
+    }
+    
+    /**
      * 根据属性构建排序器
      *
      * @param keyExtractor 属性
+     * @param desc         是否反序
      * @param nullFirst    是否null值前置
      * @return {@link Comparator }<{@link T }>
      */
-    static <T, U extends Comparable<? super U>> Comparator<T> build(Function<? super T, ? extends U> keyExtractor, boolean nullFirst) {
-        return (T o1, T o2) -> {
-            U a = Any.of(o1).get(keyExtractor);
-            U b = Any.of(o2).get(keyExtractor);
-            if (a == null) {
-                return (b == null) ? 0 : (nullFirst ? -1 : 1);
-            }
-            if (b == null) {
-                return nullFirst ? 1 : -1;
-            }
-            return a.compareTo(b);
-        };
+    static <T, U extends Comparable<? super U>> Comparator<T> build(Function<? super T, ? extends U> keyExtractor, boolean desc, boolean nullFirst) {
+        Comparator<U> baseOrder = desc ? Comparator.reverseOrder() : Comparator.naturalOrder();
+        return Comparator.comparing(keyExtractor, Sorter.<U>nullOrder(nullFirst).apply(baseOrder));
     }
-
 }

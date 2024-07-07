@@ -482,7 +482,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @return {@link T }
      */
     public <V extends Comparable<V>> T minBy(Function<? super T, ? extends V> fun, boolean nullFirst) {
-        return this.min(Sorter.build(fun, nullFirst)).orElse(null);
+        return this.min(Sorter.build(fun, false, nullFirst)).orElse(null);
     }
 
     /**
@@ -493,7 +493,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @return {@link T }
      */
     public <V extends Comparable<V>> T maxBy(Function<? super T, ? extends V> fun, boolean nullFirst) {
-        return this.max(Sorter.build(fun, nullFirst)).orElse(null);
+        return this.max(Sorter.build(fun, false, nullFirst)).orElse(null);
     }
 
     /**

@@ -66,7 +66,7 @@ public final class Any<T> {
 
 
     public boolean isPresent() {
-        return EmptyUtil.isNotEmpty(value);
+        return Objects.nonNull(value);
     }
 
 

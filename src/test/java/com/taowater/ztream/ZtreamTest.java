@@ -1,200 +1,158 @@
 package com.taowater.ztream;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import com.taowater.ztream.TestClass.Student;
 import lombok.SneakyThrows;
-import lombok.experimental.Accessors;
 import lombok.var;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.text.MessageFormat;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class ZtreamTest {
+import static com.taowater.ztream.TestClass.testList;
 
-    @Data
-    @Accessors(chain = true)
-    @EqualsAndHashCode(callSuper = true)
-    public static class Student extends Person {
-        private String name;
-        private Integer age;
+class ZtreamTest {
+
+    @Test
+    void group() {
+        var group1 = Ztream.of(testList).groupBy(Student::getName, Student::getAge, HashMap::new, Collectors.toSet());
+        group1.forEach((k, v) -> {
+            System.out.print(k);
+            System.out.print("=");
+            System.out.print(v);
+            System.out.println("\n");
+        });
     }
 
-    public static class Person {
-        private String sex;
+    @Test
+    void join() {
 
-    }
-
-    @Data
-    @EqualsAndHashCode(callSuper = true)
-    public static class Teacher extends Person {
-        private String name;
-        private Long money;
+        equals(
+                Ztream.of(testList).join(Student::getName),
+                testList.stream().map(e -> {
+                    if (Objects.isNull(e)) {
+                        return null;
+                    }
+                    return e.getName();
+                }).collect(Collectors.joining(","))
+        );
     }
 
     @Test
     @SneakyThrows
-    public void test() {
+    void nonNull() {
 
-        List<Student> list = ListUtil.of(
-                new Student().setName("小猪").setAge(23),
-                new Student().setName("小狗").setAge(24),
-                new Student().setName("小猪").setAge(25),
-                new Student().setName("小猪").setAge(26)
-        );
-        String join = Ztream.of(list).join(Student::getName);
-
-        System.out.println(join);
-
-
-        var group = Ztream.of(list).distinct(Student::getName).toMap(Student::getAge, Student::getName, LinkedHashMap::new);
-
-        group.forEach((key, value) -> System.out.println(key + ":" + value));
-
-        List<Student> students = Ztream.of(list).distinct().toList();
-        students.forEach(System.out::println);
-
-        var group1 = Ztream.of(students).groupBy(Student::getName, Student::getAge, HashMap::new, Collectors.toSet());
-        var group3 = students.stream().collect(Collectors.groupingBy(Student::getName));
-        var group4 = Ztream.of(students).groupBy(Student::getName, Student::getAge, LinkedHashMap::new, Collectors.toSet());
-        var map = Ztream.of(students).toMap(Object::toString, Objects::toString);
-
-        var sum = Ztream.of(students).sum(Student::getAge);
-        var max = Ztream.of(students).max(Student::getAge);
-        var min = Ztream.of(students).min(Student::getAge);
-
-        System.out.println(sum);
-        System.out.println(max);
-        System.out.println(min);
-        Ztream.of(students).forEach((e, i) -> {
-            System.out.println("第" + (i + 1) + "位学生：" + e.getName());
-        });
-    }
-
-    @Test
-    @SneakyThrows
-    public void test2() {
-
-        List<String> list = null;
-        List<String> list2 = ListUtil.of(null, "123");
-
-        Ztream.of(list).forEach(e -> System.out.println(e.toString()));
-        Ztream.of(list2).filter(Objects::nonNull).forEach(System.out::println);
-
-    }
-
-    @Test
-    public void distinct() {
-        List<Integer> list = ListUtil.of(1, 2, 3, 4, 5, 6, 7, 8);
-        Ztream.of(list).distinct(i -> i % 3).forEach(System.out::println);
-        System.out.println("==========");
-        Ztream.of(list).distinct(i -> i % 3).forEach(System.out::println);
-
-        CollUtil.distinct(list, i -> i % 3, true).forEach(System.out::println);
-        System.out.println("==========");
-        CollUtil.distinct(list, i -> i % 3, false).forEach(System.out::println);
-    }
-
-    @Test
-    public void testToMap() {
-        List<Student> list = ListUtil.of(
-                new Student().setName(null).setAge(23),
-                new Student().setName("小狗").setAge(24),
-                new Student().setName("小猪").setAge(54),
-                new Student().setName(null).setAge(null),
-                new Student().setName("小猪").setAge(56)
+        equals(
+                Ztream.of(testList).nonNull(),
+                testList.stream().filter(Objects::nonNull)
         );
 
-        Map<String, Integer> map = Ztream.of(list).toMap(Student::getName, Student::getAge);
-        map.forEach((k, v) -> {
-            System.out.println(MessageFormat.format("{0}:{1}", k, v));
-        });
-
-        Map<String, String> group = Ztream.of(list).groupBy(Student::getName, ExCollectors.join(","));
-        group.forEach((k, v) -> {
-            System.out.println(MessageFormat.format("{0}:{1}", k, v));
-        });
-
-        Ztream.of(list).distinct(Student::getName).forEach(System.out::println);
-        Ztream.of(list).distinct(Student::getName).forEach(System.out::println);
+        equals(
+                Ztream.of(testList).nonNull(Student::getName),
+                testList.stream().filter(e -> Objects.nonNull(e) && Objects.nonNull(e.getName()))
+        );
     }
 
     @Test
-    public void testMapIdx() {
+    void distinct() {
+        List<Integer> list = ListUtil.of(1, 4, 5, 9, 3, 2, 3, 4, 5, 6, 7, 8);
 
-        List<Student> list = ListUtil.of(
-                new Student().setName(null).setAge(23),
-                new Student().setName("小狗").setAge(24),
-                new Student().setName("小猪").setAge(54),
-                new Student().setName(null).setAge(null),
-                new Student().setName("小猪").setAge(56)
+        equals(
+                Ztream.of(list).distinct(),
+                list.stream().distinct()
         );
 
-        List<Integer> list1 = Ztream.of(list).nonNull(Student::getAge).map((e, i) -> e.getAge() + i).toList();
-
-        list1.forEach(System.out::println);
-    }
-
-    @Test
-    public void ttt() {
-        List<Student> list = ListUtil.of(
-                new Student().setName("小猪").setAge(23),
-                new Student().setName("小狗").setAge(24),
-                new Student().setName("小狗").setAge(23),
-                new Student().setName("小狗").setAge(23),
-                new Student().setName("小猪").setAge(23),
-                new Student().setName("小猪").setAge(25),
-                new Student().setName("小猪").setAge(26)
+        equals(
+                Ztream.of(list).distinct(i -> i % 3),
+                CollUtil.distinct(list, i -> i % 3, false)
         );
-
-
-        var stringMapMap = Ztream.of(list).groupBilayer(Student::getAge, Student::getName);
-        System.out.println(123);
     }
 
     @Test
-    public void testFlat() {
-        List<Integer> list = ListUtil.of(1, 2, 4);
+    void toMap() {
+
+        Map<String, Integer> map = new HashMap<>();
+        for (var item : testList) {
+            if (item == null) {
+                map.put(null, null);
+                continue;
+            }
+            map.put(item.getName(), item.getAge());
+        }
+
+        equals(
+                Ztream.of(testList).toMap(Student::getName, Student::getAge),
+                map
+        );
+    }
+
+    @Test
+    void testFlat() {
+        List<Integer> list = ListUtil.of(1, 2, 4, 6, 4, 8, 9);
         Function<Integer, Collection<Integer>> fun = e -> ListUtil.of(1, 2, 3);
-        List<Integer> list1 = Ztream.of(list).flat(fun).toList();
-        System.out.println(123);
-    }
-
-    @Test
-    public void testSort() {
-        List<Student> list = ListUtil.of(
-                new Student().setName("小猪").setAge(123),
-                new Student().setName("小狗").setAge(45),
-                new Student().setName(null).setAge(564),
-                new Student().setName("小狗").setAge(null),
-                new Student().setName(null).setAge(70),
-                new Student().setName("小猪").setAge(4),
-                new Student().setName("小猪").setAge(null)
+        equals(
+                Ztream.of(list).flat(fun),
+                list.stream().map(fun).flatMap(Collection::stream)
         );
-        Ztream.of(list).sort(r -> r
-                .desc(Student::getName, false)
-                .asc(Student::getAge)
-        ).forEach(System.out::println);
-
-        List<Integer> list2 = ListUtil.of(12, 6, null, 8, 23, 5, 0);
-        Ztream.of(list2).desc(false).forEach(System.out::println);
-        System.out.println("avg");
-        System.out.println(Ztream.of(list).avg(Student::getAge, 0));
     }
 
     @Test
-    public void testAvg() {
+    void sort() {
+        equals(
+                Ztream.of(testList).sort(r -> r
+                        .desc(Student::getName, false)
+                        .asc(Student::getAge)
+                        .nullLast()
+                ),
+                testList.stream().sorted(
+                        Comparator.nullsLast(
+                                Comparator.comparing(Student::getName, Comparator.nullsLast(Comparator.reverseOrder()))
+                                        .thenComparing(Student::getAge, Comparator.nullsFirst(Comparator.naturalOrder()))
+                        )
+                )
+        );
 
-        List<Integer> list = ListUtil.of(12, 6, null, 8, 23, 5, 0);
-        System.out.println(Ztream.of(list).avg(e -> e, 0));
+
+        equals(
+                Ztream.of(testList).sort(r -> r
+                        .desc(e -> Objects.nonNull(e.getName()))
+                        .nullLast()
+                ),
+                testList.stream().sorted(
+                        Comparator.nullsLast(Comparator.comparing(e -> Objects.nonNull(e.getName()), Comparator.nullsFirst(Comparator.reverseOrder())))
+                )
+        );
+
+        equals(
+                Ztream.of(testList).sort(r -> r
+                        .desc(Student::getName)
+                        .desc(Student::getAge)
+                ),
+                testList.stream().sorted(
+                        Comparator.nullsFirst(
+                                Comparator.comparing(Student::getName, Comparator.nullsFirst(Comparator.reverseOrder()))
+                                        .thenComparing(Student::getAge, Comparator.nullsFirst(Comparator.reverseOrder()))
+                        )
+                ));
     }
 
     @Test
-    public void testFilter() {
+    void avg() {
+
+        List<Integer> list = ListUtil.of(12, 6, 8, 23, 5, 0);
+
+        equals(
+                Ztream.of(list).avg(e -> e, 0).doubleValue(),
+                list.stream().mapToInt(e -> e).average().orElse(0.0)
+        );
+    }
+
+    @Test
+    void testFilter() {
 
         List<Student> list = ListUtil.of(
                 new Student().setName("小猪").setAge(123),
@@ -218,7 +176,7 @@ public class ZtreamTest {
     }
 
     @Test
-    public void testMapZtream() {
+    void testMapZtream() {
 
         List<Student> list = ListUtil.of(
                 new Student().setName("小猪").setAge(123),
@@ -241,19 +199,25 @@ public class ZtreamTest {
 
     @Test
     void testShuffle() {
+        Ztream.of(testList).shuffle().limit(3).map(Student::getAge).forEach(e -> System.out.println(e));
+    }
 
-        List<Student> list = ListUtil.of(
-                new Student().setName("小猪").setAge(123),
-                new Student().setName("小狗").setAge(45),
-                new Student().setName(null).setAge(564),
-                new Student().setName("小狗").setAge(null),
-                new Student().setName(null).setAge(70),
-                new Student().setName("小猪").setAge(4),
-                new Student().setName("小猪").setAge(null)
-        );
+    public static void equals(Object o1, Object o2) {
+        System.out.println(o1);
+        System.out.println(o2);
+        Assertions.assertEquals(o1, o2);
+    }
 
-        Ztream.of(list).shuffle().limit(3).map(Student::getAge).forEach(e -> System.out.println(e));
+    public static void equals(Ztream<?> ztream, Stream<?> stream) {
+        var o1 = ztream.toList();
+        var o2 = stream.collect(Collectors.toList());
+        System.out.println(o1);
+        System.out.println(o2);
+        Assertions.assertEquals(o1, o2);
+    }
 
+    public static void equals(Ztream<?> ztream, Collection<?> coll) {
+        Assertions.assertEquals(ztream.toList(), coll);
     }
 
 }

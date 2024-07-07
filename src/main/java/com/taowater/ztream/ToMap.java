@@ -64,6 +64,15 @@ interface ToMap<T> extends Stream<T> {
             Function<? super T, ? extends K> funK,
             Function<? super T, ? extends V> funV,
             Supplier<M> mapFactory) {
-        return this.filter(Objects::nonNull).collect(mapFactory, (map, item) -> map.put(funK.apply(item), funV.apply(item)), Map::putAll);
+        return this.collect(mapFactory, (map, item) -> {
+                    K key = null;
+                    V value = null;
+                    if (Objects.nonNull(item)) {
+                        key = funK.apply(item);
+                        value = funV.apply(item);
+                    }
+                    map.put(key, value);
+                },
+                Map::putAll);
     }
 }

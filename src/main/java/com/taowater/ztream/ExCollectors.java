@@ -135,6 +135,8 @@ public class ExCollectors {
                 (s, t) -> {
                     if (Objects.nonNull(t)) {
                         s.add(t.toString());
+                    } else {
+                        s.add(null);
                     }
                 },
                 StringJoiner::merge,
@@ -157,7 +159,10 @@ public class ExCollectors {
         Supplier<A> downstreamSupplier = downstream.supplier();
         BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
         BiConsumer<Map<K, A>, T> accumulator = (m, t) -> {
-            K key = classifier.apply(t);
+            K key = null;
+            if (Objects.nonNull(t)) {
+                key = classifier.apply(t);
+            }
             A container = m.computeIfAbsent(key, k -> downstreamSupplier.get());
             downstreamAccumulator.accept(container, t);
         };
@@ -178,6 +183,22 @@ public class ExCollectors {
             };
             return new CollectorImpl<>(mangledFactory, accumulator, merger, finisher, Collections.emptySet());
         }
+    }
+
+    public static <T, U, A, R>
+    Collector<T, ?, R> mapping(Function<? super T, ? extends U> mapper,
+                               Collector<? super U, A, R> downstream) {
+        BiConsumer<A, ? super U> downstreamAccumulator = downstream.accumulator();
+        return new CollectorImpl<>(downstream.supplier(),
+                (r, t) -> {
+                    U value = null;
+                    if (Objects.nonNull(t)) {
+                        value = mapper.apply(t);
+                    }
+                    downstreamAccumulator.accept(r, value);
+                },
+                downstream.combiner(), downstream.finisher(),
+                downstream.characteristics());
     }
 
     /**
