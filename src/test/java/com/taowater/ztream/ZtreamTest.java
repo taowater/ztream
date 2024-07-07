@@ -199,7 +199,7 @@ class ZtreamTest {
 
     @Test
     void testShuffle() {
-        Ztream.of(testList).shuffle().limit(3).map(Student::getAge).forEach(e -> System.out.println(e));
+        Ztream.of(testList).shuffle().limit(3).nonNull().map(Student::getAge).forEach(e -> System.out.println(e));
     }
 
     public static void equals(Object o1, Object o2) {
