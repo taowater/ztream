@@ -475,6 +475,28 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     }
 
     /**
+     * 按属性取最小的元素
+     *
+     * @param fun       属性
+     * @param nullFirst 是否null值前置
+     * @return {@link T }
+     */
+    public <V extends Comparable<V>> T minBy(Function<? super T, ? extends V> fun, boolean nullFirst) {
+        return this.min(Sorter.build(fun, nullFirst)).orElse(null);
+    }
+
+    /**
+     * 按属性取最大的元素
+     *
+     * @param fun       属性
+     * @param nullFirst 是否null值前置
+     * @return {@link T }
+     */
+    public <V extends Comparable<V>> T maxBy(Function<? super T, ? extends V> fun, boolean nullFirst) {
+        return this.max(Sorter.build(fun, nullFirst)).orElse(null);
+    }
+
+    /**
      * 映射
      *
      * @param funK 键函数
