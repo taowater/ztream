@@ -32,6 +32,7 @@
         <lombok.version>1.18.32</lombok.version>
         <junit.version>5.11.0-M2</junit.version>
         <taol.version>0.0.4</taol.version>
+        <vavr.version>0.10.4</vavr.version>
     </properties>
 
     <dependencies>
@@ -52,6 +53,11 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.vavr</groupId>
+            <artifactId>vavr</artifactId>
+            <version>${vavr.version}</version>
         </dependency>
     </dependencies>
 

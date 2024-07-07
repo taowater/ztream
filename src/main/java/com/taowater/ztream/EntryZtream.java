@@ -2,7 +2,6 @@ package com.taowater.ztream;
 
 import lombok.var;
 
-import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +15,7 @@ import java.util.stream.Stream;
  * @author zhu56
  * @date 2024/07/04 21:49
  */
+@SuppressWarnings("unchecked")
 public final class EntryZtream<K, V> extends AbstractZtream<Entry<K, V>, EntryZtream<K, V>> {
 
     @SuppressWarnings("unchecked")
@@ -127,21 +127,21 @@ public final class EntryZtream<K, V> extends AbstractZtream<Entry<K, V>, EntryZt
         return noneMatch(e -> predicate.test(e.getKey(), e.getValue()));
     }
 
-    public <NK> EntryZtream<NK, V> mapKey(BiFunction<? super K, ? super V, ? extends NK> funK) {
-        return new EntryZtream<>(map(e -> new SimpleImmutableEntry<>(funK.apply(e.getKey(), e.getValue()), e.getValue())));
+    public <N> EntryZtream<N, V> mapKey(Function<? super K, ? extends N> funK) {
+        return (EntryZtream<N, V>) new EntryZtream<>(map(e -> Functions.entryKeyValue(e, funK, Function.identity()))).distinctKeys();
     }
 
-    public <NV> EntryZtream<K, NV> mapValue(BiFunction<? super K, ? super V, ? extends NV> funV) {
-        return new EntryZtream<>(map(e -> new SimpleImmutableEntry<>(e.getKey(), funV.apply(e.getKey(), e.getValue()))));
+    public <N> EntryZtream<K, N> mapValue(Function<? super V, ? extends N> funV) {
+        return new EntryZtream<>(map(e -> Functions.entryKeyValue(e, Function.identity(), funV)));
     }
 
 
-    public <R> Ztream<R> map(BiFunction<? super K, ? super V, ? extends R> fun) {
+    public <R> Ztream<R> mapKeyValue(BiFunction<? super K, ? super V, ? extends R> fun) {
         return map(e -> fun.apply(e.getKey(), e.getValue()));
     }
 
     public EntryZtream<V, K> flip() {
-        return new EntryZtream<>(map(e -> new SimpleImmutableEntry<>(e.getValue(), e.getKey())));
+        return new EntryZtream<>(map(Functions::flip));
     }
 
 

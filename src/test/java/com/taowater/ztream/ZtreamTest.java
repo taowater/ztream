@@ -230,7 +230,7 @@ public class ZtreamTest {
                 new Student().setName("小猪").setAge(null)
         );
 
-        Ztream.of(list).group(Student::getName, Student::getAge).forEach((k, v) -> {
+        Ztream.of(list).hash(Student::getName, Student::getAge).flip().mapValue(v -> v + "123").forEach((k, v) -> {
             System.out.print(k);
             System.out.print("=");
             System.out.print(v);
@@ -240,7 +240,7 @@ public class ZtreamTest {
     }
 
     @Test
-    public void testShuffle() {
+    void testShuffle() {
 
         List<Student> list = ListUtil.of(
                 new Student().setName("小猪").setAge(123),

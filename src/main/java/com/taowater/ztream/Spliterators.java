@@ -56,7 +56,6 @@ class Spliterators {
             }
             if (groupIterator.hasNext()) {
                 Map.Entry<K, List<T>> entry = groupIterator.next();
-                System.out.println(123);
                 action.accept(new SimpleImmutableEntry<>(entry.getKey(), Ztream.of(entry.getValue()).map(funV).collect(downstream)));
                 return true;
             }

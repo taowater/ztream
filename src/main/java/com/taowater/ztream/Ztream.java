@@ -4,7 +4,6 @@ import com.taowater.taol.core.util.ConvertUtil;
 import com.taowater.taol.core.util.EmptyUtil;
 import lombok.var;
 
-import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -493,7 +492,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @return {@link EntryZtream }<{@link K }, {@link V }>
      */
     public <K, V> EntryZtream<K, V> hash(Function<? super T, K> funK, Function<? super T, V> funV) {
-        return EntryZtream.of(map(e -> new SimpleImmutableEntry<>(funK.apply(e), funV.apply(e))).distinct(Map.Entry::getKey));
+        return EntryZtream.of(map(e -> Functions.entry(e, funK, funV)).distinct(Map.Entry::getKey));
     }
 
     /**
