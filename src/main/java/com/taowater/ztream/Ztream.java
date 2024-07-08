@@ -3,6 +3,7 @@ package com.taowater.ztream;
 import com.taowater.taol.core.util.ConvertUtil;
 import com.taowater.taol.core.util.EmptyUtil;
 import lombok.var;
+import org.dromara.hutool.core.text.StrValidator;
 
 import java.util.Collection;
 import java.util.List;
@@ -461,7 +462,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @return {@link Ztream}<{@link T}>
      */
     public Ztream<T> isNull(Function<? super T, ?> fun) {
-        return this.filter(e -> Any.of(e).map(fun).isEmpty());
+        return this.filter(fun, Objects::isNull);
     }
 
     /**
@@ -471,7 +472,58 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @return {@link Ztream}<{@link T}>
      */
     public Ztream<T> nonNull(Function<? super T, ?> fun) {
-        return this.filter(e -> Any.of(e).map(fun).isPresent());
+        return this.filter(fun, Objects::nonNull);
+    }
+
+    /**
+     * 过滤某字符串属性为空的元素
+     *
+     * @param fun 属性
+     * @return {@link Ztream}<{@link T}>
+     */
+    public Ztream<T> isEmpty(Function<? super T, CharSequence> fun) {
+        return this.filter(fun, EmptyUtil::isEmpty);
+    }
+
+    /**
+     * 过滤某字符串属性不为空的元素
+     *
+     * @param fun 属性
+     * @return {@link Ztream}<{@link T}>
+     */
+    public Ztream<T> nonEmpty(Function<? super T, CharSequence> fun) {
+        return this.filter(fun, EmptyUtil::isNotEmpty);
+    }
+
+    /**
+     * 过滤某字符串属性为空白的元素
+     *
+     * @param fun 属性
+     * @return {@link Ztream}<{@link T}>
+     */
+    public Ztream<T> isBlank(Function<? super T, CharSequence> fun) {
+        return this.filter(fun, StrValidator::isBlank);
+    }
+
+    /**
+     * 过滤某字符串属性不为空白的元素
+     *
+     * @param fun 属性
+     * @return {@link Ztream}<{@link T}>
+     */
+    public Ztream<T> nonBlank(Function<? super T, CharSequence> fun) {
+        return this.filter(fun, StrValidator::isNotBlank);
+    }
+
+    /**
+     * 过滤
+     *
+     * @param fun       属性
+     * @param predicate 判断函数
+     * @return {@link Ztream }<{@link T }>
+     */
+    public <V> Ztream<T> filter(Function<? super T, ? extends V> fun, Predicate<? super V> predicate) {
+        return this.filter(e -> predicate.test(Any.of(e).get(fun)));
     }
 
     /**
@@ -481,8 +533,8 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @param nullFirst 是否null值前置
      * @return {@link T }
      */
-    public <V extends Comparable<V>> T minBy(Function<? super T, ? extends V> fun, boolean nullFirst) {
-        return this.min(Sorter.build(fun, false, nullFirst)).orElse(null);
+    public <V extends Comparable<V>> Any<T> minBy(Function<? super T, ? extends V> fun, boolean nullFirst) {
+        return this.min(Sorter.build(fun, false, nullFirst)).map(Any::of).orElse(Any.empty());
     }
 
     /**
@@ -492,8 +544,8 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
      * @param nullFirst 是否null值前置
      * @return {@link T }
      */
-    public <V extends Comparable<V>> T maxBy(Function<? super T, ? extends V> fun, boolean nullFirst) {
-        return this.max(Sorter.build(fun, false, nullFirst)).orElse(null);
+    public <V extends Comparable<V>> Any<T> maxBy(Function<? super T, ? extends V> fun, boolean nullFirst) {
+        return this.max(Sorter.build(fun, false, nullFirst)).map(Any::of).orElse(Any.empty());
     }
 
     /**

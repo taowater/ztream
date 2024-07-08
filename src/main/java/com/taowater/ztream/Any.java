@@ -3,6 +3,7 @@ package com.taowater.ztream;
 
 import com.taowater.taol.core.util.ConvertUtil;
 import com.taowater.taol.core.util.EmptyUtil;
+import lombok.var;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
@@ -57,7 +58,8 @@ public final class Any<T> {
         if (!isPresent()) {
             return defaultValue;
         }
-        return mapper.apply(value);
+        var val = mapper.apply(value);
+        return Objects.nonNull(val) ? val : defaultValue;
     }
 
     public <U> U get(Function<? super T, ? extends U> mapper) {
@@ -71,7 +73,7 @@ public final class Any<T> {
 
 
     public boolean isEmpty() {
-        return EmptyUtil.isEmpty(value);
+        return Objects.isNull(value);
     }
 
 

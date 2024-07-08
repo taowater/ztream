@@ -77,4 +77,64 @@ class Spliterators {
             return sourceSpliterator.characteristics() & ~(Spliterator.SIZED | Spliterator.SUBSIZED);
         }
     }
+
+    // 追加分割器
+    class AppendSpliterator<T> implements Spliterator<T> {
+        /**
+         * 源分割器
+         */
+        private Spliterator<T> left;
+        private Spliterator<T> right;
+
+        private boolean baseExhausted = false;
+
+        AppendSpliterator(Spliterator<? extends T> left,
+                          Spliterator<? extends T> right
+        ) {
+
+            this.left = (Spliterator<T>) left;
+            this.right = (Spliterator<T>) right;
+        }
+
+        @Override
+        public boolean tryAdvance(Consumer<? super T> action) {
+            if (!baseExhausted) {
+                boolean advanced = left.tryAdvance(action);
+                if (advanced) {
+                    return true;
+                } else {
+                    baseExhausted = true;
+                }
+            }
+
+            return right.tryAdvance(action);
+        }
+
+        @Override
+        public void forEachRemaining(Consumer<? super T> action) {
+
+            if (!baseExhausted) {
+                left.forEachRemaining(action);
+                baseExhausted = true;
+            }
+            right.forEachRemaining(action);
+        }
+
+        @Override
+        public Spliterator<T> trySplit() {
+            return left.trySplit();
+        }
+
+        @Override
+        public long estimateSize() {
+            long baseSize = left.estimateSize();
+            long appendSize = right.estimateSize();
+            return baseExhausted ? appendSize : baseSize + appendSize;
+        }
+
+        @Override
+        public int characteristics() {
+            return left.characteristics();
+        }
+    }
 }
