@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import lombok.var;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.collection.set.SetUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -178,7 +179,23 @@ class ZtreamTest {
     @Test
     void append() {
         List<Integer> list = ListUtil.of(1, 2, 3, 4, 5, 6);
+        equals(
+                Ztream.of(list).distinct().append(Ztream.of(7, 8, 9)),
+                ListUtil.of(1, 2, 3, 4, 5, 6, 7, 8, 9)
+        );
+        equals(
+                Ztream.of(list).distinct().append(7, 8, 9),
+                ListUtil.of(1, 2, 3, 4, 5, 6, 7, 8, 9)
+        );
+        equals(
+                Ztream.of(list).append(SetUtil.of(7, 8, 8, 9)),
+                ListUtil.of(1, 2, 3, 4, 5, 6, 7, 8, 9)
+        );
 
+        equals(
+                Ztream.of(list).append(Ztream.of(7, 8, 9)),
+                ListUtil.of(1, 2, 3, 4, 5, 6, 7, 8, 9)
+        );
     }
 
     @Test

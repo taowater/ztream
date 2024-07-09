@@ -85,56 +85,65 @@ class Spliterators {
          */
         private Spliterator<T> left;
         private Spliterator<T> right;
+        private int characteristics;
+        private long size;
 
-        private boolean baseExhausted = false;
-
+        @SuppressWarnings("unchecked")
         AppendSpliterator(Spliterator<? extends T> left,
                           Spliterator<? extends T> right
         ) {
 
             this.left = (Spliterator<T>) left;
             this.right = (Spliterator<T>) right;
+            this.characteristics = left.characteristics() & right.characteristics() & (ORDERED | SIZED | SUBSIZED);
+            this.size = left.estimateSize() + right.estimateSize();
+            if (this.size < 0) {
+                this.size = Long.MAX_VALUE;
+                this.characteristics &= (~SIZED) & (~SUBSIZED);
+            }
         }
 
         @Override
         public boolean tryAdvance(Consumer<? super T> action) {
-            if (!baseExhausted) {
-                boolean advanced = left.tryAdvance(action);
-                if (advanced) {
+            if (left != null) {
+                if (left.tryAdvance(action)) {
+                    if (size > 0 && size != Long.MAX_VALUE)
+                        size--;
                     return true;
-                } else {
-                    baseExhausted = true;
                 }
+                left = null;
             }
-
             return right.tryAdvance(action);
         }
 
         @Override
         public void forEachRemaining(Consumer<? super T> action) {
 
-            if (!baseExhausted) {
+            if (left != null)
                 left.forEachRemaining(action);
-                baseExhausted = true;
-            }
-            right.forEachRemaining(action);
+            if (right != null)
+                right.forEachRemaining(action);
         }
 
         @Override
         public Spliterator<T> trySplit() {
-            return left.trySplit();
+            if (left == null)
+                return right.trySplit();
+            Spliterator<T> s = left;
+            left = null;
+            return s;
         }
 
         @Override
         public long estimateSize() {
-            long baseSize = left.estimateSize();
-            long appendSize = right.estimateSize();
-            return baseExhausted ? appendSize : baseSize + appendSize;
+            if (left == null)
+                return right == null ? 0 : right.estimateSize();
+            return size;
         }
 
         @Override
         public int characteristics() {
-            return left.characteristics();
+            return characteristics;
         }
     }
 }

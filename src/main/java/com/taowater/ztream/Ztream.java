@@ -5,10 +5,7 @@ import com.taowater.taol.core.util.EmptyUtil;
 import lombok.var;
 import org.dromara.hutool.core.text.StrValidator;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
 import java.util.stream.Collector;
@@ -194,15 +191,32 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     /**
      * 追加元素
      *
-     * @param iterable iterable
+     * @param iterable iterable 可迭代元素
      * @return {@link Ztream}<{@link T}>
      */
     public Ztream<T> append(Iterable<? extends T> iterable) {
-        List<T> list = this.toList();
-        if (EmptyUtil.isNotEmpty(iterable)) {
-            list.addAll(Ztream.of(iterable).toList());
+        if (Objects.isNull(iterable)) {
+            return this;
         }
-        return Ztream.of(list);
+        return append(iterable.spliterator());
+    }
+
+    /**
+     * 追加元素
+     *
+     * @param spliterator 分割器
+     * @return {@link Ztream }<{@link T }>
+     */
+    public Ztream<T> append(Spliterator<? extends T> spliterator) {
+        if (EmptyUtil.isEmpty(spliterator)) {
+            return this;
+        }
+        Spliterator<T> left = spliterator();
+        Spliterator<T> result = (Spliterator<T>) spliterator;
+        if (left.getExactSizeIfKnown() != 0) {
+            result = new Spliterators.AppendSpliterator<>(left, spliterator);
+        }
+        return Ztream.of(StreamSupport.stream(result, isParallel()));
     }
 
     /**
