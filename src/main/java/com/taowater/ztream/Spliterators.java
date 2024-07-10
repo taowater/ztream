@@ -2,7 +2,6 @@ package com.taowater.ztream;
 
 import lombok.experimental.UtilityClass;
 
-import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
@@ -49,14 +48,23 @@ class Spliterators {
         public boolean tryAdvance(Consumer<? super Entry<K, D>> action) {
             if (groupIterator == null) {
                 sourceSpliterator.forEachRemaining(item -> {
-                    K key = funK.apply(item);
+                    K key = null;
+                    if (Objects.nonNull(item)) {
+                        key = funK.apply(item);
+                    }
                     groups.computeIfAbsent(key, k -> new ArrayList<>()).add(item);
                 });
                 groupIterator = groups.entrySet().iterator();
             }
             if (groupIterator.hasNext()) {
-                Map.Entry<K, List<T>> entry = groupIterator.next();
-                action.accept(new SimpleImmutableEntry<>(entry.getKey(), Ztream.of(entry.getValue()).map(funV).collect(downstream)));
+                Map.Entry<K, D> newEntry = Functions.entryKeyValue(groupIterator.next(), k -> k, v -> Ztream.of(v).map(i -> {
+                    V iv = null;
+                    if (Objects.nonNull(i)) {
+                        iv = funV.apply(i);
+                    }
+                    return iv;
+                }).collect(downstream));
+                action.accept(newEntry);
                 return true;
             }
             return false;
@@ -107,8 +115,9 @@ class Spliterators {
         public boolean tryAdvance(Consumer<? super T> action) {
             if (left != null) {
                 if (left.tryAdvance(action)) {
-                    if (size > 0 && size != Long.MAX_VALUE)
+                    if (size > 0 && size != Long.MAX_VALUE) {
                         size--;
+                    }
                     return true;
                 }
                 left = null;
@@ -119,16 +128,19 @@ class Spliterators {
         @Override
         public void forEachRemaining(Consumer<? super T> action) {
 
-            if (left != null)
+            if (left != null) {
                 left.forEachRemaining(action);
-            if (right != null)
+            }
+            if (right != null) {
                 right.forEachRemaining(action);
+            }
         }
 
         @Override
         public Spliterator<T> trySplit() {
-            if (left == null)
+            if (left == null) {
                 return right.trySplit();
+            }
             Spliterator<T> s = left;
             left = null;
             return s;
@@ -136,8 +148,9 @@ class Spliterators {
 
         @Override
         public long estimateSize() {
-            if (left == null)
+            if (left == null) {
                 return right == null ? 0 : right.estimateSize();
+            }
             return size;
         }
 

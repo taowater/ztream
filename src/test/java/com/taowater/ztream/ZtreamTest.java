@@ -20,13 +20,25 @@ class ZtreamTest {
 
     @Test
     void group() {
-        var group1 = Ztream.of(testList).groupBy(Student::getName, Student::getAge, HashMap::new, Collectors.toSet());
-        group1.forEach((k, v) -> {
-            System.out.print(k);
-            System.out.print("=");
-            System.out.print(v);
-            System.out.println("\n");
-        });
+        var group = Ztream.of(testList).groupBy(Student::getName, Student::getAge, HashMap::new, Collectors.toSet());
+
+        Map<String, Set<Integer>> group2 = new HashMap<>();
+        for (var item : testList) {
+            if (item == null) {
+                group2.computeIfAbsent(null, k -> new HashSet<>()).add(null);
+                continue;
+            }
+            group2.computeIfAbsent(item.getName(), k -> new HashSet<>()).add(item.getAge());
+        }
+        equals(
+                group,
+                group2
+        );
+
+        equals(
+                Ztream.of(testList).group(Student::getName, Student::getAge, Collectors.toSet()),
+                group2
+        );
     }
 
     @Test
@@ -74,7 +86,7 @@ class ZtreamTest {
     }
 
     @Test
-    void toMap() {
+    void hash() {
 
         Map<String, Integer> map = new HashMap<>();
         for (var item : testList) {
@@ -87,6 +99,11 @@ class ZtreamTest {
 
         equals(
                 Ztream.of(testList).toMap(Student::getName, Student::getAge),
+                map
+        );
+
+        equals(
+                Ztream.of(testList).hash(Student::getName, Student::getAge),
                 map
         );
     }
@@ -198,27 +215,6 @@ class ZtreamTest {
         );
     }
 
-    @Test
-    void testMapZtream() {
-
-        List<Student> list = ListUtil.of(
-                new Student().setName("小猪").setAge(123),
-                new Student().setName("小狗").setAge(45),
-                new Student().setName(null).setAge(564),
-                new Student().setName("小狗").setAge(null),
-                new Student().setName(null).setAge(70),
-                new Student().setName("小猪").setAge(4),
-                new Student().setName("小猪").setAge(null)
-        );
-
-        Ztream.of(list).hash(Student::getName, Student::getAge).flip().mapValue(v -> v + "123").forEach((k, v) -> {
-            System.out.print(k);
-            System.out.print("=");
-            System.out.print(v);
-            System.out.println("\n");
-        });
-
-    }
 
     @Test
     void testShuffle() {
@@ -226,21 +222,22 @@ class ZtreamTest {
     }
 
     public static void equals(Object o1, Object o2) {
-        System.out.println(o1);
-        System.out.println(o2);
+//        System.out.println("----equals----");
+//        System.out.println(o1);
+//        System.out.println(o2);
         Assertions.assertEquals(o1, o2);
     }
 
     public static void equals(Ztream<?> ztream, Stream<?> stream) {
-        var o1 = ztream.toList();
-        var o2 = stream.collect(Collectors.toList());
-        System.out.println(o1);
-        System.out.println(o2);
-        Assertions.assertEquals(o1, o2);
+        Assertions.assertEquals(ztream.toList(), stream.collect(Collectors.toList()));
+    }
+
+    public static void equals(EntryZtream<?, ?> ztream, Map<?, ?> map) {
+        equals(ztream.toMap(), map);
     }
 
     public static void equals(Ztream<?> ztream, Collection<?> coll) {
-        Assertions.assertEquals(ztream.toList(), coll);
+        equals(ztream.toList(), coll);
     }
 
 }
