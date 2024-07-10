@@ -223,7 +223,13 @@ abstract class AbstractZtream<T, S extends Stream<T>> implements Stream<T>, Iter
     }
 
     public S distinct(Function<? super T, ?> fun) {
-        return wrap(map(t -> new PairBox<>(t, fun.apply(t))).distinct().map(box -> box.a));
+        return wrap(map(t -> {
+            Object v = null;
+            if (Objects.nonNull(t)) {
+                v = fun.apply(t);
+            }
+            return new PairBox<>(t, v);
+        }).distinct().map(box -> box.a));
     }
 
     /**
