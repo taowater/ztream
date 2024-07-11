@@ -575,12 +575,24 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Col
     /**
      * 映射
      *
+     * @param funK     键函数
+     * @param funV     值函数
+     * @param override 是否向前覆盖
+     * @return {@link EntryZtream }<{@link K }, {@link V }>
+     */
+    public <K, V> EntryZtream<K, V> hash(Function<? super T, K> funK, Function<? super T, V> funV, boolean override) {
+        return EntryZtream.of(map(e -> Functions.entry(e, funK, funV)).distinct(Map.Entry::getKey, override));
+    }
+
+    /**
+     * 映射-重复会向前覆盖
+     *
      * @param funK 键函数
      * @param funV 值函数
      * @return {@link EntryZtream }<{@link K }, {@link V }>
      */
     public <K, V> EntryZtream<K, V> hash(Function<? super T, K> funK, Function<? super T, V> funV) {
-        return EntryZtream.of(map(e -> Functions.entry(e, funK, funV)).distinct(Map.Entry::getKey));
+        return hash(funK, funV, true);
     }
 
     /**

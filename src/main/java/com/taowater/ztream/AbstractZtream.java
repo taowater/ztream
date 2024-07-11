@@ -4,6 +4,7 @@ package com.taowater.ztream;
 import org.dromara.hutool.core.util.RandomUtil;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
 import java.util.stream.*;
 
@@ -222,14 +223,55 @@ abstract class AbstractZtream<T, S extends Stream<T>> implements Stream<T>, Iter
         stream.close();
     }
 
-    public S distinct(Function<? super T, ?> fun) {
-        return wrap(map(t -> {
+    /**
+     * 根据flag增加一个中间操作
+     *
+     * @param flag 标识
+     * @param fun  函数
+     * @return {@link S }
+     */
+    public S handle(boolean flag, Function<? super AbstractZtream<T, S>, S> fun) {
+        if (flag) {
+            return fun.apply(this);
+        }
+        return wrap(this);
+    }
+
+    /**
+     * 按某属性去重
+     *
+     * @param fun      属性
+     * @param override 是否向前覆盖
+     * @return {@link S }
+     */
+    public S distinct(Function<? super T, ?> fun, boolean override) {
+        return wrap(handle(override, AbstractZtream::reverse).map(t -> {
             Object v = null;
             if (Objects.nonNull(t)) {
                 v = fun.apply(t);
             }
             return new PairBox<>(t, v);
         }).distinct().map(box -> box.a));
+    }
+
+    /**
+     * 去重
+     *
+     * @param fun 属性
+     * @return {@link S }
+     */
+    public S distinct(Function<? super T, ?> fun) {
+        return distinct(fun, true);
+    }
+
+    /**
+     * 去重
+     *
+     * @param override 是否向前覆盖
+     * @return {@link S }
+     */
+    public S distinct(boolean override) {
+        return wrap(handle(override, AbstractZtream::reverse).distinct());
     }
 
     /**
@@ -265,7 +307,8 @@ abstract class AbstractZtream<T, S extends Stream<T>> implements Stream<T>, Iter
      * @return {@link S }
      */
     public S reverse() {
-        return sorted((Comparator<? super T>) Comparator.reverseOrder());
+        AtomicInteger index = new AtomicInteger(0);
+        return wrap(map(e -> new PairBox<>(e, index.getAndAdd(1))).sorted(Comparator.comparing(o -> ((PairBox<T, Integer>) o).b).reversed()).map(e -> e.a));
     }
 
     /**

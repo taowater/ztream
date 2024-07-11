@@ -80,7 +80,7 @@ class ZtreamTest {
         );
 
         equals(
-                Ztream.of(list).distinct(i -> i % 3),
+                Ztream.of(list).distinct(i -> i % 3, false),
                 CollUtil.distinct(list, i -> i % 3, false)
         );
     }
@@ -223,8 +223,8 @@ class ZtreamTest {
 
     public static void equals(Object o1, Object o2) {
 //        System.out.println("----equals----");
-//        System.out.println(o1);
-//        System.out.println(o2);
+        System.out.println(o1);
+        System.out.println(o2);
         Assertions.assertEquals(o1, o2);
     }
 
