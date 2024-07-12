@@ -72,8 +72,12 @@ public final class Any<T> {
     }
 
 
-    public boolean isEmpty() {
+    public boolean isNull() {
         return Objects.isNull(value);
+    }
+
+    public boolean isEmpty() {
+        return EmptyUtil.isEmpty(value);
     }
 
 

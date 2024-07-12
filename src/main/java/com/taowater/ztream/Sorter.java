@@ -5,7 +5,7 @@ import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 /**
- * 流的排序操作
+ * 排序器
  *
  * @author zhu56
  * @date 2024/05/22 00:56
@@ -146,7 +146,7 @@ public class Sorter<T> {
         comparator = comparator.thenComparing(keyExtractor, keyComparator);
         return this;
     }
-    
+
     /**
      * 根据属性构建排序器
      *

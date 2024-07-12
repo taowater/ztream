@@ -109,7 +109,7 @@ class ZtreamTest {
     }
 
     @Test
-    void testFlat() {
+    void flat() {
         List<Integer> list = ListUtil.of(1, 2, 4, 6, 4, 8, 9);
         Function<Integer, Collection<Integer>> fun = e -> ListUtil.of(1, 2, 3);
         equals(
@@ -159,13 +159,66 @@ class ZtreamTest {
     }
 
     @Test
-    void avg() {
-
-        List<Integer> list = ListUtil.of(12, 6, 8, 23, 5, 0);
+    void filter() {
 
         equals(
-                Ztream.of(list).avg(e -> e, 0).doubleValue(),
-                list.stream().mapToInt(e -> e).average().orElse(0.0)
+                Ztream.of(testList).eq(Student::getName, "小猪"),
+                testList.stream().filter(e -> Objects.equals("小猪", Any.of(e).get(Student::getName)))
+        );
+
+        equals(
+                Ztream.of(testList).eq(Student::getName, null),
+                testList.stream().filter(e -> Objects.equals(null, Any.of(e).get(Student::getName)))
+        );
+
+        equals(
+                Ztream.of(testList).isNull(Student::getName),
+                testList.stream().filter(e -> Objects.equals(null, Any.of(e).get(Student::getName)))
+        );
+
+        equals(
+                Ztream.of(testList).in(Student::getName, ListUtil.of("小猪", null)),
+                testList.stream().filter(e -> ListUtil.of(ListUtil.of("小猪", null)).contains(Any.of(e).get(Student::getName)))
+        );
+
+        equals(
+                Ztream.of(testList).notIn(Student::getName, (String) null),
+                testList.stream().filter(e -> !ListUtil.of((String) null).contains(Any.of(e).get(Student::getName)))
+        );
+
+        equals(
+                Ztream.of(testList).ge(Student::getAge, 45),
+                testList.stream().filter(Objects::nonNull).filter(e -> Objects.nonNull(e.getAge())).filter(e -> Any.of(e).get(Student::getAge) >= 45)
+        );
+
+        equals(
+                Ztream.of(testList).le(Student::getAge, 45),
+                testList.stream().filter(Objects::nonNull).filter(e -> Objects.nonNull(e.getAge())).filter(e -> Any.of(e).get(Student::getAge) <= 45)
+        );
+
+    }
+
+    @Test
+    void math() {
+
+        equals(
+                Ztream.of(testList).avg(Student::getAge, 0),
+                (int) (testList.stream().mapToInt(e -> Any.of(e).map(Student::getAge).orElse(0)).average().getAsDouble())
+        );
+
+        equals(
+                Ztream.of(testList).sum(Student::getAge),
+                testList.stream().mapToInt(e -> Any.of(e).map(Student::getAge).orElse(0)).sum()
+        );
+
+        equals(
+                Ztream.of(testList).max(Student::getAge),
+                testList.stream().mapToInt(e -> Any.of(e).map(Student::getAge).orElse(Integer.MIN_VALUE)).max().getAsInt()
+        );
+
+        equals(
+                Ztream.of(testList).min(Student::getAge),
+                testList.stream().mapToInt(e -> Any.of(e).map(Student::getAge).orElse(Integer.MAX_VALUE)).min().getAsInt()
         );
     }
 
@@ -217,8 +270,8 @@ class ZtreamTest {
 
 
     @Test
-    void testShuffle() {
-        Ztream.of(testList).shuffle().limit(3).nonNull().map(Student::getAge).forEach(e -> System.out.println(e));
+    void shuffle() {
+        Ztream.of(testList).shuffle().limit(3).nonNull().map(Student::getAge).forEach(System.out::println);
     }
 
     public static void equals(Object o1, Object o2) {
@@ -229,7 +282,7 @@ class ZtreamTest {
     }
 
     public static void equals(Ztream<?> ztream, Stream<?> stream) {
-        Assertions.assertEquals(ztream.toList(), stream.collect(Collectors.toList()));
+        equals(ztream.toList(), stream.collect(Collectors.toList()));
     }
 
     public static void equals(EntryZtream<?, ?> ztream, Map<?, ?> map) {

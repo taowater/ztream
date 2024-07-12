@@ -15,7 +15,7 @@ import java.util.stream.Stream;
  * @version 1.0
  * @date 2022/11/14 9:53
  */
-interface Math<T> extends Stream<T> {
+interface ZMath<T> extends Stream<T> {
 
     /**
      * 累加
@@ -24,7 +24,7 @@ interface Math<T> extends Stream<T> {
      * @return 统计值
      */
     default <N extends Number> N sum(SerFunction<? super T, ? extends N> fun) {
-        return this.sum(fun, null);
+        return sum(fun, null);
     }
 
     /**
@@ -35,10 +35,8 @@ interface Math<T> extends Stream<T> {
      * @return 统计值
      */
     default <N extends Number> N sum(SerFunction<? super T, ? extends N> fun, N defaultValue) {
-        var result = this
-                .filter(Objects::nonNull)
+        var result = filter(Objects::nonNull)
                 .map(fun)
-                .filter(Objects::nonNull)
                 .map(NumberUtil::toBigDecimal)
                 .reduce(NumberUtil::add)
                 .map(b -> BigDecimalStrategy.getValue(b, fun));
@@ -55,7 +53,7 @@ interface Math<T> extends Stream<T> {
      * @return {@link N}
      */
     default <N extends Comparable<N>> N max(SerFunction<? super T, ? extends N> fun) {
-        return this.max(fun, null);
+        return max(fun, null);
     }
 
     /**
@@ -66,8 +64,7 @@ interface Math<T> extends Stream<T> {
      * @return {@link N}
      */
     default <N extends Comparable<N>> N max(SerFunction<? super T, ? extends N> fun, N defaultValue) {
-        var result = this
-                .filter(Objects::nonNull)
+        var result = filter(Objects::nonNull)
                 .map(fun)
                 .filter(Objects::nonNull)
                 .reduce((a, b) -> a.compareTo(b) >= 0 ? a : b);
@@ -84,7 +81,7 @@ interface Math<T> extends Stream<T> {
      * @return {@link N}
      */
     default <N extends Comparable<N>> N min(SerFunction<? super T, ? extends N> fun) {
-        return this.min(fun, null);
+        return min(fun, null);
     }
 
     /**
@@ -95,8 +92,7 @@ interface Math<T> extends Stream<T> {
      * @return {@link N}
      */
     default <N extends Comparable<N>> N min(SerFunction<? super T, ? extends N> fun, N defaultValue) {
-        var result = this
-                .filter(Objects::nonNull)
+        var result = filter(Objects::nonNull)
                 .map(fun)
                 .filter(Objects::nonNull)
                 .reduce((a, b) -> a.compareTo(b) < 0 ? a : b);
@@ -115,7 +111,7 @@ interface Math<T> extends Stream<T> {
      * @return {@link N }
      */
     default <N extends Number> N avg(SerFunction<? super T, ? extends N> fun, N defaultValue, boolean nullCount) {
-        var result = this.collect(ExCollectors.avg(fun, nullCount));
+        var result = collect(ExCollectors.avg(fun, nullCount));
         return Any.of(result).orElse(defaultValue);
     }
 

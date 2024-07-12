@@ -10,12 +10,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 流的收集操作
+ * 收集操作
  *
  * @author Zhu56
  * @date 2022/11/13 19:12:35
  */
-interface Collect<T> extends Stream<T> {
+interface ZCollect<T> extends Stream<T> {
 
     /**
      * 收集为集合

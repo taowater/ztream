@@ -11,12 +11,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 流的分组操作
+ * 分组操作
  *
  * @author Zhu56
  * @date 2022/11/13 20:21:12
  */
-interface GroupBy<T> extends Stream<T> {
+interface ZGroupBy<T> extends Stream<T> {
 
     /**
      * 分组-缺省值类型、Map类型及组集合类型，默认为元素本身、HashMap及ArrayList

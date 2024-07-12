@@ -33,13 +33,15 @@ public class TestClass {
     }
 
     public static List<Student> testList = ListUtil.of(
-            new Student().setName("小猪").setAge(123),
-            new Student().setName("小狗").setAge(45),
+            new Student().setName("小猪").setAge(1),
+            new Student().setName("小狗").setAge(2),
             null,
-            new Student().setName(null).setAge(564),
+            new Student().setName(null).setAge(3),
+            new Student().setName(" ").setAge(9),
             new Student().setName("小狗").setAge(null),
-            new Student().setName(null).setAge(70),
-            new Student().setName("小猪").setAge(4),
-            new Student().setName("小猪").setAge(null)
+            new Student().setName(null).setAge(4),
+            new Student().setName("").setAge(8),
+            new Student().setName("小猪").setAge(5),
+            new Student().setName("小猪").setAge(7)
     );
 }

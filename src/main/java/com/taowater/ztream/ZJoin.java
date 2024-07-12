@@ -3,15 +3,14 @@ package com.taowater.ztream;
 
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 /**
- * 流的join操作
+ * join操作
  *
  * @author Zhu56
  * @date 2022/11/13 19:12:35
  */
-interface Join<T> extends Stream<T> {
+interface ZJoin<T, S extends IZtream<T, S>> extends IZtream<T, S> {
 
     /**
      * 返回拼接后的字符串
@@ -36,10 +35,10 @@ interface Join<T> extends Stream<T> {
      * 拼接属性
      *
      * @param fun 函数
-     * @return {@link String}
+     * @return 拼接后的字符串
      */
     default String join(Function<? super T, ?> fun) {
-        return this.join(fun, ",");
+        return join(fun, ",");
     }
 
     /**
@@ -47,15 +46,10 @@ interface Join<T> extends Stream<T> {
      *
      * @param fun       函数
      * @param delimiter 分隔符
-     * @return {@link String}
+     * @return 拼接后的字符串
      */
     default String join(Function<? super T, ?> fun, CharSequence delimiter) {
-        return this.map(e -> {
-            if (Objects.isNull(e)) {
-                return null;
-            }
-            return fun.apply(e);
-        }).collect(ExCollectors.join(delimiter, "", ""));
+        return map(e -> Any.of(e).get(fun)).collect(ExCollectors.join(delimiter, "", ""));
     }
 
     /**

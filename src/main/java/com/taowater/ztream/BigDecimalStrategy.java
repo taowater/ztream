@@ -4,7 +4,6 @@ import com.taowater.taol.core.function.LambdaUtil;
 import com.taowater.taol.core.function.SerFunction;
 import com.taowater.taol.core.util.EmptyUtil;
 import lombok.experimental.UtilityClass;
-import lombok.var;
 import org.dromara.hutool.core.map.MapUtil;
 
 import java.math.BigDecimal;
@@ -34,29 +33,19 @@ class BigDecimalStrategy {
             .build();
 
     /**
-     * 获取转换函数
-     *
-     * @param clazz clazz
-     * @return {@link Function}<{@link BigDecimal}, {@link T}>
-     */
-    @SuppressWarnings("unchecked")
-    public <T extends Number> Function<BigDecimal, T> getFunction(Class<T> clazz) {
-        return (Function<BigDecimal, T>) TYPE_FUN.getOrDefault(clazz, Function.identity());
-    }
-
-    /**
      * 获得指定类型数值
      *
      * @param bigDecimal 大小数
      * @param function   函数
      * @return {@link N}
      */
+    @SuppressWarnings("unchecked")
     public <N extends Number> N getValue(BigDecimal bigDecimal, SerFunction<?, ? extends N> function) {
         if (EmptyUtil.isHadEmpty(bigDecimal, function)) {
             return null;
         }
-        var returnClass = LambdaUtil.getReturnClass(function);
-        var fun = BigDecimalStrategy.getFunction(returnClass);
+        Class<? extends N> returnClass = LambdaUtil.getReturnClass(function);
+        Function<BigDecimal, N> fun = (Function<BigDecimal, N>) TYPE_FUN.getOrDefault(returnClass, Function.identity());
         return fun.apply(bigDecimal);
     }
 }

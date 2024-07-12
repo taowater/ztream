@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
- * 流的转Map操作
+ * 映射操作
  *
  * @author Zhu56
  * @date 2022/11/13 20:21:12
