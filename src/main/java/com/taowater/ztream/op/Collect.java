@@ -1,4 +1,4 @@
-package com.taowater.ztream;
+package com.taowater.ztream.op;
 
 
 import com.taowater.taol.core.util.ConvertUtil;
@@ -15,7 +15,7 @@ import java.util.stream.Stream;
  * @author Zhu56
  * @date 2022/11/13 19:12:35
  */
-interface ZCollect<T> extends Stream<T> {
+public interface Collect<T> extends Stream<T> {
 
     /**
      * 收集为集合

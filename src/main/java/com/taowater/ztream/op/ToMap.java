@@ -1,4 +1,4 @@
-package com.taowater.ztream;
+package com.taowater.ztream.op;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +13,7 @@ import java.util.stream.Stream;
  * @author Zhu56
  * @date 2022/11/13 20:21:12
  */
-interface ToMap<T> extends Stream<T> {
+public interface ToMap<T> extends Stream<T> {
 
 
     /**

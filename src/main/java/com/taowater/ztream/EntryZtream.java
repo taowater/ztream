@@ -1,5 +1,6 @@
 package com.taowater.ztream;
 
+import com.taowater.ztream.assist.Functions;
 import lombok.var;
 
 import java.util.Collection;

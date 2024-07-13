@@ -1,5 +1,8 @@
-package com.taowater.ztream;
+package com.taowater.ztream.op;
 
+import com.taowater.ztream.IZtream;
+import com.taowater.ztream.assist.Box;
+import com.taowater.ztream.assist.Sorter;
 import org.dromara.hutool.core.util.RandomUtil;
 
 import java.util.Comparator;
@@ -13,13 +16,13 @@ import java.util.function.Function;
  * @author zhu56
  * @date 2024/07/13 00:39
  */
-interface ZSort<T, S extends IZtream<T, S>> extends IZtream<T, S> {
+public interface Sort<T, S extends IZtream<T, S>> extends IZtream<T, S> {
 
     /**
      * 升序
      *
      * @param fun 属性
-     * @return {@link Ztream}<{@link T}>
+     * @return 新流
      */
     default <U extends Comparable<? super U>> S asc(Function<? super T, ? extends U> fun) {
         return asc(fun, true);
@@ -30,7 +33,7 @@ interface ZSort<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      *
      * @param fun       属性
      * @param nullFirst 是否null值前置
-     * @return {@link Ztream }<{@link T }>
+     * @return 新流
      */
     default <U extends Comparable<? super U>> S asc(Function<? super T, ? extends U> fun, boolean nullFirst) {
         return sort(r -> r.asc(fun, nullFirst));
@@ -39,7 +42,7 @@ interface ZSort<T, S extends IZtream<T, S>> extends IZtream<T, S> {
     /**
      * 升序
      *
-     * @return {@link Ztream }<{@link T }>
+     * @return 新流
      */
     default S asc() {
         return asc(true);
@@ -49,7 +52,7 @@ interface ZSort<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      * 升序
      *
      * @param nullFirst 是否null值前置
-     * @return {@link Ztream }<{@link T }>
+     * @return 新流
      */
     @SuppressWarnings("unchecked")
     default S asc(boolean nullFirst) {
@@ -59,7 +62,7 @@ interface ZSort<T, S extends IZtream<T, S>> extends IZtream<T, S> {
     /**
      * 降序
      *
-     * @return {@link Ztream}<{@link T}>
+     * @return 新流
      */
     default <U extends Comparable<? super U>> S desc(Function<? super T, ? extends U> fun) {
         return desc(fun, true);
@@ -70,7 +73,7 @@ interface ZSort<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      *
      * @param fun       属性
      * @param nullFirst 是否null值前置
-     * @return {@link Ztream }<{@link T }>
+     * @return 新流
      */
     default <U extends Comparable<? super U>> S desc(Function<? super T, ? extends U> fun, boolean nullFirst) {
         return sort(r -> r.desc(fun, nullFirst));
@@ -79,7 +82,7 @@ interface ZSort<T, S extends IZtream<T, S>> extends IZtream<T, S> {
     /**
      * 降序
      *
-     * @return {@link Ztream}<{@link T}>
+     * @return 新流
      */
     default S desc() {
         return desc(true);
@@ -89,7 +92,7 @@ interface ZSort<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      * 降序
      *
      * @param nullFirst 是否null值前置
-     * @return {@link Ztream }<{@link T }>
+     * @return 新流
      */
     @SuppressWarnings("unchecked")
     default S desc(boolean nullFirst) {
@@ -100,7 +103,7 @@ interface ZSort<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      * 排序
      *
      * @param consumer 排序上下分的消费函数
-     * @return {@link Ztream}<{@link T}>
+     * @return 新流
      */
     default S sort(Consumer<Sorter<T>> consumer) {
         Sorter<T> sorter = new Sorter<>();
@@ -111,10 +114,10 @@ interface ZSort<T, S extends IZtream<T, S>> extends IZtream<T, S> {
     /**
      * 对元素进行洗牌
      *
-     * @return {@link Ztream}<{@link T}>
+     * @return 新流
      */
     default S shuffle() {
-        return wrap(map(e -> new AbstractZtream.PairBox<>(e, RandomUtil.randomInt())).sorted(Comparator.comparing(e -> e.b)).map(e -> e.a));
+        return wrap(map(e -> new Box.PairBox<>(e, RandomUtil.randomInt())).sorted(Comparator.comparing(Box.PairBox::getB)).map(Box::getA));
     }
 
     /**
@@ -122,8 +125,9 @@ interface ZSort<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      *
      * @return {@link S }
      */
+    @SuppressWarnings("unchecked")
     default S reverse() {
         AtomicInteger index = new AtomicInteger(0);
-        return wrap(map(e -> new AbstractZtream.PairBox<>(e, index.getAndAdd(1))).sorted(Comparator.comparing(o -> ((AbstractZtream.PairBox<T, Integer>) o).b).reversed()).map(e -> e.a));
+        return wrap(map(e -> new Box.PairBox<>(e, index.getAndAdd(1))).sorted(Comparator.comparing((Box.PairBox<T, Integer> o) -> o.getB()).reversed()).map(Box::getA));
     }
 }

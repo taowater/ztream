@@ -1,7 +1,10 @@
-package com.taowater.ztream;
+package com.taowater.ztream.op;
 
 
 import com.taowater.taol.core.function.SerFunction;
+import com.taowater.ztream.Any;
+import com.taowater.ztream.assist.BigDecimalStrategy;
+import com.taowater.ztream.assist.ExCollectors;
 import lombok.var;
 import org.dromara.hutool.core.math.NumberUtil;
 
@@ -15,7 +18,7 @@ import java.util.stream.Stream;
  * @version 1.0
  * @date 2022/11/14 9:53
  */
-interface ZMath<T> extends Stream<T> {
+public interface Math<T> extends Stream<T> {
 
     /**
      * 累加

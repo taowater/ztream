@@ -14,7 +14,7 @@ import java.util.stream.*;
  * @author Zhu56
  * @date 2022/11/13 21:37:12
  */
-interface IZtream<T, S extends Stream<T>> extends Stream<T>, Iterable<T> {
+public interface IZtream<T, S extends Stream<T>> extends Stream<T>, Iterable<T> {
 
     /**
      * 获取被当前实例包装的流对象

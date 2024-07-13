@@ -1,4 +1,4 @@
-package com.taowater.ztream;
+package com.taowater.ztream.assist;
 
 import com.taowater.taol.core.function.LambdaUtil;
 import com.taowater.taol.core.function.SerFunction;
@@ -20,7 +20,7 @@ import java.util.function.Function;
  * @date 2022/4/29 17:14
  */
 @UtilityClass
-class BigDecimalStrategy {
+public class BigDecimalStrategy {
 
     private final Map<Class<?>, Function<BigDecimal, ?>> TYPE_FUN = MapUtil.builder(new HashMap<Class<?>, Function<BigDecimal, ?>>())
             .put(Byte.class, BigDecimal::byteValue)

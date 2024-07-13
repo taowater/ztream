@@ -1,10 +1,13 @@
 package com.taowater.ztream;
 
 
+import com.taowater.ztream.assist.Box;
+import com.taowater.ztream.op.Math;
+import com.taowater.ztream.op.*;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -14,9 +17,9 @@ import java.util.stream.Stream;
  * @author Zhu56
  * @date 2022/11/13 21:37:12
  */
-abstract class AbstractZtream<T, S extends AbstractZtream<T, S>> implements ZFilter<T, S>, ZSort<T, S>, ZCollect<T>,
-        ZMath<T>,
-        ZJoin<T, S> {
+public abstract class AbstractZtream<T, S extends AbstractZtream<T, S>> implements Filter<T, S>, Sort<T, S>, Collect<T>,
+        Math<T>,
+        Join<T, S> {
     protected final Stream<T> stream;
 
     protected AbstractZtream(Stream<T> stream) {
@@ -36,13 +39,13 @@ abstract class AbstractZtream<T, S extends AbstractZtream<T, S>> implements ZFil
      * @return {@link S }
      */
     public S distinct(Function<? super T, ?> fun, boolean override) {
-        return wrap(handle(override, ZSort::reverse).map(t -> {
+        return wrap(handle(override, Sort::reverse).map(t -> {
             Object v = null;
             if (Objects.nonNull(t)) {
                 v = fun.apply(t);
             }
-            return new PairBox<>(t, v);
-        }).distinct().map(box -> box.a));
+            return new Box.PairBox<>(t, v);
+        }).distinct().map(Box::getA));
     }
 
     /**
@@ -62,7 +65,7 @@ abstract class AbstractZtream<T, S extends AbstractZtream<T, S>> implements ZFil
      * @return {@link S }
      */
     public S distinct(boolean override) {
-        return wrap(handle(override, ZSort::reverse).distinct());
+        return wrap(handle(override, Sort::reverse).distinct());
     }
 
     /**
@@ -101,45 +104,5 @@ abstract class AbstractZtream<T, S extends AbstractZtream<T, S>> implements ZFil
     public boolean hadRepeat() {
         Set<T> set = new HashSet<>();
         return anyMatch(x -> !set.add(x));
-    }
-
-
-    static class Box<A> implements Consumer<A> {
-        A a;
-
-        Box() {
-        }
-
-        Box(A obj) {
-            this.a = obj;
-        }
-
-        @Override
-        public void accept(A a) {
-            this.a = a;
-        }
-    }
-
-    static class PairBox<A, B> extends Box<A> {
-        B b;
-
-        PairBox(A a, B b) {
-            super(a);
-            this.b = b;
-        }
-
-        static <T> PairBox<T, T> single(T a) {
-            return new PairBox<>(a, a);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hashCode(b);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return obj != null && obj.getClass() == PairBox.class && Objects.equals(b, ((PairBox<?, ?>) obj).b);
-        }
     }
 }

@@ -1,4 +1,4 @@
-package com.taowater.ztream;
+package com.taowater.ztream.assist;
 
 import lombok.experimental.UtilityClass;
 
@@ -18,7 +18,7 @@ import java.util.function.ObjIntConsumer;
  * @date 2024/07/04 23:50
  */
 @UtilityClass
-class Functions {
+public class Functions {
 
     /**
      * 索引消费者
@@ -27,7 +27,7 @@ class Functions {
      * @version 1.0
      * @date 2023/4/18 16:29
      */
-    static class IndexedConsumer<T> implements Consumer<T> {
+    public static class IndexedConsumer<T> implements Consumer<T> {
         private final AtomicInteger index = new AtomicInteger(0);
 
         private final ObjIntConsumer<? super T> consumer;
@@ -49,7 +49,7 @@ class Functions {
      * @version 1.0
      * @date 2023/05/11 00:03
      */
-    static class IndexedFunction<T, R> implements Function<T, R> {
+    public static class IndexedFunction<T, R> implements Function<T, R> {
         private final AtomicInteger index = new AtomicInteger(0);
 
         private final BiFunction<T, Integer, R> fun;
@@ -72,7 +72,7 @@ class Functions {
      * @param funV 值函数
      * @return {@link Entry }<{@link K }, {@link V }>
      */
-    static <T, K, V> Entry<K, V> entry(T obj, Function<? super T, ? extends K> funK, Function<? super T, ? extends V> funV) {
+    public static <T, K, V> Entry<K, V> entry(T obj, Function<? super T, ? extends K> funK, Function<? super T, ? extends V> funV) {
         K key = null;
         V value = null;
         if (Objects.nonNull(obj)) {
@@ -90,7 +90,7 @@ class Functions {
      * @param funV  值函数
      * @return {@link Entry }<{@link NK }, {@link NV }>
      */
-    static <K, V, NK, NV> Entry<NK, NV> entryKeyValue(Entry<K, V> entry, Function<? super K, ? extends NK> funK, Function<? super V, ? extends NV> funV) {
+    public static <K, V, NK, NV> Entry<NK, NV> entryKeyValue(Entry<K, V> entry, Function<? super K, ? extends NK> funK, Function<? super V, ? extends NV> funV) {
         Function<Entry<K, V>, K> key = Entry::getKey;
         Function<Entry<K, V>, V> value = Entry::getValue;
         return entry(entry, key.andThen(funK), value.andThen(funV));
@@ -102,7 +102,7 @@ class Functions {
      * @param entry entry
      * @return {@link Entry }<{@link V }, {@link K }>
      */
-    static <K, V> Entry<V, K> flip(Entry<K, V> entry) {
+    public static <K, V> Entry<V, K> flip(Entry<K, V> entry) {
         return entry(entry, Entry::getValue, Entry::getKey);
     }
 }

@@ -1,6 +1,8 @@
-package com.taowater.ztream;
+package com.taowater.ztream.op;
 
 import com.taowater.taol.core.util.EmptyUtil;
+import com.taowater.ztream.Any;
+import com.taowater.ztream.IZtream;
 import org.dromara.hutool.core.text.StrValidator;
 
 import java.util.Arrays;
@@ -18,7 +20,7 @@ import java.util.stream.Stream;
  * @author zhu56
  * @date 2024/07/13 00:33
  */
-interface ZFilter<T, S extends IZtream<T, S>> extends IZtream<T, S> {
+public interface Filter<T, S extends IZtream<T, S>> extends IZtream<T, S> {
 
     /**
      * 等值操作
@@ -92,8 +94,8 @@ interface ZFilter<T, S extends IZtream<T, S>> extends IZtream<T, S> {
             return wrap(this);
         }
         return nonNull(fun)
-                .handle(Objects.nonNull(leftValue), z -> ((ZFilter<T, S>) z).ge(fun, leftValue))
-                .handle(Objects.nonNull(rightValue), z -> ((ZFilter<T, S>) z).le(fun, rightValue));
+                .handle(Objects.nonNull(leftValue), z -> ((Filter<T, S>) z).ge(fun, leftValue))
+                .handle(Objects.nonNull(rightValue), z -> ((Filter<T, S>) z).le(fun, rightValue));
     }
 
     /**
@@ -176,6 +178,7 @@ interface ZFilter<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      * @param c c
      * @return 新流
      */
+    @SuppressWarnings("all")
     default S in(T... c) {
         return in(Stream.of(c).collect(Collectors.toSet()));
     }
@@ -193,11 +196,12 @@ interface ZFilter<T, S extends IZtream<T, S>> extends IZtream<T, S> {
     /**
      * 过滤不在指定集合中的元素
      *
-     * @param c c
+     * @param values 指定值
      * @return 新流
      */
-    default S notIn(T... c) {
-        return notIn(Stream.of(c).collect(Collectors.toSet()));
+    @SuppressWarnings("all")
+    default S notIn(T... values) {
+        return notIn(Stream.of(values).collect(Collectors.toSet()));
     }
 
     /**

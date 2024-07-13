@@ -1,7 +1,6 @@
 package com.taowater.ztream;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.UtilityClass;
 import org.dromara.hutool.core.collection.ListUtil;
@@ -15,6 +14,9 @@ public class TestClass {
     @Data
     @Accessors(chain = true)
     @EqualsAndHashCode(callSuper = true)
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Student extends Person {
         private String name;
         private Integer age;

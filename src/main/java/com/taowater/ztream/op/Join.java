@@ -1,5 +1,9 @@
-package com.taowater.ztream;
+package com.taowater.ztream.op;
 
+
+import com.taowater.ztream.Any;
+import com.taowater.ztream.IZtream;
+import com.taowater.ztream.assist.ExCollectors;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -10,7 +14,7 @@ import java.util.function.Function;
  * @author Zhu56
  * @date 2022/11/13 19:12:35
  */
-interface ZJoin<T, S extends IZtream<T, S>> extends IZtream<T, S> {
+public interface Join<T, S extends IZtream<T, S>> extends IZtream<T, S> {
 
     /**
      * 返回拼接后的字符串

@@ -182,8 +182,8 @@ class ZtreamTest {
         );
 
         equals(
-                Ztream.of(testList).notIn(Student::getName, (String) null),
-                testList.stream().filter(e -> !ListUtil.of((String) null).contains(Any.of(e).get(Student::getName)))
+                Ztream.of(testList).notIn(Student::getName, (String) null, "小猪"),
+                testList.stream().filter(e -> !ListUtil.of((String) null, "小猪").contains(Any.of(e).get(Student::getName)))
         );
 
         equals(

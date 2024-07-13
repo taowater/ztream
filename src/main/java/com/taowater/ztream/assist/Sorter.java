@@ -1,4 +1,4 @@
-package com.taowater.ztream;
+package com.taowater.ztream.assist;
 
 import java.util.Comparator;
 import java.util.function.Function;
@@ -23,7 +23,7 @@ public class Sorter<T> {
     private boolean nullFirst = true;
 
     @SuppressWarnings("unchecked")
-    Comparator<T> getComparator() {
+    public Comparator<T> getComparator() {
         return (Comparator<T>) Sorter.<T>nullOrder(nullFirst).apply(comparator);
     }
 
@@ -155,7 +155,7 @@ public class Sorter<T> {
      * @param nullFirst    是否null值前置
      * @return {@link Comparator }<{@link T }>
      */
-    static <T, U extends Comparable<? super U>> Comparator<T> build(Function<? super T, ? extends U> keyExtractor, boolean desc, boolean nullFirst) {
+    public static <T, U extends Comparable<? super U>> Comparator<T> build(Function<? super T, ? extends U> keyExtractor, boolean desc, boolean nullFirst) {
         Comparator<U> baseOrder = desc ? Comparator.reverseOrder() : Comparator.naturalOrder();
         return Comparator.comparing(keyExtractor, Sorter.<U>nullOrder(nullFirst).apply(baseOrder));
     }

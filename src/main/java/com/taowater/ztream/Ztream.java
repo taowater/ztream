@@ -2,6 +2,12 @@ package com.taowater.ztream;
 
 import com.taowater.taol.core.util.ConvertUtil;
 import com.taowater.taol.core.util.EmptyUtil;
+import com.taowater.ztream.assist.BreakException;
+import com.taowater.ztream.assist.Functions;
+import com.taowater.ztream.assist.Sorter;
+import com.taowater.ztream.assist.Spliterators;
+import com.taowater.ztream.op.GroupBy;
+import com.taowater.ztream.op.ToMap;
 import lombok.var;
 
 import java.util.*;
@@ -19,7 +25,7 @@ import java.util.stream.StreamSupport;
  * @date 2022/11/13 01:11:56
  */
 @SuppressWarnings("unchecked")
-public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements ZGroupBy<T>,
+public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements GroupBy<T>,
         ToMap<T> {
 
     Ztream(Stream<T> stream) {

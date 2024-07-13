@@ -1,5 +1,6 @@
-package com.taowater.ztream;
+package com.taowater.ztream.assist;
 
+import com.taowater.ztream.Ztream;
 import lombok.experimental.UtilityClass;
 
 import java.util.*;
@@ -15,10 +16,10 @@ import java.util.stream.Collector;
  * @date 2024/07/07 02:56
  */
 @UtilityClass
-class Spliterators {
+public class Spliterators {
 
     // 分组用分割器
-    class GroupSpliterator<T, K, V, A, D> implements Spliterator<Entry<K, D>> {
+    public static class GroupSpliterator<T, K, V, A, D> implements Spliterator<Entry<K, D>> {
         /**
          * 源分割器
          */
@@ -33,10 +34,10 @@ class Spliterators {
         private final Function<? super T, ? extends V> funV;
         private final Collector<? super V, A, D> downstream;
 
-        GroupSpliterator(Spliterator<T> sourceSpliterator,
-                         Function<? super T, ? extends K> funK,
-                         Function<? super T, ? extends V> funV,
-                         Collector<? super V, A, D> downstream
+        public GroupSpliterator(Spliterator<T> sourceSpliterator,
+                                Function<? super T, ? extends K> funK,
+                                Function<? super T, ? extends V> funV,
+                                Collector<? super V, A, D> downstream
         ) {
             this.sourceSpliterator = sourceSpliterator;
             this.funK = funK;
@@ -87,7 +88,7 @@ class Spliterators {
     }
 
     // 追加分割器
-    class AppendSpliterator<T> implements Spliterator<T> {
+    public static class AppendSpliterator<T> implements Spliterator<T> {
         /**
          * 源分割器
          */
@@ -97,8 +98,8 @@ class Spliterators {
         private long size;
 
         @SuppressWarnings("unchecked")
-        AppendSpliterator(Spliterator<? extends T> left,
-                          Spliterator<? extends T> right
+        public AppendSpliterator(Spliterator<? extends T> left,
+                                 Spliterator<? extends T> right
         ) {
 
             this.left = (Spliterator<T>) left;

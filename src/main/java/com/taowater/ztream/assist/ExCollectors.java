@@ -1,7 +1,8 @@
-package com.taowater.ztream;
+package com.taowater.ztream.assist;
 
 
 import com.taowater.taol.core.function.SerFunction;
+import com.taowater.ztream.Ztream;
 import lombok.experimental.UtilityClass;
 import org.dromara.hutool.core.math.NumberUtil;
 
