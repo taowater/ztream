@@ -145,16 +145,6 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
     }
 
     /**
-     * 判断元素某个属性是有重复
-     *
-     * @param function 函数
-     * @return boolean
-     */
-    public boolean hadRepeat(Function<? super T, ?> function) {
-        return map(function).hadRepeat();
-    }
-
-    /**
      * 转换
      *
      * @param clazz clazz

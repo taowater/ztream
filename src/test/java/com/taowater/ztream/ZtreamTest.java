@@ -270,6 +270,22 @@ class ZtreamTest {
 
 
     @Test
+    void judge() {
+        Assertions.assertFalse(Ztream.of(testList).hadRepeat());
+        Assertions.assertTrue(Ztream.of(testList).hadRepeat(Student::getName));
+        Assertions.assertTrue(Ztream.of(testList).anyMatch(Student::getName, Objects::isNull));
+        Assertions.assertFalse(Ztream.of(testList).noneMatch(Student::getName, Objects::isNull));
+        Assertions.assertFalse(Ztream.of(testList).allMatch(Student::getName, Objects::isNull));
+
+
+        Assertions.assertFalse(Ztream.of(null, null).isEmpty());
+        Assertions.assertTrue(Ztream.of(null, null).nonNull().isEmpty());
+        Assertions.assertTrue(Ztream.of(null, null).isNotEmpty());
+
+
+    }
+
+    @Test
     void shuffle() {
         Ztream.of(testList).shuffle().limit(3).nonNull().map(Student::getAge).forEach(System.out::println);
     }

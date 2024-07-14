@@ -5,9 +5,7 @@ import com.taowater.ztream.assist.Box;
 import com.taowater.ztream.op.Math;
 import com.taowater.ztream.op.*;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -19,7 +17,8 @@ import java.util.stream.Stream;
  */
 public abstract class AbstractZtream<T, S extends AbstractZtream<T, S>> implements Filter<T, S>, Sort<T, S>, Collect<T>,
         Math<T>,
-        Join<T, S> {
+        Join<T, S>,
+        Judge<T, S> {
     protected final Stream<T> stream;
 
     protected AbstractZtream(Stream<T> stream) {
@@ -93,16 +92,5 @@ public abstract class AbstractZtream<T, S extends AbstractZtream<T, S>> implemen
      */
     public Any<T> random() {
         return Any.of(shuffle().findFirst().orElse(null));
-    }
-
-
-    /**
-     * 判断元素是否有重复
-     *
-     * @return boolean
-     */
-    public boolean hadRepeat() {
-        Set<T> set = new HashSet<>();
-        return anyMatch(x -> !set.add(x));
     }
 }
