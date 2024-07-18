@@ -114,18 +114,6 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
     }
 
     /**
-     * 如果流集合不为空，则执行以所有元素收集成List为入参的消费函数
-     *
-     * @param consumer 消费者
-     */
-    public <C extends Collection<T>> void ifNotEmpty(Consumer<C> consumer) {
-        C list = (C) this.toList();
-        if (EmptyUtil.isNotEmpty(list)) {
-            consumer.accept(list);
-        }
-    }
-
-    /**
      * 遍历
      *
      * @param action 行动
@@ -177,7 +165,10 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
      */
     @SafeVarargs
     public final Ztream<T> append(T... values) {
-        return this.append(Ztream.of(values).toList());
+        if (EmptyUtil.isEmpty(values)) {
+            return this;
+        }
+        return append(Arrays.spliterator(values));
     }
 
     /**

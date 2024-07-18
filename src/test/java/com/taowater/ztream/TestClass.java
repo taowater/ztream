@@ -24,11 +24,9 @@ public class TestClass {
 
     public static class Person {
         private String sex;
-
     }
 
     @Data
-    @EqualsAndHashCode(callSuper = true)
     public static class Teacher extends Person {
         private String name;
         private Long money;

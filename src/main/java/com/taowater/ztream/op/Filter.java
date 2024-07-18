@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  * 过滤操作
  *
  * @author zhu56
- * @date 2024/07/13 00:33
+ * @see 0.0.3
  */
 public interface Filter<T, S extends IZtream<T, S>> extends IZtream<T, S> {
 
@@ -89,6 +89,7 @@ public interface Filter<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      * @param rightValue 右值
      * @return 新流
      */
+    @SuppressWarnings("unchecked")
     default <N extends Comparable<? super N>> S between(Function<? super T, ? extends N> fun, N leftValue, N rightValue) {
         if (EmptyUtil.isAllEmpty(leftValue, rightValue)) {
             return wrap(this);
@@ -107,7 +108,7 @@ public interface Filter<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      */
     default S rightLike(Function<? super T, String> fun, String value) {
         return filter(e -> {
-            String str = fun.apply(e);
+            String str = Any.of(e).get(fun);
             if (EmptyUtil.isEmpty(str)) {
                 return EmptyUtil.isEmpty(value);
             }
@@ -136,7 +137,11 @@ public interface Filter<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      * @param values 值
      * @return 新流
      */
+    @SuppressWarnings("unchecked")
     default <V> S in(Function<? super T, ? extends V> fun, V... values) {
+        if (EmptyUtil.isEmpty(values)) {
+            return wrap(Stream.empty());
+        }
         return in(fun, Stream.of(values).collect(Collectors.toSet()));
     }
 
@@ -158,6 +163,7 @@ public interface Filter<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      * @param values 值
      * @return 新流
      */
+    @SuppressWarnings("unchecked")
     default <V> S notIn(Function<? super T, ? extends V> fun, V... values) {
         return notIn(fun, new HashSet<>(Arrays.asList(values)));
     }

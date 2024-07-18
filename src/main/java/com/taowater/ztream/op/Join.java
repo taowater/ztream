@@ -12,7 +12,7 @@ import java.util.function.Function;
  * join操作
  *
  * @author Zhu56
- * @date 2022/11/13 19:12:35
+ * @since 0.0.1
  */
 public interface Join<T, S extends IZtream<T, S>> extends IZtream<T, S> {
 

@@ -14,7 +14,7 @@ import java.util.function.Function;
  * 排序操作
  *
  * @author zhu56
- * @date 2024/07/13 00:39
+ * @since 0.0.3
  */
 public interface Sort<T, S extends IZtream<T, S>> extends IZtream<T, S> {
 

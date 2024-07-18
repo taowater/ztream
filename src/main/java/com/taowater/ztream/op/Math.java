@@ -15,8 +15,7 @@ import java.util.stream.Stream;
  * 数学统计相关
  *
  * @author zhu56
- * @version 1.0
- * @date 2022/11/14 9:53
+ * @since 0.0.1
  */
 public interface Math<T> extends Stream<T> {
 

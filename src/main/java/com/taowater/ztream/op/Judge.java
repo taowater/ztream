@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  * 判断操作
  *
  * @author zhu56
- * @date 2024/07/15 00:42
+ * @date @since 0.1.13
  */
 public interface Judge<T, S extends IZtream<T, S>> extends IZtream<T, S> {
 

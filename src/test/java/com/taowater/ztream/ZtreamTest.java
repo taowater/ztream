@@ -1,11 +1,13 @@
 package com.taowater.ztream;
 
+import com.taowater.taol.core.util.EmptyUtil;
 import com.taowater.ztream.TestClass.Student;
 import lombok.SneakyThrows;
 import lombok.var;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
+import org.dromara.hutool.core.text.StrValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -162,6 +164,31 @@ class ZtreamTest {
     void filter() {
 
         equals(
+                Ztream.of(testList).lt(Student::getAge, 5),
+                testList.stream().filter(e -> Objects.nonNull(e) && Objects.nonNull(e.getAge()) && e.getAge() < 5)
+        );
+
+        equals(
+                Ztream.of(testList).le(Student::getAge, 5),
+                testList.stream().filter(e -> Objects.nonNull(e) && Objects.nonNull(e.getAge()) && e.getAge() <= 5)
+        );
+
+        equals(
+                Ztream.of(testList).gt(Student::getAge, 7),
+                testList.stream().filter(e -> Objects.nonNull(e) && Objects.nonNull(e.getAge()) && e.getAge() > 7)
+        );
+
+        equals(
+                Ztream.of(testList).between(Student::getAge, 3, 8),
+                testList.stream().filter(e -> Objects.nonNull(e) && Objects.nonNull(e.getAge()) && e.getAge() >= 3 && e.getAge() <= 8)
+        );
+
+        equals(
+                Ztream.of(testList).ge(Student::getAge, 3),
+                testList.stream().filter(e -> Objects.nonNull(e) && Objects.nonNull(e.getAge()) && e.getAge() >= 3)
+        );
+
+        equals(
                 Ztream.of(testList).eq(Student::getName, "小猪"),
                 testList.stream().filter(e -> Objects.equals("小猪", Any.of(e).get(Student::getName)))
         );
@@ -177,7 +204,7 @@ class ZtreamTest {
         );
 
         equals(
-                Ztream.of(testList).in(Student::getName, ListUtil.of("小猪", null)),
+                Ztream.of(testList).in(Student::getName, "小猪", null),
                 testList.stream().filter(e -> ListUtil.of(ListUtil.of("小猪", null)).contains(Any.of(e).get(Student::getName)))
         );
 
@@ -187,14 +214,35 @@ class ZtreamTest {
         );
 
         equals(
-                Ztream.of(testList).ge(Student::getAge, 45),
-                testList.stream().filter(Objects::nonNull).filter(e -> Objects.nonNull(e.getAge())).filter(e -> Any.of(e).get(Student::getAge) >= 45)
+                Ztream.of(testList).isNull(),
+                testList.stream().filter(Objects::isNull)
         );
 
         equals(
-                Ztream.of(testList).le(Student::getAge, 45),
-                testList.stream().filter(Objects::nonNull).filter(e -> Objects.nonNull(e.getAge())).filter(e -> Any.of(e).get(Student::getAge) <= 45)
+                Ztream.of(testList).isBlank(Student::getName),
+                testList.stream().filter(e -> StrValidator.isBlank(Any.of(e).get(Student::getName)))
         );
+
+        equals(
+                Ztream.of(testList).nonBlank(Student::getName),
+                testList.stream().filter(e -> StrValidator.isNotBlank((Any.of(e).get(Student::getName))))
+        );
+
+        equals(
+                Ztream.of(testList).nonEmpty(Student::getName),
+                testList.stream().filter(e -> EmptyUtil.isNotEmpty((Any.of(e).get(Student::getName))))
+        );
+        equals(
+                Ztream.of(testList).rightLike(Student::getName, "小"),
+                testList.stream().filter(e -> {
+                    String str = Any.of(e).get(Student::getName);
+                    if (EmptyUtil.isEmpty(str)) {
+                        return false;
+                    }
+                    return str.startsWith("小");
+                })
+        );
+
 
     }
 
@@ -223,27 +271,36 @@ class ZtreamTest {
     }
 
     @Test
-    void testFilter() {
-
-        List<Student> list = ListUtil.of(
-                new Student().setName("小猪").setAge(123),
-                new Student().setName("小狗").setAge(45),
-                new Student().setName(null).setAge(564),
-                new Student().setName("小狗").setAge(null),
-                new Student().setName(null).setAge(70),
-                new Student().setName("小猪").setAge(4),
-                new Student().setName("小猪").setAge(null)
+    void collect() {
+        equals(
+                Ztream.of(testList).toList(),
+                testList
         );
-        System.out.println("------");
-        Ztream.of(list).lt(Student::getAge, 4).forEach(System.out::println);
-        System.out.println("------");
-        Ztream.of(list).le(Student::getAge, 4).forEach(System.out::println);
-        System.out.println("------");
-        Ztream.of(list).gt(Student::getAge, 70).forEach(System.out::println);
-        System.out.println("------");
-        Ztream.of(list).ge(Student::getAge, 70).forEach(System.out::println);
-        System.out.println("------");
-        Ztream.of(list).between(Student::getAge, 69, 71).forEach(System.out::println);
+
+        equals(
+                Ztream.of(testList).toList(Student::getName),
+                testList.stream().map(e -> Any.of(e).get(Student::getName)).collect(Collectors.toList())
+        );
+        equals(
+                Ztream.of(testList).toList(TestClass.Teacher.class),
+                testList.stream().map(e -> Any.of(e).get(TestClass.Teacher.class)).collect(Collectors.toList())
+        );
+
+        equals(
+                Ztream.of(testList).toSet(),
+                new HashSet<>(testList)
+        );
+
+        equals(
+                Ztream.of(testList).toSet(Student::getName),
+                testList.stream().map(e -> Any.of(e).get(Student::getName)).collect(Collectors.toSet())
+        );
+        equals(
+                Ztream.of(testList).toSet(TestClass.Teacher.class),
+                testList.stream().map(e -> Any.of(e).get(TestClass.Teacher.class)).collect(Collectors.toSet())
+        );
+
+
     }
 
     @Test
@@ -290,7 +347,7 @@ class ZtreamTest {
         Ztream.of(testList).shuffle().limit(3).nonNull().map(Student::getAge).forEach(System.out::println);
     }
 
-    public static void equals(Object o1, Object o2) {
+    public static <T> void equals(T o1, T o2) {
 //        System.out.println("----equals----");
         System.out.println(o1);
         System.out.println(o2);

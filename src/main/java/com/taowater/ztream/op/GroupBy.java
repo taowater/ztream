@@ -16,7 +16,7 @@ import java.util.stream.Stream;
  * 分组操作
  *
  * @author Zhu56
- * @date 2022/11/13 20:21:12
+ * @since 0.0.1
  */
 public interface GroupBy<T> extends Stream<T> {
 
