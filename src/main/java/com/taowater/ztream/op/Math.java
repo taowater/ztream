@@ -23,7 +23,7 @@ public interface Math<T> extends Stream<T> {
      * 累加
      *
      * @param fun 属性
-     * @return 统计值
+     * @return 和
      */
     default <N extends Number> N sum(SerFunction<? super T, ? extends N> fun) {
         return sum(fun, null);
@@ -34,7 +34,7 @@ public interface Math<T> extends Stream<T> {
      *
      * @param fun          属性方法引用
      * @param defaultValue 默认值
-     * @return 统计值
+     * @return 和
      */
     default <N extends Number> N sum(SerFunction<? super T, ? extends N> fun, N defaultValue) {
         var result = filter(Objects::nonNull)
@@ -52,7 +52,7 @@ public interface Math<T> extends Stream<T> {
      * 最大值
      *
      * @param fun 函数
-     * @return {@link N}
+     * @return 最大值
      */
     default <N extends Comparable<N>> N max(SerFunction<? super T, ? extends N> fun) {
         return max(fun, null);
@@ -63,7 +63,7 @@ public interface Math<T> extends Stream<T> {
      *
      * @param fun          属性
      * @param defaultValue 默认值
-     * @return {@link N}
+     * @return 最大值
      */
     default <N extends Comparable<N>> N max(SerFunction<? super T, ? extends N> fun, N defaultValue) {
         var result = filter(Objects::nonNull)
@@ -80,7 +80,7 @@ public interface Math<T> extends Stream<T> {
      * 最小值
      *
      * @param fun 函数
-     * @return {@link N}
+     * @return 最小值
      */
     default <N extends Comparable<N>> N min(SerFunction<? super T, ? extends N> fun) {
         return min(fun, null);
@@ -91,7 +91,7 @@ public interface Math<T> extends Stream<T> {
      *
      * @param fun          属性
      * @param defaultValue 默认值
-     * @return {@link N}
+     * @return 最小值
      */
     default <N extends Comparable<N>> N min(SerFunction<? super T, ? extends N> fun, N defaultValue) {
         var result = filter(Objects::nonNull)
@@ -110,7 +110,7 @@ public interface Math<T> extends Stream<T> {
      * @param fun          属性
      * @param defaultValue 默认值
      * @param nullCount    null是否计数
-     * @return {@link N }
+     * @return 平均值
      */
     default <N extends Number> N avg(SerFunction<? super T, ? extends N> fun, N defaultValue, boolean nullCount) {
         var result = collect(ExCollectors.avg(fun, nullCount));
@@ -122,7 +122,7 @@ public interface Math<T> extends Stream<T> {
      *
      * @param fun          属性
      * @param defaultValue 默认值
-     * @return {@link N }
+     * @return 平均值
      */
     default <N extends Number> N avg(SerFunction<? super T, ? extends N> fun, N defaultValue) {
         return avg(fun, defaultValue, true);

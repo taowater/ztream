@@ -125,9 +125,8 @@ public interface Sort<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      *
      * @return {@link S }
      */
-    @SuppressWarnings("unchecked")
     default S reverse() {
         AtomicInteger index = new AtomicInteger(0);
-        return wrap(map(e -> new Box.PairBox<>(e, index.getAndAdd(1))).sorted(Comparator.comparing((Box.PairBox<T, Integer> o) -> o.getB()).reversed()).map(Box::getA));
+        return wrap(map(e -> new Box.PairBox<>(e, index.getAndAdd(1))).sorted(Comparator.comparing((Function<Box.PairBox<T, Integer>, Integer>) Box.PairBox::getB).reversed()).map(Box::getA));
     }
 }

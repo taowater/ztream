@@ -91,12 +91,15 @@ class ZtreamTest {
     void hash() {
 
         Map<String, Integer> map = new HashMap<>();
+        Map<String, Student> oMap = new HashMap<>();
         for (var item : testList) {
             if (item == null) {
                 map.put(null, null);
+                oMap.put(null, null);
                 continue;
             }
             map.put(item.getName(), item.getAge());
+            oMap.put(item.getName(), item);
         }
 
         equals(
@@ -105,9 +108,18 @@ class ZtreamTest {
         );
 
         equals(
+                Ztream.of(testList).toMap(Student::getName),
+                oMap
+        );
+
+        equals(
                 Ztream.of(testList).hash(Student::getName, Student::getAge),
                 map
         );
+
+        assert Ztream.of(testList).toMap(Student::getName, () -> new LinkedHashMap<>()) instanceof LinkedHashMap;
+
+
     }
 
     @Test

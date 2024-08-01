@@ -24,7 +24,7 @@ public interface GroupBy<T> extends Stream<T> {
      * 分组-缺省值类型、Map类型及组集合类型，默认为元素本身、HashMap及ArrayList
      *
      * @param funK funK
-     * @return {@link Map}<{@link K}, {@link List}<{@link T}>>
+     * @return 分组结果
      */
     default <K> Map<K, List<T>> groupBy(Function<? super T, ? extends K> funK) {
         return this.groupBy(funK, Function.identity());
@@ -35,7 +35,7 @@ public interface GroupBy<T> extends Stream<T> {
      *
      * @param funK       分组依据
      * @param mapFactory map工厂
-     * @return {@link M}
+     * @return 分组结果
      */
     default <K, M extends Map<K, List<T>>> M groupBy(Function<? super T, ? extends K> funK, Supplier<M> mapFactory) {
         return this.groupBy(funK, mapFactory, Collectors.toList());
@@ -46,7 +46,7 @@ public interface GroupBy<T> extends Stream<T> {
      *
      * @param funK       分组依据
      * @param downstream 下游
-     * @return {@link M}
+     * @return 分组结果
      */
     @SuppressWarnings("unchecked")
     default <K, A, D, M extends Map<K, D>> M groupBy(Function<? super T, ? extends K> funK, Collector<? super T, A, D> downstream) {
@@ -60,7 +60,7 @@ public interface GroupBy<T> extends Stream<T> {
      * @param funK       分组依据
      * @param mapFactory map工厂
      * @param downstream 下游
-     * @return {@link M}
+     * @return 分组结果
      */
     default <K, A, D, M extends Map<K, D>> M groupBy(Function<? super T, ? extends K> funK, Supplier<M> mapFactory, Collector<? super T, A, D> downstream) {
         return this.groupBy(funK, Function.identity(), mapFactory, downstream);
@@ -71,7 +71,7 @@ public interface GroupBy<T> extends Stream<T> {
      *
      * @param funK 分组依据
      * @param funV 值依据
-     * @return {@link Map}<{@link K}, {@link List}<{@link V}>>
+     * @return 分组结果
      */
     default <K, V> Map<K, List<V>> groupBy(Function<? super T, ? extends K> funK, Function<? super T, ? extends V> funV) {
         return this.groupBy(funK, funV, HashMap::new);
@@ -83,7 +83,7 @@ public interface GroupBy<T> extends Stream<T> {
      * @param funK       分组依据
      * @param funV       值依据
      * @param mapFactory 提供的map
-     * @return {@link Map}<{@link K}, {@link List}<{@link V}>>
+     * @return 分组结果
      */
     default <K, V, M extends Map<K, List<V>>> M groupBy(Function<? super T, ? extends K> funK, Function<? super T, ? extends V> funV, Supplier<M> mapFactory) {
         return this.groupBy(funK, funV, mapFactory, Collectors.toList());
@@ -95,7 +95,7 @@ public interface GroupBy<T> extends Stream<T> {
      * @param funK       分组依据
      * @param funV       值依据
      * @param downstream 下游操作(组集合的类型)
-     * @return {@link M}
+     * @return 分组结果
      */
     @SuppressWarnings("unchecked")
     default <K, V, A, D, M extends Map<K, D>> M groupBy(Function<? super T, ? extends K> funK, Function<? super T, ? extends V> funV, Collector<? super V, A, D> downstream) {
@@ -112,7 +112,7 @@ public interface GroupBy<T> extends Stream<T> {
      * @param funV       值依据
      * @param mapFactory 提供的map
      * @param downstream 下游操作(组集合的类型)
-     * @return map
+     * @return 分组结果
      */
     default <K, V, A, D, M extends Map<K, D>> M groupBy(Function<? super T, ? extends K> funK, Function<? super T, ? extends V> funV, Supplier<M> mapFactory, Collector<? super V, A, D> downstream) {
         return this.collect(ExCollectors.groupingBy(funK, mapFactory, ExCollectors.mapping(funV, downstream)));
@@ -123,7 +123,7 @@ public interface GroupBy<T> extends Stream<T> {
      *
      * @param funK  一重键
      * @param funK2 二重键
-     * @return {@link M}
+     * @return 分组结果
      */
     default <K, K2, M extends Map<K, Map<K2, List<T>>>> M groupBilayer(Function<? super T, ? extends K> funK, Function<? super T, ? extends K2> funK2) {
         return groupBilayer(funK, funK2, Function.identity());
@@ -135,7 +135,7 @@ public interface GroupBy<T> extends Stream<T> {
      * @param funK  一重键
      * @param funK2 二重键
      * @param funV  值属性
-     * @return {@link M}
+     * @return 分组结果
      */
     @SuppressWarnings("unchecked")
     default <K, K2, V, M extends Map<K, Map<K2, List<V>>>> M groupBilayer(Function<? super T, ? extends K> funK, Function<? super T, ? extends K2> funK2, Function<? super T, ? extends V> funV) {

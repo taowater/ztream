@@ -53,7 +53,7 @@ public interface Join<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      * @return 拼接后的字符串
      */
     default String join(Function<? super T, ?> fun, CharSequence delimiter) {
-        return map(e -> Any.of(e).get(fun)).collect(ExCollectors.join(delimiter, "", ""));
+        return map(e -> Any.of(e).get(fun)).collect(ExCollectors.join(delimiter));
     }
 
     /**

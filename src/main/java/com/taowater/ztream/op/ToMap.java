@@ -20,7 +20,7 @@ public interface ToMap<T> extends Stream<T> {
      * 映射
      *
      * @param funK 键方法
-     * @return {@link Map}<{@link K}, {@link T}>
+     * @return 映射结果
      */
     default <K> Map<K, T> toMap(Function<? super T, ? extends K> funK) {
         return this.toMap(funK, Function.identity());
@@ -31,7 +31,7 @@ public interface ToMap<T> extends Stream<T> {
      *
      * @param funK       键方法
      * @param mapFactory map工厂
-     * @return {@link M}
+     * @return 映射结果
      */
     default <K, M extends Map<K, T>> M toMap(
             Function<? super T, ? extends K> funK,
@@ -44,7 +44,7 @@ public interface ToMap<T> extends Stream<T> {
      *
      * @param funK 键方法
      * @param funV 值方法
-     * @return {@link Map}<{@link K}, {@link V}>
+     * @return 映射结果
      */
     default <K, V> Map<K, V> toMap(
             Function<? super T, ? extends K> funK,
@@ -58,7 +58,7 @@ public interface ToMap<T> extends Stream<T> {
      * @param funK       键方法
      * @param funV       值方法
      * @param mapFactory map工厂
-     * @return {@link Map}<{@link K}, {@link V}>
+     * @return 映射结果
      */
     default <K, V, M extends Map<K, V>> M toMap(
             Function<? super T, ? extends K> funK,
