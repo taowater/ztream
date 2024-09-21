@@ -1,10 +1,10 @@
 package com.taowater.ztream.op;
 
 
-import com.taowater.taol.core.function.SerFunction;
 import com.taowater.ztream.Any;
 import com.taowater.ztream.assist.BigDecimalStrategy;
 import com.taowater.ztream.assist.ExCollectors;
+import io.vavr.Function1;
 import lombok.var;
 import org.dromara.hutool.core.math.NumberUtil;
 
@@ -25,7 +25,7 @@ public interface Math<T> extends Stream<T> {
      * @param fun 属性
      * @return 和
      */
-    default <N extends Number> N sum(SerFunction<? super T, ? extends N> fun) {
+    default <N extends Number> N sum(Function1<? super T, ? extends N> fun) {
         return sum(fun, null);
     }
 
@@ -36,7 +36,7 @@ public interface Math<T> extends Stream<T> {
      * @param defaultValue 默认值
      * @return 和
      */
-    default <N extends Number> N sum(SerFunction<? super T, ? extends N> fun, N defaultValue) {
+    default <N extends Number> N sum(Function1<? super T, ? extends N> fun, N defaultValue) {
         var result = filter(Objects::nonNull)
                 .map(fun)
                 .map(NumberUtil::toBigDecimal)
@@ -54,7 +54,7 @@ public interface Math<T> extends Stream<T> {
      * @param fun 函数
      * @return 最大值
      */
-    default <N extends Comparable<N>> N max(SerFunction<? super T, ? extends N> fun) {
+    default <N extends Comparable<N>> N max(Function1<? super T, ? extends N> fun) {
         return max(fun, null);
     }
 
@@ -65,7 +65,7 @@ public interface Math<T> extends Stream<T> {
      * @param defaultValue 默认值
      * @return 最大值
      */
-    default <N extends Comparable<N>> N max(SerFunction<? super T, ? extends N> fun, N defaultValue) {
+    default <N extends Comparable<N>> N max(Function1<? super T, ? extends N> fun, N defaultValue) {
         var result = filter(Objects::nonNull)
                 .map(fun)
                 .filter(Objects::nonNull)
@@ -82,7 +82,7 @@ public interface Math<T> extends Stream<T> {
      * @param fun 函数
      * @return 最小值
      */
-    default <N extends Comparable<N>> N min(SerFunction<? super T, ? extends N> fun) {
+    default <N extends Comparable<N>> N min(Function1<? super T, ? extends N> fun) {
         return min(fun, null);
     }
 
@@ -93,7 +93,7 @@ public interface Math<T> extends Stream<T> {
      * @param defaultValue 默认值
      * @return 最小值
      */
-    default <N extends Comparable<N>> N min(SerFunction<? super T, ? extends N> fun, N defaultValue) {
+    default <N extends Comparable<N>> N min(Function1<? super T, ? extends N> fun, N defaultValue) {
         var result = filter(Objects::nonNull)
                 .map(fun)
                 .filter(Objects::nonNull)
@@ -112,7 +112,7 @@ public interface Math<T> extends Stream<T> {
      * @param nullCount    null是否计数
      * @return 平均值
      */
-    default <N extends Number> N avg(SerFunction<? super T, ? extends N> fun, N defaultValue, boolean nullCount) {
+    default <N extends Number> N avg(Function1<? super T, ? extends N> fun, N defaultValue, boolean nullCount) {
         var result = collect(ExCollectors.avg(fun, nullCount));
         return Any.of(result).orElse(defaultValue);
     }
@@ -124,7 +124,7 @@ public interface Math<T> extends Stream<T> {
      * @param defaultValue 默认值
      * @return 平均值
      */
-    default <N extends Number> N avg(SerFunction<? super T, ? extends N> fun, N defaultValue) {
+    default <N extends Number> N avg(Function1<? super T, ? extends N> fun, N defaultValue) {
         return avg(fun, defaultValue, true);
     }
 }

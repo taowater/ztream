@@ -3,12 +3,14 @@ package com.taowater.ztream.op;
 import com.taowater.taol.core.util.EmptyUtil;
 import com.taowater.ztream.Any;
 import com.taowater.ztream.IZtream;
+import com.taowater.ztream.assist.Wrapper;
 import org.dromara.hutool.core.text.StrValidator;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -297,5 +299,17 @@ public interface Filter<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      */
     default <V> S filter(Function<? super T, ? extends V> fun, Predicate<? super V> predicate) {
         return filter(e -> predicate.test(Any.of(e).get(fun)));
+    }
+
+    /**
+     * 条件过滤
+     *
+     * @param consumer 消费者
+     * @return {@link S }
+     */
+    default S query(Consumer<Wrapper<T>> consumer) {
+        Wrapper<T> wrapper = new Wrapper<>();
+        consumer.accept(wrapper);
+        return wrap(filter(e -> e, wrapper.getCondition()));
     }
 }

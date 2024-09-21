@@ -1,8 +1,8 @@
 package com.taowater.ztream.assist;
 
 
-import com.taowater.taol.core.function.SerFunction;
 import com.taowater.ztream.Ztream;
+import io.vavr.Function1;
 import lombok.experimental.UtilityClass;
 import org.dromara.hutool.core.math.NumberUtil;
 
@@ -89,7 +89,7 @@ public class ExCollectors {
      * @param nullCount null是否计数
      * @return {@link CollectorImpl }<{@link T }, {@link List }<{@link T }>, {@link N }>
      */
-    public static <T, N extends Number> CollectorImpl<T, List<T>, N> avg(SerFunction<? super T, N> fun, boolean nullCount) {
+    public static <T, N extends Number> CollectorImpl<T, List<T>, N> avg(Function1<? super T, N> fun, boolean nullCount) {
         return new CollectorImpl<>(
                 ArrayList::new,
                 List::add,

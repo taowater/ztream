@@ -1,8 +1,8 @@
 package com.taowater.ztream.assist;
 
 import com.taowater.taol.core.function.LambdaUtil;
-import com.taowater.taol.core.function.SerFunction;
 import com.taowater.taol.core.util.EmptyUtil;
+import io.vavr.Function1;
 import lombok.experimental.UtilityClass;
 import org.dromara.hutool.core.map.MapUtil;
 
@@ -40,7 +40,7 @@ public class BigDecimalStrategy {
      * @return {@link N}
      */
     @SuppressWarnings("unchecked")
-    public <N extends Number> N getValue(BigDecimal bigDecimal, SerFunction<?, ? extends N> function) {
+    public <N extends Number> N getValue(BigDecimal bigDecimal, Function1<?, ? extends N> function) {
         if (EmptyUtil.isHadEmpty(bigDecimal, function)) {
             return null;
         }

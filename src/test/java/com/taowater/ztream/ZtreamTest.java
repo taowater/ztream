@@ -255,7 +255,21 @@ class ZtreamTest {
                 })
         );
 
+        Ztream.of(testList).query(w -> w
+                .eq(Student::getAge, 2)
+                .in(Student::getName, "2134")
+                .or(w2 -> w2
+                        .in(Student::getName, "123")
+                )
+        ).toList();
 
+    }
+
+    @Test
+    void wrapper() {
+        Ztream.of(testList).query(w -> w
+                .gt(Student::getAge, 20)
+        ).forEach(System.out::println);
     }
 
     @Test

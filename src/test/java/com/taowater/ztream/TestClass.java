@@ -40,8 +40,8 @@ public class TestClass {
             new Student().setName(" ").setAge(9),
             new Student().setName("小狗").setAge(null),
             new Student().setName(null).setAge(4),
-            new Student().setName("").setAge(8),
-            new Student().setName("小猪").setAge(5),
+            new Student().setName("").setAge(89),
+            new Student().setName("小猪").setAge(50),
             new Student().setName("小猪").setAge(7)
     );
 }
