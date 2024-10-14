@@ -146,7 +146,7 @@ public class Wrapper<T> {
             return this;
         }
         if (Objects.nonNull(leftValue)) {
-            and(p -> p.gt(fun, leftValue));
+            and(p -> p.ge(fun, leftValue));
         }
         if (Objects.nonNull(rightValue)) {
             and(p -> p.le(fun, rightValue));
