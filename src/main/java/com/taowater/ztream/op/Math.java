@@ -57,7 +57,7 @@ public interface Math<T> extends Stream<T> {
      * @param nullFirst 是否null值前置
      * @return {@link T }
      */
-    default <V extends Comparable<V>> Any<T> minBy(Function<? super T, ? extends V> fun, boolean nullFirst) {
+    default <V extends Comparable<? super V>> Any<T> minBy(Function<? super T, ? extends V> fun, boolean nullFirst) {
         return this.min(Sorter.build(fun, false, nullFirst)).map(Any::of).orElse(Any.empty());
     }
 
@@ -68,7 +68,7 @@ public interface Math<T> extends Stream<T> {
      * @param nullFirst 是否null值前置
      * @return {@link T }
      */
-    default <V extends Comparable<V>> Any<T> maxBy(Function<? super T, ? extends V> fun, boolean nullFirst) {
+    default <V extends Comparable<? super V>> Any<T> maxBy(Function<? super T, ? extends V> fun, boolean nullFirst) {
         return this.max(Sorter.build(fun, false, nullFirst)).map(Any::of).orElse(Any.empty());
     }
 
