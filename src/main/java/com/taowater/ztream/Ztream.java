@@ -4,7 +4,6 @@ import com.taowater.taol.core.util.ConvertUtil;
 import com.taowater.taol.core.util.EmptyUtil;
 import com.taowater.ztream.assist.BreakException;
 import com.taowater.ztream.assist.Functions;
-import com.taowater.ztream.assist.Sorter;
 import com.taowater.ztream.assist.Spliterators;
 import com.taowater.ztream.op.GroupBy;
 import com.taowater.ztream.op.ToMap;
@@ -240,29 +239,6 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
      */
     public <N> Ztream<N> cast(Class<N> clazz) {
         return map(clazz::cast);
-    }
-
-
-    /**
-     * 按属性取最小的元素
-     *
-     * @param fun       属性
-     * @param nullFirst 是否null值前置
-     * @return {@link T }
-     */
-    public <V extends Comparable<V>> Any<T> minBy(Function<? super T, ? extends V> fun, boolean nullFirst) {
-        return this.min(Sorter.build(fun, false, nullFirst)).map(Any::of).orElse(Any.empty());
-    }
-
-    /**
-     * 按属性取最大的元素
-     *
-     * @param fun       属性
-     * @param nullFirst 是否null值前置
-     * @return {@link T }
-     */
-    public <V extends Comparable<V>> Any<T> maxBy(Function<? super T, ? extends V> fun, boolean nullFirst) {
-        return this.max(Sorter.build(fun, false, nullFirst)).map(Any::of).orElse(Any.empty());
     }
 
     /**

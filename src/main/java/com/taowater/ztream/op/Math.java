@@ -4,11 +4,13 @@ package com.taowater.ztream.op;
 import com.taowater.ztream.Any;
 import com.taowater.ztream.assist.BigDecimalStrategy;
 import com.taowater.ztream.assist.ExCollectors;
+import com.taowater.ztream.assist.Sorter;
 import io.vavr.Function1;
 import lombok.var;
 import org.dromara.hutool.core.math.NumberUtil;
 
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -46,6 +48,28 @@ public interface Math<T> extends Stream<T> {
             return result.get();
         }
         return defaultValue;
+    }
+
+    /**
+     * 按属性取最小的元素
+     *
+     * @param fun       属性
+     * @param nullFirst 是否null值前置
+     * @return {@link T }
+     */
+    default <V extends Comparable<V>> Any<T> minBy(Function<? super T, ? extends V> fun, boolean nullFirst) {
+        return this.min(Sorter.build(fun, false, nullFirst)).map(Any::of).orElse(Any.empty());
+    }
+
+    /**
+     * 按属性取最大的元素
+     *
+     * @param fun       属性
+     * @param nullFirst 是否null值前置
+     * @return {@link T }
+     */
+    default <V extends Comparable<V>> Any<T> maxBy(Function<? super T, ? extends V> fun, boolean nullFirst) {
+        return this.max(Sorter.build(fun, false, nullFirst)).map(Any::of).orElse(Any.empty());
     }
 
     /**
