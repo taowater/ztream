@@ -62,6 +62,16 @@ public interface Math<T> extends Stream<T> {
     }
 
     /**
+     * 按属性取最小的元素
+     *
+     * @param fun 属性
+     * @return {@link T }
+     */
+    default <V extends Comparable<? super V>> Any<T> minBy(Function<? super T, ? extends V> fun) {
+        return this.minBy(fun, true);
+    }
+
+    /**
      * 按属性取最大的元素
      *
      * @param fun       属性
@@ -70,6 +80,41 @@ public interface Math<T> extends Stream<T> {
      */
     default <V extends Comparable<? super V>> Any<T> maxBy(Function<? super T, ? extends V> fun, boolean nullFirst) {
         return this.max(Sorter.build(fun, false, nullFirst)).map(Any::of).orElse(Any.empty());
+    }
+
+    /**
+     * 按属性取最大的元素
+     *
+     * @param fun 属性
+     * @return {@link T }
+     */
+    default <V extends Comparable<? super V>> Any<T> maxBy(Function<? super T, ? extends V> fun) {
+        return this.maxBy(fun, false);
+    }
+
+    /**
+     * 最大
+     *
+     * @return 结果
+     */
+    default Any<T> max() {
+        return this.max(false);
+    }
+
+    /**
+     * 最大
+     *
+     * @param nullFirst 是否null值前置
+     * @return 结果
+     */
+    @SuppressWarnings("unchecked")
+    default Any<T> max(boolean nullFirst) {
+        return this.max(Sorter.build((a, b) -> {
+            if (a instanceof Comparable) {
+                return ((Comparable) a).compareTo(b);
+            }
+            return a.toString().compareTo(b.toString());
+        }, nullFirst)).map(Any::of).orElse(Any.empty());
     }
 
     /**
@@ -108,6 +153,31 @@ public interface Math<T> extends Stream<T> {
      */
     default <N extends Comparable<N>> N min(Function1<? super T, ? extends N> fun) {
         return min(fun, null);
+    }
+
+    /**
+     * 最小
+     *
+     * @return 结果
+     */
+    default Any<T> min() {
+        return this.max(true);
+    }
+
+    /**
+     * 最小
+     *
+     * @param nullFirst 是否null值前置
+     * @return 结果
+     */
+    @SuppressWarnings("unchecked")
+    default Any<T> min(boolean nullFirst) {
+        return this.min(Sorter.build((a, b) -> {
+            if (a instanceof Comparable) {
+                return ((Comparable) a).compareTo(b);
+            }
+            return a.toString().compareTo(b.toString());
+        }, nullFirst)).map(Any::of).orElse(Any.empty());
     }
 
     /**

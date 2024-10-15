@@ -159,4 +159,8 @@ public class Sorter<T> {
         Comparator<U> baseOrder = desc ? Comparator.reverseOrder() : Comparator.naturalOrder();
         return Comparator.comparing(keyExtractor, Sorter.<U>nullOrder(nullFirst).apply(baseOrder));
     }
+
+    public static <T> Comparator<T> build(Comparator<? super T> comparator, boolean nullFirst) {
+        return (Comparator<T>) Sorter.<T>nullOrder(nullFirst).apply(comparator);
+    }
 }

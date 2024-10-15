@@ -273,6 +273,12 @@ class ZtreamTest {
     }
 
     @Test
+    void max() {
+
+        Ztream.of(testList).maxBy(Student::getAge).ifPresent(e -> System.out.println(e));
+    }
+
+    @Test
     void math() {
 
         equals(
