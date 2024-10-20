@@ -2,6 +2,7 @@ package com.taowater.ztream.op;
 
 
 import com.taowater.ztream.Any;
+import com.taowater.ztream.IZtream;
 import com.taowater.ztream.assist.BigDecimalStrategy;
 import com.taowater.ztream.assist.ExCollectors;
 import com.taowater.ztream.assist.Sorter;
@@ -9,9 +10,9 @@ import io.vavr.Function1;
 import lombok.var;
 import org.dromara.hutool.core.math.NumberUtil;
 
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 /**
  * 数学统计相关
@@ -19,7 +20,7 @@ import java.util.stream.Stream;
  * @author zhu56
  * @since 0.0.1
  */
-public interface Math<T> extends Stream<T> {
+public interface Math<T, S extends IZtream<T, S>> extends IZtream<T, S> {
 
     /**
      * 累加
@@ -58,7 +59,9 @@ public interface Math<T> extends Stream<T> {
      * @return {@link T }
      */
     default <V extends Comparable<? super V>> Any<T> minBy(Function<? super T, ? extends V> fun, boolean nullFirst) {
-        return this.min(Sorter.build(fun, false, nullFirst)).map(Any::of).orElse(Any.empty());
+        Sorter<T> sorter = new Sorter<>(nullFirst);
+        sorter.asc(fun, nullFirst);
+        return this.sorted(sorter.getComparator()).findFirst(false).map(Any::of).orElseGet(Any::empty);
     }
 
     /**
@@ -79,7 +82,9 @@ public interface Math<T> extends Stream<T> {
      * @return {@link T }
      */
     default <V extends Comparable<? super V>> Any<T> maxBy(Function<? super T, ? extends V> fun, boolean nullFirst) {
-        return this.max(Sorter.build(fun, false, nullFirst)).map(Any::of).orElse(Any.empty());
+        Sorter<T> sorter = new Sorter<>(nullFirst);
+        sorter.desc(fun, nullFirst);
+        return this.sorted(sorter.getComparator()).findFirst(false).map(Any::of).orElseGet(Any::empty);
     }
 
     /**
@@ -109,12 +114,14 @@ public interface Math<T> extends Stream<T> {
      */
     @SuppressWarnings("unchecked")
     default Any<T> max(boolean nullFirst) {
-        return this.max(Sorter.build((a, b) -> {
+        Sorter<T> sorter = new Sorter<>(nullFirst);
+        sorter.desc(((Comparator<? super T>) (a, b) -> {
             if (a instanceof Comparable) {
                 return ((Comparable) a).compareTo(b);
             }
             return a.toString().compareTo(b.toString());
-        }, nullFirst)).map(Any::of).orElse(Any.empty());
+        }), nullFirst);
+        return this.sorted(sorter.getComparator()).findFirst(false).map(Any::of).orElseGet(Any::empty);
     }
 
     /**
@@ -161,7 +168,7 @@ public interface Math<T> extends Stream<T> {
      * @return 结果
      */
     default Any<T> min() {
-        return this.max(true);
+        return this.min(true);
     }
 
     /**
@@ -172,12 +179,14 @@ public interface Math<T> extends Stream<T> {
      */
     @SuppressWarnings("unchecked")
     default Any<T> min(boolean nullFirst) {
-        return this.min(Sorter.build((a, b) -> {
+        Sorter<T> sorter = new Sorter<>(nullFirst);
+        sorter.asc(((Comparator<? super T>) (a, b) -> {
             if (a instanceof Comparable) {
                 return ((Comparable) a).compareTo(b);
             }
             return a.toString().compareTo(b.toString());
-        }, nullFirst)).map(Any::of).orElse(Any.empty());
+        }), nullFirst);
+        return this.sorted(sorter.getComparator()).findFirst(false).map(Any::of).orElseGet(Any::empty);
     }
 
     /**

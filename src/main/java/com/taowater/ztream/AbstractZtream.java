@@ -16,7 +16,7 @@ import java.util.stream.Stream;
  * @date 2022/11/13 21:37:12
  */
 public abstract class AbstractZtream<T, S extends AbstractZtream<T, S>> implements Filter<T, S>, Sort<T, S>, Collect<T>,
-        Math<T>,
+        Math<T, S>,
         Join<T, S>,
         Judge<T, S> {
     protected final Stream<T> stream;
@@ -73,7 +73,7 @@ public abstract class AbstractZtream<T, S extends AbstractZtream<T, S>> implemen
      * @return {@link Any}<{@link T}>
      */
     public Any<T> first() {
-        return Any.of(findFirst().orElse(null));
+        return Any.of(findFirst(false).orElse(null));
     }
 
     /**
@@ -82,7 +82,7 @@ public abstract class AbstractZtream<T, S extends AbstractZtream<T, S>> implemen
      * @return {@link Any}<{@link T}>
      */
     public Any<T> any() {
-        return Any.of(findAny().orElse(null));
+        return Any.of(findAny(false).orElse(null));
     }
 
     /**
@@ -91,6 +91,6 @@ public abstract class AbstractZtream<T, S extends AbstractZtream<T, S>> implemen
      * @return {@link Any}<{@link T}>
      */
     public Any<T> random() {
-        return Any.of(shuffle().findFirst().orElse(null));
+        return Any.of(shuffle().findFirst(false).orElse(null));
     }
 }

@@ -192,9 +192,45 @@ public interface IZtream<T, S extends Stream<T>> extends Stream<T>, Iterable<T> 
         return unwrap().findFirst();
     }
 
+    /**
+     * 首个元素
+     *
+     * @param throwNpe 是否抛出空指针异常
+     * @return 结果
+     */
+    default Optional<T> findFirst(boolean throwNpe) {
+        try {
+            return unwrap().findFirst();
+        } catch (NullPointerException e) {
+            if (throwNpe) {
+                throw e;
+            } else {
+                return Optional.empty();
+            }
+        }
+    }
+
     @Override
     default Optional<T> findAny() {
         return unwrap().findAny();
+    }
+
+    /**
+     * 任意一个
+     *
+     * @param throwNpe 是否抛出空指针异常
+     * @return 结果
+     */
+    default Optional<T> findAny(boolean throwNpe) {
+        try {
+            return unwrap().findAny();
+        } catch (NullPointerException e) {
+            if (throwNpe) {
+                throw e;
+            } else {
+                return Optional.empty();
+            }
+        }
     }
 
     @Override

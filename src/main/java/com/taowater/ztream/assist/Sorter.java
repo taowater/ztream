@@ -1,5 +1,7 @@
 package com.taowater.ztream.assist;
 
+import lombok.NoArgsConstructor;
+
 import java.util.Comparator;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
@@ -10,6 +12,7 @@ import java.util.function.UnaryOperator;
  * @author zhu56
  * @date 2024/05/22 00:56
  */
+@NoArgsConstructor
 public class Sorter<T> {
 
     /**
@@ -21,6 +24,10 @@ public class Sorter<T> {
      * 元素为null时是否前置
      */
     private boolean nullFirst = true;
+
+    public Sorter(boolean nullFirst) {
+        this.nullFirst = nullFirst;
+    }
 
     @SuppressWarnings("unchecked")
     public Comparator<T> getComparator() {
@@ -47,6 +54,19 @@ public class Sorter<T> {
      */
     public <U extends Comparable<? super U>> Sorter<T> sort(Function<? super T, ? extends U> keyExtractor, boolean desc, boolean nullFirst) {
         comparator = comparator.thenComparing(build(keyExtractor, desc, nullFirst));
+        return this;
+    }
+
+    /**
+     * 自定义排序逻辑排序
+     *
+     * @param otherComparator 其他比较器
+     * @param desc            是否倒序
+     * @param nullFirst       是否null值前置
+     * @return {@link Sorter }<{@link T }>
+     */
+    public Sorter<T> sort(Comparator<T> otherComparator, boolean desc, boolean nullFirst) {
+        comparator = comparator.thenComparing(build(otherComparator, desc, nullFirst));
         return this;
     }
 
@@ -92,6 +112,18 @@ public class Sorter<T> {
     }
 
     /**
+     * 自定义排序逻辑升序
+     *
+     * @param comparator 比较器
+     * @param nullFirst  是否null值前置
+     * @return {@link Sorter }<{@link T }>
+     */
+    public Sorter<T> asc(Comparator<? super T> comparator, boolean nullFirst) {
+        sort(comparator::compare, false, nullFirst);
+        return this;
+    }
+
+    /**
      * 降序
      *
      * @param keyExtractor 属性
@@ -110,6 +142,18 @@ public class Sorter<T> {
      */
     public <U extends Comparable<? super U>> Sorter<T> desc(Function<? super T, ? extends U> keyExtractor, boolean nullFirst) {
         return sort(keyExtractor, true, nullFirst);
+    }
+
+    /**
+     * 自定义排序逻辑降序
+     *
+     * @param comparator 比较器
+     * @param nullFirst  是否null值前置
+     * @return {@link Sorter }<{@link T }>
+     */
+    public Sorter<T> desc(Comparator<? super T> comparator, boolean nullFirst) {
+        sort(comparator::compare, true, nullFirst);
+        return this;
     }
 
     /**
@@ -160,7 +204,16 @@ public class Sorter<T> {
         return Comparator.comparing(keyExtractor, Sorter.<U>nullOrder(nullFirst).apply(baseOrder));
     }
 
-    public static <T> Comparator<T> build(Comparator<? super T> comparator, boolean nullFirst) {
-        return (Comparator<T>) Sorter.<T>nullOrder(nullFirst).apply(comparator);
+    /**
+     * 根据排序逻辑确定最终的排序器
+     *
+     * @param comparator 比较仪
+     * @param desc       描述
+     * @param nullFirst  是否null值前置
+     * @return {@link Comparator }<{@link T }>
+     */
+    public static <T> Comparator<T> build(Comparator<? super T> comparator, boolean desc, boolean nullFirst) {
+        Comparator<? super T> baseOrder = desc ? comparator.reversed() : comparator;
+        return (Comparator<T>) Sorter.<T>nullOrder(nullFirst).apply(baseOrder);
     }
 }

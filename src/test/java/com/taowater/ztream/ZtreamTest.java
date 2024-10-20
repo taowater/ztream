@@ -7,6 +7,7 @@ import lombok.var;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
+import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.text.StrValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -273,9 +274,36 @@ class ZtreamTest {
     }
 
     @Test
-    void max() {
+    void peak() {
 
-        Ztream.of(testList).maxBy(Student::getAge).ifPresent(e -> System.out.println(e));
+        var o = Ztream.of(testList).maxBy(Student::getAge).orElse(null);
+        var o2 = Ztream.of(testList).minBy(Student::getAge, false).orElse(null);
+        System.out.println(o);
+        System.out.println(o2);
+
+        var list = ListUtil.of(null, 1, 2, 3, 4, 5, 6, null);
+
+        equals(
+                Ztream.of(list).min(false).orElse(null),
+                1
+        );
+
+        equals(
+                Ztream.of(list).max().orElse(null),
+                6
+        );
+
+        var dates = ListUtil.of(DateUtil.yesterday(), DateUtil.today(), DateUtil.tomorrow());
+
+        equals(
+                Ztream.of(dates).max().get(DateUtil::formatDate),
+                DateUtil.formatDate(DateUtil.tomorrow())
+        );
+
+        equals(
+                Ztream.of(dates).min().get(DateUtil::formatDate),
+                DateUtil.formatDate(DateUtil.yesterday())
+        );
     }
 
     @Test
