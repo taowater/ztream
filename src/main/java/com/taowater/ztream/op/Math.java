@@ -5,14 +5,11 @@ import com.taowater.ztream.Any;
 import com.taowater.ztream.IZtream;
 import com.taowater.ztream.assist.BigDecimalStrategy;
 import com.taowater.ztream.assist.ExCollectors;
-import com.taowater.ztream.assist.Sorter;
 import io.vavr.Function1;
 import lombok.var;
 import org.dromara.hutool.core.math.NumberUtil;
 
-import java.util.Comparator;
 import java.util.Objects;
-import java.util.function.Function;
 
 /**
  * 数学统计相关
@@ -54,14 +51,12 @@ public interface Math<T, S extends IZtream<T, S>> extends IZtream<T, S> {
     /**
      * 按属性取最小的元素
      *
-     * @param fun       属性
-     * @param nullFirst 是否null值前置
+     * @param fun     属性
+     * @param nullMin null视为最小
      * @return {@link T }
      */
-    default <V extends Comparable<? super V>> Any<T> minBy(Function<? super T, ? extends V> fun, boolean nullFirst) {
-        Sorter<T> sorter = new Sorter<>(nullFirst);
-        sorter.asc(fun, nullFirst);
-        return this.sorted(sorter.getComparator()).findFirst(false).map(Any::of).orElseGet(Any::empty);
+    default <V extends Comparable<? super V>> Any<T> minBy(Function1<? super T, ? extends V> fun, boolean nullMin) {
+        return this.collect(ExCollectors.peak(fun, nullMin)).getMin();
     }
 
     /**
@@ -70,21 +65,19 @@ public interface Math<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      * @param fun 属性
      * @return {@link T }
      */
-    default <V extends Comparable<? super V>> Any<T> minBy(Function<? super T, ? extends V> fun) {
+    default <V extends Comparable<? super V>> Any<T> minBy(Function1<? super T, ? extends V> fun) {
         return this.minBy(fun, true);
     }
 
     /**
      * 按属性取最大的元素
      *
-     * @param fun       属性
-     * @param nullFirst 是否null值前置
+     * @param fun     属性
+     * @param nullMin null视为最小
      * @return {@link T }
      */
-    default <V extends Comparable<? super V>> Any<T> maxBy(Function<? super T, ? extends V> fun, boolean nullFirst) {
-        Sorter<T> sorter = new Sorter<>(nullFirst);
-        sorter.desc(fun, nullFirst);
-        return this.sorted(sorter.getComparator()).findFirst(false).map(Any::of).orElseGet(Any::empty);
+    default <V extends Comparable<? super V>> Any<T> maxBy(Function1<? super T, ? extends V> fun, boolean nullMin) {
+        return this.collect(ExCollectors.peak(fun, nullMin)).getMax();
     }
 
     /**
@@ -93,8 +86,8 @@ public interface Math<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      * @param fun 属性
      * @return {@link T }
      */
-    default <V extends Comparable<? super V>> Any<T> maxBy(Function<? super T, ? extends V> fun) {
-        return this.maxBy(fun, false);
+    default <V extends Comparable<? super V>> Any<T> maxBy(Function1<? super T, ? extends V> fun) {
+        return this.maxBy(fun, true);
     }
 
     /**
@@ -103,25 +96,25 @@ public interface Math<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      * @return 结果
      */
     default Any<T> max() {
-        return this.max(false);
+        return this.max(true);
     }
 
     /**
      * 最大
      *
-     * @param nullFirst 是否null值前置
+     * @param nullMin null视为最小
      * @return 结果
      */
     @SuppressWarnings("unchecked")
-    default Any<T> max(boolean nullFirst) {
-        Sorter<T> sorter = new Sorter<>(nullFirst);
-        sorter.desc(((Comparator<? super T>) (a, b) -> {
-            if (a instanceof Comparable) {
-                return ((Comparable) a).compareTo(b);
-            }
-            return a.toString().compareTo(b.toString());
-        }), nullFirst);
-        return this.sorted(sorter.getComparator()).findFirst(false).map(Any::of).orElseGet(Any::empty);
+    default Any<T> max(boolean nullMin) {
+        return this.collect(ExCollectors.peak(
+                (a, b) -> {
+                    if (a instanceof Comparable) {
+                        return ((Comparable) a).compareTo(b);
+                    }
+                    return a.toString().compareTo(b.toString());
+                }, nullMin
+        )).getMax();
     }
 
     /**
@@ -142,14 +135,7 @@ public interface Math<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      * @return 最大值
      */
     default <N extends Comparable<N>> N max(Function1<? super T, ? extends N> fun, N defaultValue) {
-        var result = filter(Objects::nonNull)
-                .map(fun)
-                .filter(Objects::nonNull)
-                .reduce((a, b) -> a.compareTo(b) >= 0 ? a : b);
-        if (result.isPresent()) {
-            return result.get();
-        }
-        return defaultValue;
+        return this.maxBy(fun).get(fun, defaultValue);
     }
 
     /**
@@ -174,19 +160,19 @@ public interface Math<T, S extends IZtream<T, S>> extends IZtream<T, S> {
     /**
      * 最小
      *
-     * @param nullFirst 是否null值前置
+     * @param nullMin null视为最小
      * @return 结果
      */
     @SuppressWarnings("unchecked")
-    default Any<T> min(boolean nullFirst) {
-        Sorter<T> sorter = new Sorter<>(nullFirst);
-        sorter.asc(((Comparator<? super T>) (a, b) -> {
-            if (a instanceof Comparable) {
-                return ((Comparable) a).compareTo(b);
-            }
-            return a.toString().compareTo(b.toString());
-        }), nullFirst);
-        return this.sorted(sorter.getComparator()).findFirst(false).map(Any::of).orElseGet(Any::empty);
+    default Any<T> min(boolean nullMin) {
+        return this.collect(ExCollectors.peak(
+                (a, b) -> {
+                    if (a instanceof Comparable) {
+                        return ((Comparable) a).compareTo(b);
+                    }
+                    return a.toString().compareTo(b.toString());
+                }, nullMin
+        )).getMin();
     }
 
     /**
@@ -197,14 +183,7 @@ public interface Math<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      * @return 最小值
      */
     default <N extends Comparable<N>> N min(Function1<? super T, ? extends N> fun, N defaultValue) {
-        var result = filter(Objects::nonNull)
-                .map(fun)
-                .filter(Objects::nonNull)
-                .reduce((a, b) -> a.compareTo(b) < 0 ? a : b);
-        if (result.isPresent()) {
-            return result.get();
-        }
-        return defaultValue;
+        return this.minBy(fun).get(fun, defaultValue);
     }
 
     /**

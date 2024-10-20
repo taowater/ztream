@@ -1,6 +1,7 @@
 package com.taowater.ztream.assist;
 
 
+import com.taowater.ztream.Any;
 import com.taowater.ztream.Ztream;
 import io.vavr.Function1;
 import lombok.experimental.UtilityClass;
@@ -106,6 +107,63 @@ public class ExCollectors {
                     BigDecimal avgValue = NumberUtil.toBigDecimal(sum).divide(BigDecimal.valueOf(count), 4, RoundingMode.HALF_UP);
                     return BigDecimalStrategy.getValue(avgValue, fun);
                 },
+                Collections.emptySet()
+        );
+    }
+
+    /**
+     * 最值收集器
+     *
+     * @param comparator 比较器
+     * @param nullMin    null视为最小
+     * @return 最值结果
+     */
+    public static <T> CollectorImpl<T, Peak<T>, Peak<Any<T>>> peak(Comparator<? super T> comparator, boolean nullMin) {
+        Sorter<T> sorter = new Sorter<>(nullMin);
+        sorter.asc(comparator, nullMin);
+        return buildPeak(sorter.getComparator());
+    }
+
+    /**
+     * 最值收集器
+     *
+     * @param fun     属性
+     * @param nullMin null视为最小
+     * @return 最值结果
+     */
+    public static <T, N extends Comparable<? super N>> CollectorImpl<T, Peak<T>, Peak<Any<T>>> peak(Function1<? super T, ? extends N> fun, boolean nullMin) {
+        Sorter<T> sorter = new Sorter<>(nullMin);
+        sorter.asc(fun, nullMin);
+        return buildPeak(sorter.getComparator());
+    }
+
+    private static <T> CollectorImpl<T, Peak<T>, Peak<Any<T>>> buildPeak(Comparator<? super T> finalComparator) {
+        return new CollectorImpl<>(
+                Peak::new,
+                (p, a) -> {
+                    T max = p.getMax();
+                    T min = p.getMin();
+                    if (Objects.isNull(max) || finalComparator.compare(max, a) < 0) {
+                        p.setMax(a);
+                    }
+                    if (Objects.isNull(max) || finalComparator.compare(min, a) > 0) {
+                        p.setMin(a);
+                    }
+                },
+                (p1, p2) -> {
+                    T max1 = p1.getMax();
+                    T min1 = p1.getMin();
+                    T max2 = p2.getMax();
+                    T min2 = p2.getMin();
+                    if (finalComparator.compare(max1, max2) < 0) {
+                        p1.setMax(max2);
+                    }
+                    if (finalComparator.compare(min1, min2) > 0) {
+                        p1.setMin(min2);
+                    }
+                    return p1;
+                },
+                p -> new Peak<>(Any.of(p.getMax()), Any.of(p.getMin())),
                 Collections.emptySet()
         );
     }

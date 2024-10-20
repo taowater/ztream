@@ -325,7 +325,7 @@ class ZtreamTest {
         );
 
         equals(
-                Ztream.of(testList).min(Student::getAge),
+                Ztream.of(testList).nonNull(Student::getAge).min(Student::getAge),
                 testList.stream().mapToInt(e -> Any.of(e).map(Student::getAge).orElse(Integer.MAX_VALUE)).min().getAsInt()
         );
     }
