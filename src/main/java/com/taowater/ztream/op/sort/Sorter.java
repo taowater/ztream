@@ -1,4 +1,4 @@
-package com.taowater.ztream.assist;
+package com.taowater.ztream.op.sort;
 
 import lombok.NoArgsConstructor;
 
@@ -13,7 +13,7 @@ import java.util.function.UnaryOperator;
  * @date 2024/05/22 00:56
  */
 @NoArgsConstructor
-public class Sorter<T> {
+public class Sorter<T> implements Asc<T, Sorter<T>>, Desc<T, Sorter<T>> {
 
     /**
      * 默认排序不改变顺序
@@ -50,10 +50,12 @@ public class Sorter<T> {
      * @param keyExtractor 属性
      * @param desc         是否倒序
      * @param nullFirst    是否null值前置
-     * @return {@link Sorter }<{@link T }>
+     * @param condition    条件
      */
-    public <U extends Comparable<? super U>> Sorter<T> sort(Function<? super T, ? extends U> keyExtractor, boolean desc, boolean nullFirst) {
-        comparator = comparator.thenComparing(build(keyExtractor, desc, nullFirst));
+    public <U extends Comparable<? super U>> Sorter<T> sort(boolean condition, Function<? super T, ? extends U> keyExtractor, boolean desc, boolean nullFirst) {
+        if (condition) {
+            comparator = comparator.thenComparing(build(keyExtractor, desc, nullFirst));
+        }
         return this;
     }
 
@@ -63,12 +65,27 @@ public class Sorter<T> {
      * @param otherComparator 其他比较器
      * @param desc            是否倒序
      * @param nullFirst       是否null值前置
-     * @return {@link Sorter }<{@link T }>
+     * @param condition       条件
      */
-    public Sorter<T> sort(Comparator<T> otherComparator, boolean desc, boolean nullFirst) {
-        comparator = comparator.thenComparing(build(otherComparator, desc, nullFirst));
+    public Sorter<T> sort(boolean condition, Comparator<T> otherComparator, boolean desc, boolean nullFirst) {
+        if (condition) {
+            comparator = comparator.thenComparing(build(otherComparator, desc, nullFirst));
+        }
         return this;
     }
+
+    /**
+     * 排序
+     *
+     * @param keyExtractor 属性
+     * @param desc         是否倒序
+     * @param nullFirst    是否null值前置
+     * @return {@link Sorter }<{@link T }>
+     */
+    public <U extends Comparable<? super U>> Sorter<T> sort(Function<? super T, ? extends U> keyExtractor, boolean desc, boolean nullFirst) {
+        return sort(true, keyExtractor, desc, nullFirst);
+    }
+
 
     /**
      * null前置
@@ -87,72 +104,6 @@ public class Sorter<T> {
      */
     public Sorter<T> nullLast() {
         this.nullFirst = false;
-        return this;
-    }
-
-    /**
-     * 升序
-     *
-     * @param keyExtractor 属性
-     * @return {@link Sorter }<{@link T }>
-     */
-    public <U extends Comparable<? super U>> Sorter<T> asc(Function<? super T, ? extends U> keyExtractor) {
-        return sort(keyExtractor, false, true);
-    }
-
-    /**
-     * 升序
-     *
-     * @param keyExtractor 属性
-     * @param nullFirst    是否null值前置
-     * @return {@link Sorter }<{@link T }>
-     */
-    public <U extends Comparable<? super U>> Sorter<T> asc(Function<? super T, ? extends U> keyExtractor, boolean nullFirst) {
-        return sort(keyExtractor, false, nullFirst);
-    }
-
-    /**
-     * 自定义排序逻辑升序
-     *
-     * @param comparator 比较器
-     * @param nullFirst  是否null值前置
-     * @return {@link Sorter }<{@link T }>
-     */
-    public Sorter<T> asc(Comparator<? super T> comparator, boolean nullFirst) {
-        sort(comparator::compare, false, nullFirst);
-        return this;
-    }
-
-    /**
-     * 降序
-     *
-     * @param keyExtractor 属性
-     * @return {@link Sorter }<{@link T }>
-     */
-    public <U extends Comparable<? super U>> Sorter<T> desc(Function<? super T, ? extends U> keyExtractor) {
-        return sort(keyExtractor, true, true);
-    }
-
-    /**
-     * 降序
-     *
-     * @param keyExtractor 属性
-     * @param nullFirst    是否null值前置
-     * @return {@link Sorter }<{@link T }>
-     */
-    public <U extends Comparable<? super U>> Sorter<T> desc(Function<? super T, ? extends U> keyExtractor, boolean nullFirst) {
-        return sort(keyExtractor, true, nullFirst);
-    }
-
-    /**
-     * 自定义排序逻辑降序
-     *
-     * @param comparator 比较器
-     * @param nullFirst  是否null值前置
-     * @return {@link Sorter }<{@link T }>
-     */
-    public Sorter<T> desc(Comparator<? super T> comparator, boolean nullFirst) {
-        sort(comparator::compare, true, nullFirst);
         return this;
     }
 
@@ -212,8 +163,29 @@ public class Sorter<T> {
      * @param nullFirst  是否null值前置
      * @return {@link Comparator }<{@link T }>
      */
+    @SuppressWarnings("unchecked")
     public static <T> Comparator<T> build(Comparator<? super T> comparator, boolean desc, boolean nullFirst) {
         Comparator<? super T> baseOrder = desc ? comparator.reversed() : comparator;
         return (Comparator<T>) Sorter.<T>nullOrder(nullFirst).apply(baseOrder);
+    }
+
+    @Override
+    public <U extends Comparable<? super U>> Sorter<T> desc(boolean condition, Function<? super T, ? extends U> keyExtractor, boolean nullFirst) {
+        return sort(condition, keyExtractor, true, nullFirst);
+    }
+
+    @Override
+    public Sorter<T> desc(boolean condition, Comparator<? super T> comparator, boolean nullFirst) {
+        return sort(condition, comparator::compare, true, nullFirst);
+    }
+
+    @Override
+    public <U extends Comparable<? super U>> Sorter<T> asc(boolean condition, Function<? super T, ? extends U> keyExtractor, boolean nullFirst) {
+        return sort(condition, keyExtractor, false, nullFirst);
+    }
+
+    @Override
+    public Sorter<T> asc(boolean condition, Comparator<? super T> comparator, boolean nullFirst) {
+        return sort(condition, comparator::compare, false, nullFirst);
     }
 }

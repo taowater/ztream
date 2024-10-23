@@ -1,9 +1,8 @@
-package com.taowater.ztream.op;
+package com.taowater.ztream.op.filter;
 
 import com.taowater.taol.core.util.EmptyUtil;
 import com.taowater.ztream.Any;
 import com.taowater.ztream.IZtream;
-import com.taowater.ztream.assist.Wrapper;
 import org.dromara.hutool.core.text.StrValidator;
 
 import java.util.Arrays;

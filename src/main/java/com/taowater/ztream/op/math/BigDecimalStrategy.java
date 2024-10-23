@@ -1,4 +1,4 @@
-package com.taowater.ztream.assist;
+package com.taowater.ztream.op.math;
 
 import com.taowater.taol.core.function.LambdaUtil;
 import com.taowater.taol.core.util.EmptyUtil;

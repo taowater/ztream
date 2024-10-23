@@ -1,4 +1,4 @@
-package com.taowater.ztream.assist;
+package com.taowater.ztream.op.math;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

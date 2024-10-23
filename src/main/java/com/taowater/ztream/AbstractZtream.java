@@ -2,8 +2,12 @@ package com.taowater.ztream;
 
 
 import com.taowater.ztream.assist.Box;
-import com.taowater.ztream.op.Math;
-import com.taowater.ztream.op.*;
+import com.taowater.ztream.op.Collect;
+import com.taowater.ztream.op.Join;
+import com.taowater.ztream.op.Judge;
+import com.taowater.ztream.op.filter.Filter;
+import com.taowater.ztream.op.math.Math;
+import com.taowater.ztream.op.sort.Sort;
 
 import java.util.Objects;
 import java.util.function.Function;

@@ -3,6 +3,9 @@ package com.taowater.ztream.assist;
 
 import com.taowater.ztream.Any;
 import com.taowater.ztream.Ztream;
+import com.taowater.ztream.op.math.BigDecimalStrategy;
+import com.taowater.ztream.op.math.Peak;
+import com.taowater.ztream.op.sort.Sorter;
 import io.vavr.Function1;
 import lombok.experimental.UtilityClass;
 import org.dromara.hutool.core.math.NumberUtil;

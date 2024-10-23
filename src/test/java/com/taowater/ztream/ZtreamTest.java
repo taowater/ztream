@@ -135,6 +135,20 @@ class ZtreamTest {
 
     @Test
     void sort() {
+
+        equals(
+                Ztream.of(testList).sort(r -> r
+                        .desc(Student::getName, false)
+                        .asc(false, Student::getAge)
+                        .nullLast()
+                ),
+                testList.stream().sorted(
+                        Comparator.nullsLast(
+                                Comparator.comparing(Student::getName, Comparator.nullsLast(Comparator.reverseOrder()))
+                        )
+                )
+        );
+
         equals(
                 Ztream.of(testList).sort(r -> r
                         .desc(Student::getName, false)

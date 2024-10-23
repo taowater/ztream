@@ -1,8 +1,7 @@
-package com.taowater.ztream.op;
+package com.taowater.ztream.op.sort;
 
 import com.taowater.ztream.IZtream;
 import com.taowater.ztream.assist.Box;
-import com.taowater.ztream.assist.Sorter;
 import org.dromara.hutool.core.util.RandomUtil;
 
 import java.util.Comparator;
@@ -16,28 +15,7 @@ import java.util.function.Function;
  * @author zhu56
  * @since 0.0.3
  */
-public interface Sort<T, S extends IZtream<T, S>> extends IZtream<T, S> {
-
-    /**
-     * 升序
-     *
-     * @param fun 属性
-     * @return 新流
-     */
-    default <U extends Comparable<? super U>> S asc(Function<? super T, ? extends U> fun) {
-        return asc(fun, true);
-    }
-
-    /**
-     * 升序
-     *
-     * @param fun       属性
-     * @param nullFirst 是否null值前置
-     * @return 新流
-     */
-    default <U extends Comparable<? super U>> S asc(Function<? super T, ? extends U> fun, boolean nullFirst) {
-        return sort(r -> r.asc(fun, nullFirst));
-    }
+public interface Sort<T, S extends IZtream<T, S>> extends IZtream<T, S>, Asc<T, S>, Desc<T, S> {
 
     /**
      * 升序
@@ -57,26 +35,6 @@ public interface Sort<T, S extends IZtream<T, S>> extends IZtream<T, S> {
     @SuppressWarnings("unchecked")
     default S asc(boolean nullFirst) {
         return sort(r -> r.then((Comparator<T>) Comparator.naturalOrder(), nullFirst));
-    }
-
-    /**
-     * 降序
-     *
-     * @return 新流
-     */
-    default <U extends Comparable<? super U>> S desc(Function<? super T, ? extends U> fun) {
-        return desc(fun, true);
-    }
-
-    /**
-     * 降序
-     *
-     * @param fun       属性
-     * @param nullFirst 是否null值前置
-     * @return 新流
-     */
-    default <U extends Comparable<? super U>> S desc(Function<? super T, ? extends U> fun, boolean nullFirst) {
-        return sort(r -> r.desc(fun, nullFirst));
     }
 
     /**
@@ -128,5 +86,25 @@ public interface Sort<T, S extends IZtream<T, S>> extends IZtream<T, S> {
     default S reverse() {
         AtomicInteger index = new AtomicInteger(0);
         return wrap(map(e -> new Box.PairBox<>(e, index.getAndAdd(1))).sorted(Comparator.comparing((Function<Box.PairBox<T, Integer>, Integer>) Box.PairBox::getB).reversed()).map(Box::getA));
+    }
+
+    @Override
+    default <U extends Comparable<? super U>> S desc(boolean condition, Function<? super T, ? extends U> keyExtractor, boolean nullFirst) {
+        return sort(r -> r.desc(condition, keyExtractor, nullFirst));
+    }
+
+    @Override
+    default S desc(boolean condition, Comparator<? super T> comparator, boolean nullFirst) {
+        return sort(r -> r.desc(condition, comparator, nullFirst));
+    }
+
+    @Override
+    default <U extends Comparable<? super U>> S asc(boolean condition, Function<? super T, ? extends U> keyExtractor, boolean nullFirst) {
+        return sort(r -> r.asc(condition, keyExtractor, nullFirst));
+    }
+
+    @Override
+    default S asc(boolean condition, Comparator<? super T> comparator, boolean nullFirst) {
+        return sort(r -> r.asc(condition, comparator, nullFirst));
     }
 }
