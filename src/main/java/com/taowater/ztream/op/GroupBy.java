@@ -101,8 +101,7 @@ public interface GroupBy<T> extends Stream<T> {
     default <K, V, A, D, M extends Map<K, D>> M groupBy(Function<? super T, ? extends K> funK, Function<? super T, ? extends V> funV, Collector<? super V, A, D> downstream) {
         return (M) this.groupBy(funK, funV, HashMap::new, downstream);
     }
-
-
+    
     /**
      * 分组
      * 本方法是其余分组方法的基础，其余方法都是常见情形或默认缺省的重载

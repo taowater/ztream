@@ -70,11 +70,24 @@ public interface Sort<T, S extends IZtream<T, S>> extends IZtream<T, S>, Asc<T, 
     }
 
     /**
-     * 对元素进行洗牌
+     * 洗牌
      *
      * @return 新流
      */
     default S shuffle() {
+        return shuffle(true);
+    }
+
+    /**
+     * 洗牌
+     *
+     * @param condition 执行条件
+     * @return {@link S }
+     */
+    default S shuffle(boolean condition) {
+        if (!condition) {
+            return wrap(this);
+        }
         return wrap(map(e -> new Box.PairBox<>(e, RandomUtil.randomInt())).sorted(Comparator.comparing(Box.PairBox::getB)).map(Box::getA));
     }
 
@@ -84,6 +97,18 @@ public interface Sort<T, S extends IZtream<T, S>> extends IZtream<T, S>, Asc<T, 
      * @return {@link S }
      */
     default S reverse() {
+        return reverse(true);
+    }
+
+    /**
+     * 反转顺序
+     *
+     * @param condition 执行条件
+     */
+    default S reverse(boolean condition) {
+        if (!condition) {
+            return wrap(this);
+        }
         AtomicInteger index = new AtomicInteger(0);
         return wrap(map(e -> new Box.PairBox<>(e, index.getAndAdd(1))).sorted(Comparator.comparing((Function<Box.PairBox<T, Integer>, Integer>) Box.PairBox::getB).reversed()).map(Box::getA));
     }
