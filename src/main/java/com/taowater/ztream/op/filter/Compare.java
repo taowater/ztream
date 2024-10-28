@@ -1,17 +1,8 @@
 package com.taowater.ztream.op.filter;
 
-import com.taowater.taol.core.util.EmptyUtil;
-import com.taowater.ztream.Any;
-import org.dromara.hutool.core.text.StrValidator;
-
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 比较操作
@@ -19,7 +10,7 @@ import java.util.stream.Stream;
  * @author zhu56
  * @date 2024/10/24 23:48
  */
-public interface Compare<T, W> {
+public interface Compare<T, W> extends ConditionCompare<T, W> {
 
     W filter(Predicate<? super T> predicate);
 
@@ -30,7 +21,7 @@ public interface Compare<T, W> {
      * @param predicate 判断函数
      */
     default <V> W filter(Function<? super T, ? extends V> fun, Predicate<? super V> predicate) {
-        return filter(e -> predicate.test(Any.of(e).get(fun)));
+        return filter(true, fun, predicate);
     }
 
     /**
@@ -40,7 +31,7 @@ public interface Compare<T, W> {
      * @param value 值
      */
     default <V> W eq(Function<? super T, ? extends V> fun, V value) {
-        return filter(e -> Objects.equals(value, Any.of(e).get(fun)));
+        return eq(true, fun, value);
     }
 
 
@@ -50,11 +41,8 @@ public interface Compare<T, W> {
      * @param fun    属性
      * @param values 值
      */
-    default <V, C extends Collection<? extends V>> W in(Function<? super T, ? extends V> fun, C values) {
-        if (EmptyUtil.isEmpty(values)) {
-            return filter(e -> false);
-        }
-        return filter(fun, values::contains);
+    default <V> W in(Function<? super T, ? extends V> fun, Collection<? extends V> values) {
+        return in(true, fun, values);
     }
 
     /**
@@ -65,10 +53,7 @@ public interface Compare<T, W> {
      */
     @SuppressWarnings("unchecked")
     default <V> W in(Function<? super T, ? extends V> fun, V... values) {
-        if (EmptyUtil.isEmpty(values)) {
-            return filter(e -> false);
-        }
-        return in(fun, Stream.of(values).collect(Collectors.toSet()));
+        return in(true, fun, values);
     }
 
     /**
@@ -76,11 +61,8 @@ public interface Compare<T, W> {
      *
      * @param c c
      */
-    default <C extends Collection<? extends T>> W in(C c) {
-        if (EmptyUtil.isEmpty(c)) {
-            return filter(e -> false);
-        }
-        return filter(c::contains);
+    default W in(Collection<? extends T> c) {
+        return in(true, c);
     }
 
     /**
@@ -90,7 +72,7 @@ public interface Compare<T, W> {
      */
     @SuppressWarnings("all")
     default W in(T... c) {
-        return in(Stream.of(c).collect(Collectors.toSet()));
+        return in(true, c);
     }
 
     /**
@@ -98,11 +80,8 @@ public interface Compare<T, W> {
      *
      * @param c c
      */
-    default <C extends Collection<? extends T>> W notIn(C c) {
-        if (EmptyUtil.isEmpty(c)) {
-            return filter(e -> true);
-        }
-        return filter(e -> !c.contains(e));
+    default W notIn(Collection<? extends T> c) {
+        return notIn(true, c);
     }
 
     /**
@@ -112,7 +91,7 @@ public interface Compare<T, W> {
      */
     @SuppressWarnings("all")
     default W notIn(T... values) {
-        return notIn(Stream.of(values).collect(Collectors.toSet()));
+        return notIn(true, values);
     }
 
     /**
@@ -121,11 +100,8 @@ public interface Compare<T, W> {
      * @param fun    属性
      * @param values 值
      */
-    default <V, C extends Collection<? extends V>> W notIn(Function<? super T, ? extends V> fun, C values) {
-        if (EmptyUtil.isEmpty(values)) {
-            return filter(e -> true);
-        }
-        return filter(fun, v -> !values.contains(v));
+    default <V> W notIn(Function<? super T, ? extends V> fun, Collection<? extends V> values) {
+        return notIn(true, fun, values);
     }
 
     /**
@@ -136,21 +112,21 @@ public interface Compare<T, W> {
      */
     @SuppressWarnings("unchecked")
     default <V> W notIn(Function<? super T, ? extends V> fun, V... values) {
-        return notIn(fun, new HashSet<>(Arrays.asList(values)));
+        return notIn(true, fun, values);
     }
 
     /**
      * 过滤为空的元素
      */
     default W isNull() {
-        return filter(Objects::isNull);
+        return isNull(true);
     }
 
     /**
      * 过滤元素非空
      */
     default W nonNull() {
-        return filter(Objects::nonNull);
+        return nonNull(true);
     }
 
     /**
@@ -159,7 +135,7 @@ public interface Compare<T, W> {
      * @param fun 函数
      */
     default W isNull(Function<? super T, ?> fun) {
-        return filter(fun, Objects::isNull);
+        return isNull(true, fun);
     }
 
 
@@ -169,7 +145,7 @@ public interface Compare<T, W> {
      * @param fun 属性
      */
     default W nonNull(Function<? super T, ?> fun) {
-        return filter(fun, Objects::nonNull);
+        return nonNull(true, fun);
     }
 
     /**
@@ -177,8 +153,8 @@ public interface Compare<T, W> {
      *
      * @param fun 属性
      */
-    default W isEmpty(Function<? super T, CharSequence> fun) {
-        return filter(fun, EmptyUtil::isEmpty);
+    default W isEmpty(Function<? super T, ?> fun) {
+        return isEmpty(true, fun);
     }
 
     /**
@@ -186,8 +162,8 @@ public interface Compare<T, W> {
      *
      * @param fun 属性
      */
-    default W nonEmpty(Function<? super T, CharSequence> fun) {
-        return filter(fun, EmptyUtil::isNotEmpty);
+    default W nonEmpty(Function<? super T, ?> fun) {
+        return nonEmpty(true, fun);
     }
 
     /**
@@ -196,7 +172,7 @@ public interface Compare<T, W> {
      * @param fun 属性
      */
     default W isBlank(Function<? super T, CharSequence> fun) {
-        return filter(fun, StrValidator::isBlank);
+        return isBlank(true, fun);
     }
 
     /**
@@ -205,7 +181,7 @@ public interface Compare<T, W> {
      * @param fun 属性
      */
     default W nonBlank(Function<? super T, CharSequence> fun) {
-        return filter(fun, StrValidator::isNotBlank);
+        return nonBlank(true, fun);
     }
 
     /**
@@ -215,14 +191,7 @@ public interface Compare<T, W> {
      * @param value 值
      */
     default <N extends Comparable<? super N>> W lt(Function<? super T, ? extends N> fun, N value) {
-        Objects.requireNonNull(value);
-        return filter(e -> {
-            N v = Any.of(e).get(fun);
-            if (Objects.isNull(v)) {
-                return false;
-            }
-            return v.compareTo(value) < 0;
-        });
+        return lt(true, fun, value);
     }
 
     /**
@@ -232,14 +201,7 @@ public interface Compare<T, W> {
      * @param value 值
      */
     default <N extends Comparable<? super N>> W le(Function<? super T, ? extends N> fun, N value) {
-        Objects.requireNonNull(value);
-        return filter(e -> {
-            N v = Any.of(e).get(fun);
-            if (Objects.isNull(v)) {
-                return false;
-            }
-            return v.compareTo(value) <= 0;
-        });
+        return le(true, fun, value);
     }
 
     /**
@@ -249,14 +211,7 @@ public interface Compare<T, W> {
      * @param value 值
      */
     default <N extends Comparable<? super N>> W gt(Function<? super T, ? extends N> fun, N value) {
-        Objects.requireNonNull(value);
-        return filter(e -> {
-            N v = Any.of(e).get(fun);
-            if (Objects.isNull(v)) {
-                return false;
-            }
-            return v.compareTo(value) > 0;
-        });
+        return gt(true, fun, value);
     }
 
     /**
@@ -266,14 +221,7 @@ public interface Compare<T, W> {
      * @param value 值
      */
     default <N extends Comparable<? super N>> W ge(Function<? super T, ? extends N> fun, N value) {
-        Objects.requireNonNull(value);
-        return filter(e -> {
-            N v = Any.of(e).get(fun);
-            if (Objects.isNull(v)) {
-                return false;
-            }
-            return v.compareTo(value) >= 0;
-        });
+        return ge(true, fun, value);
     }
 
     /**
@@ -284,29 +232,7 @@ public interface Compare<T, W> {
      * @param rightValue 右值
      */
     default <N extends Comparable<? super N>> W between(Function<? super T, ? extends N> fun, N leftValue, N rightValue) {
-        if (EmptyUtil.isAllEmpty(leftValue, rightValue)) {
-            return filter(e -> true);
-        }
-        Predicate<T> predicate = e -> true;
-        if (Objects.nonNull(leftValue)) {
-            predicate = predicate.and(e -> {
-                N v = Any.of(e).get(fun);
-                if (Objects.isNull(v)) {
-                    return false;
-                }
-                return v.compareTo(leftValue) >= 0;
-            });
-        }
-        if (Objects.nonNull(rightValue)) {
-            predicate = predicate.and(e -> {
-                N v = Any.of(e).get(fun);
-                if (Objects.isNull(v)) {
-                    return false;
-                }
-                return v.compareTo(rightValue) <= 0;
-            });
-        }
-        return filter(predicate);
+        return between(true, fun, leftValue, rightValue);
     }
 
     /**
@@ -316,28 +242,10 @@ public interface Compare<T, W> {
      * @param value 值
      */
     default W rightLike(Function<? super T, String> fun, String value) {
-        return filter(e -> {
-            String str = Any.of(e).get(fun);
-            if (Objects.isNull(str)) {
-                return Objects.isNull(value);
-            }
-            if (Objects.isNull(value)) {
-                return false;
-            }
-            return str.startsWith(value);
-        });
+        return rightLike(true, fun, value);
     }
 
     default W like(Function<? super T, String> fun, String value) {
-        return filter(e -> {
-            String str = Any.of(e).get(fun);
-            if (Objects.isNull(str)) {
-                return Objects.isNull(value);
-            }
-            if (Objects.isNull(value)) {
-                return false;
-            }
-            return str.contains(value);
-        });
+        return like(true, fun, value);
     }
 }

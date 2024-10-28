@@ -18,6 +18,14 @@ public interface Filter<T, S extends IZtream<T, S>> extends IZtream<T, S>, Compa
         return IZtream.super.filter(predicate);
     }
 
+    @Override
+    default S filter(boolean condition, Predicate<? super T> predicate) {
+        if (condition) {
+            return filter(predicate);
+        }
+        return wrap(this);
+    }
+
     /**
      * 条件过滤
      *

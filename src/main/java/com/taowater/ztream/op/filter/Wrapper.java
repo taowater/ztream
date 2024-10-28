@@ -42,4 +42,12 @@ public class Wrapper<T> implements Compare<T, Wrapper<T>> {
         this.condition = condition.or(wrapper.condition);
         return this;
     }
+
+    @Override
+    public Wrapper<T> filter(boolean condition, Predicate<? super T> predicate) {
+        if (condition) {
+            return this.filter(predicate);
+        }
+        return this;
+    }
 }
