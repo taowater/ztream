@@ -421,6 +421,14 @@ class ZtreamTest {
         Ztream.of(testList).shuffle().limit(3).nonNull().map(Student::getAge).forEach(System.out::println);
     }
 
+    @Test
+    public void query() {
+        equals(
+                Ztream.of(testList).last().orElse(null),
+                CollUtil.getLast(Ztream.of(testList).toList())
+        );
+    }
+
     public static <T> void equals(T o1, T o2) {
 //        System.out.println("----equals----");
         System.out.println(o1);

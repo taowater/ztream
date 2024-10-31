@@ -1,6 +1,7 @@
 package com.taowater.ztream.assist;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -14,6 +15,7 @@ import java.util.function.Consumer;
  */
 public class Box<A> implements Consumer<A> {
     @Getter
+    @Setter
     private A a;
 
     Box() {

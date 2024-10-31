@@ -2,6 +2,7 @@ package com.taowater.ztream;
 
 
 import com.taowater.ztream.assist.Box;
+import com.taowater.ztream.assist.ExCollectors;
 import com.taowater.ztream.op.Collect;
 import com.taowater.ztream.op.Join;
 import com.taowater.ztream.op.Judge;
@@ -81,12 +82,39 @@ public abstract class AbstractZtream<T, S extends AbstractZtream<T, S>> implemen
     }
 
     /**
+     * 获取第一个元素
+     *
+     * @return {@link T }
+     */
+    public T getFirst() {
+        return first().orElse(null);
+    }
+
+    /**
      * 任意一个
      *
      * @return {@link Any}<{@link T}>
      */
     public Any<T> any() {
         return Any.of(findAny(false).orElse(null));
+    }
+
+    /**
+     * 最后一个
+     *
+     * @return {@link Any }<{@link T }>
+     */
+    public Any<T> last() {
+        return collect(ExCollectors.last());
+    }
+
+    /**
+     * 获取最后一个
+     *
+     * @return {@link T }
+     */
+    public T getLast() {
+        return last().orElse(null);
     }
 
     /**

@@ -204,9 +204,8 @@ public interface IZtream<T, S extends Stream<T>> extends Stream<T>, Iterable<T> 
         } catch (NullPointerException e) {
             if (throwNpe) {
                 throw e;
-            } else {
-                return Optional.empty();
             }
+            return Optional.empty();
         }
     }
 
@@ -227,9 +226,8 @@ public interface IZtream<T, S extends Stream<T>> extends Stream<T>, Iterable<T> 
         } catch (NullPointerException e) {
             if (throwNpe) {
                 throw e;
-            } else {
-                return Optional.empty();
             }
+            return Optional.empty();
         }
     }
 
