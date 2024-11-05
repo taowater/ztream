@@ -123,6 +123,6 @@ public abstract class AbstractZtream<T, S extends AbstractZtream<T, S>> implemen
      * @return {@link Any}<{@link T}>
      */
     public Any<T> random() {
-        return Any.of(shuffle().findFirst(false).orElse(null));
+        return shuffle().first();
     }
 }

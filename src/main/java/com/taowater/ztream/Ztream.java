@@ -242,6 +242,17 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
     }
 
     /**
+     * 页
+     *
+     * @param no   数
+     * @param size 大小
+     * @return {@link Ztream }<{@link T }>
+     */
+    public Ztream<T> page(long no, long size) {
+        return skip((no - 1) * size).limit(size);
+    }
+
+    /**
      * 映射
      *
      * @param funK 键函数
