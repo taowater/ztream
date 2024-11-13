@@ -81,7 +81,7 @@ public interface Judge<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      * @return 判断结果
      */
     default <V> boolean judge(BiPredicate<? super S, Predicate<? super T>> handle, Function<? super T, ? extends V> fun, Predicate<? super V> predicate) {
-        return handle.test(wrap(this), e -> predicate.test(Any.of(e).get(fun)));
+        return handle.test(ztream(this), e -> predicate.test(Any.of(e).get(fun)));
     }
 
     /**

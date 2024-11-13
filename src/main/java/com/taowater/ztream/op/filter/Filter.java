@@ -23,7 +23,7 @@ public interface Filter<T, S extends IZtream<T, S>> extends IZtream<T, S>, Compa
         if (condition) {
             return filter(predicate);
         }
-        return wrap(this);
+        return ztream(this);
     }
 
     /**
@@ -35,6 +35,6 @@ public interface Filter<T, S extends IZtream<T, S>> extends IZtream<T, S>, Compa
     default S query(Consumer<Wrapper<T>> consumer) {
         Wrapper<T> wrapper = new Wrapper<>();
         consumer.accept(wrapper);
-        return wrap(filter(e -> e, wrapper.getCondition()));
+        return ztream(filter(e -> e, wrapper.getCondition()));
     }
 }

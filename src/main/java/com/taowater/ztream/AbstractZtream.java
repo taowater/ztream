@@ -22,7 +22,7 @@ import java.util.stream.Stream;
  */
 public abstract class AbstractZtream<T, S extends AbstractZtream<T, S>> implements Filter<T, S>, Sort<T, S>, Collect<T>,
         Math<T, S>,
-        Join<T, S>,
+        Join<T>,
         Judge<T, S> {
     protected final Stream<T> stream;
 
@@ -31,7 +31,7 @@ public abstract class AbstractZtream<T, S extends AbstractZtream<T, S>> implemen
     }
 
     @Override
-    public Stream<T> unwrap() {
+    public Stream<T> stream() {
         return stream;
     }
 
@@ -43,7 +43,7 @@ public abstract class AbstractZtream<T, S extends AbstractZtream<T, S>> implemen
      * @return {@link S }
      */
     public S distinct(Function<? super T, ?> fun, boolean override) {
-        return wrap(handle(override, Sort::reverse).map(t -> {
+        return ztream(handle(override, Sort::reverse).map(t -> {
             Object v = null;
             if (Objects.nonNull(t)) {
                 v = fun.apply(t);
@@ -69,7 +69,7 @@ public abstract class AbstractZtream<T, S extends AbstractZtream<T, S>> implemen
      * @return {@link S }
      */
     public S distinct(boolean override) {
-        return wrap(handle(override, Sort::reverse).distinct());
+        return ztream(handle(override, Sort::reverse).distinct());
     }
 
     /**

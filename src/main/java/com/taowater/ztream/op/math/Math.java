@@ -109,7 +109,7 @@ public interface Math<T, S extends IZtream<T, S>> extends IZtream<T, S> {
         return this.collect(ExCollectors.peak(
                 (a, b) -> {
                     if (a instanceof Comparable) {
-                        return ((Comparable) a).compareTo(b);
+                        return ((Comparable<T>) a).compareTo(b);
                     }
                     return a.toString().compareTo(b.toString());
                 }, nullMin
@@ -167,7 +167,7 @@ public interface Math<T, S extends IZtream<T, S>> extends IZtream<T, S> {
         return this.collect(ExCollectors.peak(
                 (a, b) -> {
                     if (a instanceof Comparable) {
-                        return ((Comparable) a).compareTo(b);
+                        return ((Comparable<T>) a).compareTo(b);
                     }
                     return a.toString().compareTo(b.toString());
                 }, nullMin

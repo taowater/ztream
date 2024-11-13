@@ -37,7 +37,7 @@ public final class EntryZtream<K, V> extends AbstractZtream<Entry<K, V>, EntryZt
     }
 
     @Override
-    public EntryZtream<K, V> wrap(Stream<Entry<K, V>> stream) {
+    public EntryZtream<K, V> ztream(Stream<Entry<K, V>> stream) {
         return new EntryZtream<>(stream);
     }
 

@@ -21,7 +21,7 @@ public interface IZtream<T, S extends Stream<T>> extends Stream<T>, Iterable<T> 
      *
      * @return 被当前实例包装的流对象
      */
-    Stream<T> unwrap();
+    Stream<T> stream();
 
 
     /**
@@ -30,7 +30,7 @@ public interface IZtream<T, S extends Stream<T>> extends Stream<T>, Iterable<T> 
      * @param stream 流
      * @return 包装的结果
      */
-    S wrap(Stream<T> stream);
+    S ztream(Stream<T> stream);
 
     /**
      * 根据flag增加一个中间操作
@@ -41,155 +41,155 @@ public interface IZtream<T, S extends Stream<T>> extends Stream<T>, Iterable<T> 
      */
     default S handle(boolean flag, Function<? super S, S> fun) {
         if (flag) {
-            return fun.apply(wrap(this));
+            return fun.apply(ztream(this));
         }
-        return wrap(this);
+        return ztream(this);
     }
 
     @Override
     default S filter(Predicate<? super T> predicate) {
-        return wrap(unwrap().filter(predicate));
+        return ztream(stream().filter(predicate));
     }
 
     @Override
     default IntStream mapToInt(ToIntFunction<? super T> mapper) {
-        return unwrap().mapToInt(mapper);
+        return stream().mapToInt(mapper);
     }
 
     @Override
     default LongStream mapToLong(ToLongFunction<? super T> mapper) {
-        return unwrap().mapToLong(mapper);
+        return stream().mapToLong(mapper);
     }
 
     @Override
     default DoubleStream mapToDouble(ToDoubleFunction<? super T> mapper) {
-        return unwrap().mapToDouble(mapper);
+        return stream().mapToDouble(mapper);
     }
 
     @Override
     default IntStream flatMapToInt(Function<? super T, ? extends IntStream> mapper) {
-        return unwrap().flatMapToInt(mapper);
+        return stream().flatMapToInt(mapper);
     }
 
     @Override
     default LongStream flatMapToLong(Function<? super T, ? extends LongStream> mapper) {
-        return unwrap().flatMapToLong(mapper);
+        return stream().flatMapToLong(mapper);
     }
 
     @Override
     default DoubleStream flatMapToDouble(Function<? super T, ? extends DoubleStream> mapper) {
-        return unwrap().flatMapToDouble(mapper);
+        return stream().flatMapToDouble(mapper);
     }
 
     @Override
     default S distinct() {
-        return wrap(unwrap().distinct());
+        return ztream(stream().distinct());
     }
 
     @Override
     default S sorted() {
-        return wrap(unwrap().sorted());
+        return ztream(stream().sorted());
     }
 
     @Override
     default S sorted(Comparator<? super T> comparator) {
-        return wrap(unwrap().sorted(comparator));
+        return ztream(stream().sorted(comparator));
     }
 
     @Override
     @SuppressWarnings("all")
     default S peek(Consumer<? super T> action) {
-        return wrap(unwrap().peek(action));
+        return ztream(stream().peek(action));
     }
 
     @Override
     default S limit(long maxSize) {
-        return wrap(unwrap().limit(maxSize));
+        return ztream(stream().limit(maxSize));
     }
 
     @Override
     default S skip(long n) {
-        return wrap(unwrap().skip(n));
+        return ztream(stream().skip(n));
     }
 
     @Override
     default void forEach(Consumer<? super T> action) {
-        unwrap().forEach(action);
+        stream().forEach(action);
     }
 
     @Override
     default void forEachOrdered(Consumer<? super T> action) {
-        unwrap().forEachOrdered(action);
+        stream().forEachOrdered(action);
     }
 
     @Override
     default Object[] toArray() {
-        return unwrap().toArray();
+        return stream().toArray();
     }
 
     @Override
     default <A> A[] toArray(IntFunction<A[]> generator) {
-        return unwrap().toArray(generator);
+        return stream().toArray(generator);
     }
 
     @Override
     default T reduce(T identity, BinaryOperator<T> accumulator) {
-        return unwrap().reduce(identity, accumulator);
+        return stream().reduce(identity, accumulator);
     }
 
     @Override
     default Optional<T> reduce(BinaryOperator<T> accumulator) {
-        return unwrap().reduce(accumulator);
+        return stream().reduce(accumulator);
     }
 
     @Override
     default <U> U reduce(U identity, BiFunction<U, ? super T, U> accumulator, BinaryOperator<U> combiner) {
-        return unwrap().reduce(identity, accumulator, combiner);
+        return stream().reduce(identity, accumulator, combiner);
     }
 
     @Override
     default <R> R collect(Supplier<R> supplier, BiConsumer<R, ? super T> accumulator, BiConsumer<R, R> combiner) {
-        return unwrap().collect(supplier, accumulator, combiner);
+        return stream().collect(supplier, accumulator, combiner);
     }
 
     @Override
     default <R, A> R collect(Collector<? super T, A, R> collector) {
-        return unwrap().collect(collector);
+        return stream().collect(collector);
     }
 
     @Override
     default Optional<T> min(Comparator<? super T> comparator) {
-        return unwrap().min(comparator);
+        return stream().min(comparator);
     }
 
     @Override
     default Optional<T> max(Comparator<? super T> comparator) {
-        return unwrap().max(comparator);
+        return stream().max(comparator);
     }
 
     @Override
     default long count() {
-        return unwrap().count();
+        return stream().count();
     }
 
     @Override
     default boolean anyMatch(Predicate<? super T> predicate) {
-        return unwrap().anyMatch(predicate);
+        return stream().anyMatch(predicate);
     }
 
     @Override
     default boolean allMatch(Predicate<? super T> predicate) {
-        return unwrap().allMatch(predicate);
+        return stream().allMatch(predicate);
     }
 
     @Override
     default boolean noneMatch(Predicate<? super T> predicate) {
-        return unwrap().noneMatch(predicate);
+        return stream().noneMatch(predicate);
     }
 
     @Override
     default Optional<T> findFirst() {
-        return unwrap().findFirst();
+        return stream().findFirst();
     }
 
     /**
@@ -200,7 +200,7 @@ public interface IZtream<T, S extends Stream<T>> extends Stream<T>, Iterable<T> 
      */
     default Optional<T> findFirst(boolean throwNpe) {
         try {
-            return unwrap().findFirst();
+            return stream().findFirst();
         } catch (NullPointerException e) {
             if (throwNpe) {
                 throw e;
@@ -211,7 +211,7 @@ public interface IZtream<T, S extends Stream<T>> extends Stream<T>, Iterable<T> 
 
     @Override
     default Optional<T> findAny() {
-        return unwrap().findAny();
+        return stream().findAny();
     }
 
     /**
@@ -222,7 +222,7 @@ public interface IZtream<T, S extends Stream<T>> extends Stream<T>, Iterable<T> 
      */
     default Optional<T> findAny(boolean throwNpe) {
         try {
-            return unwrap().findAny();
+            return stream().findAny();
         } catch (NullPointerException e) {
             if (throwNpe) {
                 throw e;
@@ -233,41 +233,41 @@ public interface IZtream<T, S extends Stream<T>> extends Stream<T>, Iterable<T> 
 
     @Override
     default Iterator<T> iterator() {
-        return unwrap().iterator();
+        return stream().iterator();
     }
 
     @Override
     default Spliterator<T> spliterator() {
-        return unwrap().spliterator();
+        return stream().spliterator();
     }
 
     @Override
     default boolean isParallel() {
-        return unwrap().isParallel();
+        return stream().isParallel();
     }
 
     @Override
     default S sequential() {
-        return wrap(unwrap().sequential());
+        return ztream(stream().sequential());
     }
 
     @Override
     default S parallel() {
-        return wrap(unwrap().parallel());
+        return ztream(stream().parallel());
     }
 
     @Override
     default S unordered() {
-        return wrap(unwrap().unordered());
+        return ztream(stream().unordered());
     }
 
     @Override
     default S onClose(Runnable closeHandler) {
-        return wrap(unwrap().onClose(closeHandler));
+        return ztream(stream().onClose(closeHandler));
     }
 
     @Override
     default void close() {
-        unwrap().close();
+        stream().close();
     }
 }

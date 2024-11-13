@@ -32,7 +32,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
     }
 
     @Override
-    public Ztream<T> wrap(Stream<T> stream) {
+    public Ztream<T> ztream(Stream<T> stream) {
         return new Ztream<>(stream);
     }
 
@@ -242,10 +242,10 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
     }
 
     /**
-     * 页
+     * 分页
      *
-     * @param no   数
-     * @param size 大小
+     * @param no   页码
+     * @param size 页长
      * @return {@link Ztream }<{@link T }>
      */
     public Ztream<T> page(long no, long size) {

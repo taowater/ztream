@@ -2,11 +2,11 @@ package com.taowater.ztream.op;
 
 
 import com.taowater.ztream.Any;
-import com.taowater.ztream.IZtream;
 import com.taowater.ztream.assist.ExCollectors;
 
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * join操作
@@ -14,7 +14,7 @@ import java.util.function.Function;
  * @author Zhu56
  * @since 0.0.1
  */
-public interface Join<T, S extends IZtream<T, S>> extends IZtream<T, S> {
+public interface Join<T> extends Stream<T> {
 
     /**
      * 返回拼接后的字符串

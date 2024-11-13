@@ -86,9 +86,9 @@ public interface Sort<T, S extends IZtream<T, S>> extends IZtream<T, S>, Asc<T, 
      */
     default S shuffle(boolean condition) {
         if (!condition) {
-            return wrap(this);
+            return ztream(this);
         }
-        return wrap(map(e -> new Box.PairBox<>(e, RandomUtil.randomInt())).sorted(Comparator.comparing(Box.PairBox::getB)).map(Box::getA));
+        return ztream(map(e -> new Box.PairBox<>(e, RandomUtil.randomInt())).sorted(Comparator.comparing(Box.PairBox::getB)).map(Box::getA));
     }
 
     /**
@@ -107,10 +107,10 @@ public interface Sort<T, S extends IZtream<T, S>> extends IZtream<T, S>, Asc<T, 
      */
     default S reverse(boolean condition) {
         if (!condition) {
-            return wrap(this);
+            return ztream(this);
         }
         AtomicInteger index = new AtomicInteger(0);
-        return wrap(map(e -> new Box.PairBox<>(e, index.getAndAdd(1))).sorted(Comparator.comparing((Function<Box.PairBox<T, Integer>, Integer>) Box.PairBox::getB).reversed()).map(Box::getA));
+        return ztream(map(e -> new Box.PairBox<>(e, index.getAndAdd(1))).sorted(Comparator.comparing((Function<Box.PairBox<T, Integer>, Integer>) Box.PairBox::getB).reversed()).map(Box::getA));
     }
 
     @Override
