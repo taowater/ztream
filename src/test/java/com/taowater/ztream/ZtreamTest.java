@@ -422,10 +422,18 @@ class ZtreamTest {
     }
 
     @Test
-    public void query() {
+    void query() {
         equals(
                 Ztream.of(testList).last().orElse(null),
                 CollUtil.getLast(Ztream.of(testList).toList())
+        );
+    }
+
+    @Test
+    void page() {
+        equals(
+                Ztream.of(testList).page(2, 3).toList(),
+                testList.subList(3, 6)
         );
     }
 

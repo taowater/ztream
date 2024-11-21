@@ -17,9 +17,7 @@ import java.util.stream.*;
 public interface IZtream<T, S extends Stream<T>> extends Stream<T>, Iterable<T> {
 
     /**
-     * 获取被当前实例包装的流对象
-     *
-     * @return 被当前实例包装的流对象
+     * 获取原始流
      */
     Stream<T> stream();
 

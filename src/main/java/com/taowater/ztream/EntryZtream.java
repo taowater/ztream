@@ -76,7 +76,7 @@ public final class EntryZtream<K, V> extends AbstractZtream<Entry<K, V>, EntryZt
                 });
     }
 
-    public void forEach(BiConsumer<K, V> consumer) {
+    public void forEachKeyValue(BiConsumer<K, V> consumer) {
         forEach(e -> consumer.accept(e.getKey(), e.getValue()));
     }
 
@@ -88,7 +88,7 @@ public final class EntryZtream<K, V> extends AbstractZtream<Entry<K, V>, EntryZt
         forEach(e -> consumer.accept(e.getValue()));
     }
 
-    public EntryZtream<K, V> peek(BiConsumer<K, V> consumer) {
+    public EntryZtream<K, V> peekKeyValue(BiConsumer<K, V> consumer) {
         return peek(e -> consumer.accept(e.getKey(), e.getValue()));
     }
 
@@ -100,11 +100,11 @@ public final class EntryZtream<K, V> extends AbstractZtream<Entry<K, V>, EntryZt
         return peek(e -> consumer.accept(e.getValue()));
     }
 
-    public EntryZtream<K, V> nonNullKeys() {
+    public EntryZtream<K, V> nonNullKey() {
         return filter(e -> e.getKey() != null);
     }
 
-    public EntryZtream<K, V> nonNullValues() {
+    public EntryZtream<K, V> nonNullValue() {
         return filter(e -> e.getValue() != null);
     }
 
@@ -125,7 +125,7 @@ public final class EntryZtream<K, V> extends AbstractZtream<Entry<K, V>, EntryZt
     }
 
     public <N> EntryZtream<N, V> mapKey(Function<? super K, ? extends N> funK) {
-        return (EntryZtream<N, V>) new EntryZtream<>(map(e -> Functions.entryKeyValue(e, funK, Function.identity()))).distinctKeys();
+        return (EntryZtream<N, V>) new EntryZtream<>(map(e -> Functions.entryKeyValue(e, funK, Function.identity()))).distinctKey();
     }
 
     public <N> EntryZtream<K, N> mapValue(Function<? super V, ? extends N> funV) {
@@ -142,11 +142,11 @@ public final class EntryZtream<K, V> extends AbstractZtream<Entry<K, V>, EntryZt
     }
 
 
-    public EntryZtream<K, V> distinctKeys() {
+    public EntryZtream<K, V> distinctKey() {
         return distinct(Entry::getKey);
     }
 
-    public EntryZtream<K, V> distinctValues() {
+    public EntryZtream<K, V> distinctValue() {
         return distinct(Entry::getValue);
     }
 }
