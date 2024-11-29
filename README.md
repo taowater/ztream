@@ -1,6 +1,5 @@
 # Ztream
 
-[![Star History Chart](https://api.star-history.com/svg?repos=taowater/ztream&type=Date)](https://star-history.com/#taowater/ztream&Date)
 <p align="center">
 	<a target="_blank" href="https://central.sonatype.com/artifact/io.github.taowater/ztream">
 		<img src="https://img.shields.io/maven-central/v/io.github.taowater/ztream.svg?label=Maven%20Central" />
@@ -15,6 +14,8 @@
 		<img src="https://img.shields.io/github/stars/taowater/ztream.svg?style=social" alt="github star"/>
 	</a>
 </p>
+
+[![Star History Chart](https://api.star-history.com/svg?repos=taowater/ztream&type=Date)](https://star-history.com/#taowater/ztream&Date)
 
 Java Stream 增强
 
