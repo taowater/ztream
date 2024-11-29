@@ -1,5 +1,7 @@
 # Ztream
+## Star History
 
+[![Star History Chart](https://api.star-history.com/svg?repos=taowater/ztream&type=Date)](https://star-history.com/#taowater/ztream&Date)
 <p align="center">
 	<a target="_blank" href="https://central.sonatype.com/artifact/io.github.taowater/ztream">
 		<img src="https://img.shields.io/maven-central/v/io.github.taowater/ztream.svg?label=Maven%20Central" />
