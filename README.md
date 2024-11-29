@@ -1,5 +1,4 @@
 # Ztream
-## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=taowater/ztream&type=Date)](https://star-history.com/#taowater/ztream&Date)
 <p align="center">
