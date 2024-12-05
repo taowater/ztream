@@ -30,20 +30,6 @@ public interface IZtream<T, S extends Stream<T>> extends Stream<T>, Iterable<T> 
      */
     S ztream(Stream<T> stream);
 
-    /**
-     * 根据flag增加一个中间操作
-     *
-     * @param flag 标识
-     * @param fun  函数
-     * @return {@link S }
-     */
-    default S handle(boolean flag, Function<? super S, S> fun) {
-        if (flag) {
-            return fun.apply(ztream(this));
-        }
-        return ztream(this);
-    }
-
     @Override
     default S filter(Predicate<? super T> predicate) {
         return ztream(stream().filter(predicate));

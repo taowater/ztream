@@ -438,9 +438,6 @@ class ZtreamTest {
     }
 
     public static <T> void equals(T o1, T o2) {
-//        System.out.println("----equals----");
-        System.out.println(o1);
-        System.out.println(o2);
         Assertions.assertEquals(o1, o2);
     }
 

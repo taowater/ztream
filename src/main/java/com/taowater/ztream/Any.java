@@ -12,6 +12,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 /**
  * 自定义Optional
@@ -95,7 +96,7 @@ public final class Any<T> {
         if (Objects.isNull(tempValue)) {
             return this;
         }
-        Ztream.of(actions).forEach(action -> action.accept(tempValue));
+        Stream.of(actions).forEach(action -> action.accept(tempValue));
         return this;
     }
 

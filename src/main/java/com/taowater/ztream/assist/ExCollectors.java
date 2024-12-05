@@ -278,11 +278,4 @@ public class ExCollectors {
             return m1;
         };
     }
-
-    public static <T> Collector<T, ?, Any<T>> last() {
-        return Collector.of(() -> new Box<T>(null),
-                Box::setA,
-                (box1, box2) -> Objects.equals(box2.getA(), null) ? box1 : box2,
-                box -> Any.of(box.getA()));
-    }
 }

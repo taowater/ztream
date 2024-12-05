@@ -2,7 +2,6 @@ package com.taowater.ztream;
 
 
 import com.taowater.ztream.assist.Box;
-import com.taowater.ztream.assist.ExCollectors;
 import com.taowater.ztream.op.Collect;
 import com.taowater.ztream.op.Join;
 import com.taowater.ztream.op.Judge;
@@ -10,7 +9,6 @@ import com.taowater.ztream.op.filter.Filter;
 import com.taowater.ztream.op.math.Math;
 import com.taowater.ztream.op.sort.Sort;
 
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -43,13 +41,11 @@ public abstract class AbstractZtream<T, S extends AbstractZtream<T, S>> implemen
      * @return {@link S }
      */
     public S distinct(Function<? super T, ?> fun, boolean override) {
-        return ztream(handle(override, Sort::reverse).map(t -> {
-            Object v = null;
-            if (Objects.nonNull(t)) {
-                v = fun.apply(t);
-            }
-            return new Box.PairBox<>(t, v);
-        }).distinct().map(Box::getA));
+        return ztream(reverse(override)
+                .map(t -> new Box.PairBox<>(t, Any.of(t).get(fun)))
+                .distinct()
+                .map(Box::getA))
+                .reverse(override);
     }
 
     /**
@@ -59,7 +55,7 @@ public abstract class AbstractZtream<T, S extends AbstractZtream<T, S>> implemen
      * @return {@link S }
      */
     public S distinct(Function<? super T, ?> fun) {
-        return distinct(fun, true);
+        return distinct(fun, false);
     }
 
     /**
@@ -69,7 +65,7 @@ public abstract class AbstractZtream<T, S extends AbstractZtream<T, S>> implemen
      * @return {@link S }
      */
     public S distinct(boolean override) {
-        return ztream(handle(override, Sort::reverse).distinct());
+        return reverse(override).distinct().reverse(override);
     }
 
     /**
@@ -105,7 +101,7 @@ public abstract class AbstractZtream<T, S extends AbstractZtream<T, S>> implemen
      * @return {@link Any }<{@link T }>
      */
     public Any<T> last() {
-        return collect(ExCollectors.last());
+        return Any.of(stream.reduce((a, b) -> b).orElse(null));
     }
 
     /**
