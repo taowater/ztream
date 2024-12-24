@@ -4,14 +4,11 @@ import com.taowater.taol.core.util.EmptyUtil;
 import com.taowater.ztream.TestClass.Student;
 import lombok.SneakyThrows;
 import lombok.var;
-import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.collection.set.SetUtil;
-import org.dromara.hutool.core.date.DateUtil;
-import org.dromara.hutool.core.text.StrValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.StringUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -75,7 +72,7 @@ class ZtreamTest {
 
     @Test
     void distinct() {
-        List<Integer> list = ListUtil.of(1, 4, 5, 9, 3, 2, 3, 4, 5, 6, 7, 8);
+        List<Integer> list = newList(1, 4, 5, 9, 3, 2, 3, 4, 5, 6, 7, 8);
 
         equals(
                 Ztream.of(list).distinct(),
@@ -84,7 +81,7 @@ class ZtreamTest {
 
         equals(
                 Ztream.of(list).distinct(i -> i % 3, false),
-                CollUtil.distinct(list, i -> i % 3, false)
+                io.vavr.collection.Stream.ofAll(list).distinctBy(i -> i % 3).toJavaList()
         );
     }
 
@@ -125,8 +122,8 @@ class ZtreamTest {
 
     @Test
     void flat() {
-        List<Integer> list = ListUtil.of(1, 2, 4, 6, 4, 8, 9);
-        Function<Integer, Collection<Integer>> fun = e -> ListUtil.of(1, 2, 3);
+        List<Integer> list = newList(1, 2, 4, 6, 4, 8, 9);
+        Function<Integer, Collection<Integer>> fun = e -> newList(1, 2, 3);
         equals(
                 Ztream.of(list).flat(fun),
                 list.stream().map(fun).flatMap(Collection::stream)
@@ -232,12 +229,12 @@ class ZtreamTest {
 
         equals(
                 Ztream.of(testList).in(Student::getName, "小猪", null),
-                testList.stream().filter(e -> ListUtil.of(ListUtil.of("小猪", null)).contains(Any.of(e).get(Student::getName)))
+                testList.stream().filter(e -> newList("小猪", null).contains(Any.of(e).get(Student::getName)))
         );
 
         equals(
                 Ztream.of(testList).notIn(Student::getName, (String) null, "小猪"),
-                testList.stream().filter(e -> !ListUtil.of((String) null, "小猪").contains(Any.of(e).get(Student::getName)))
+                testList.stream().filter(e -> !newList((String) null, "小猪").contains(Any.of(e).get(Student::getName)))
         );
 
         equals(
@@ -247,12 +244,12 @@ class ZtreamTest {
 
         equals(
                 Ztream.of(testList).isBlank(Student::getName),
-                testList.stream().filter(e -> StrValidator.isBlank(Any.of(e).get(Student::getName)))
+                testList.stream().filter(e -> StringUtils.isBlank(Any.of(e).get(Student::getName)))
         );
 
         equals(
                 Ztream.of(testList).nonBlank(Student::getName),
-                testList.stream().filter(e -> StrValidator.isNotBlank((Any.of(e).get(Student::getName))))
+                testList.stream().filter(e -> StringUtils.isNotBlank((Any.of(e).get(Student::getName))))
         );
 
         equals(
@@ -295,7 +292,7 @@ class ZtreamTest {
         System.out.println(o);
         System.out.println(o2);
 
-        var list = ListUtil.of(null, 1, 2, 3, 4, 5, 6, null);
+        var list = newList(null, 1, 2, 3, 4, 5, 6, null);
 
         equals(
                 Ztream.of(list).min(false).orElse(null),
@@ -307,16 +304,20 @@ class ZtreamTest {
                 6
         );
 
-        var dates = ListUtil.of(DateUtil.yesterday(), DateUtil.today(), DateUtil.tomorrow());
+        var today = new Date();
+        var yesterday = new Date(today.getTime() - 1000 * 60 * 24L);
+        var tomorrow = new Date(today.getTime() + 1000 * 60 * 24L);
+
+        var dates = newList(yesterday, today, tomorrow);
 
         equals(
-                Ztream.of(dates).max().get(DateUtil::formatDate),
-                DateUtil.formatDate(DateUtil.tomorrow())
+                Ztream.of(dates).max().get(ZtreamTest::formatDate),
+                ZtreamTest.formatDate(tomorrow)
         );
 
         equals(
-                Ztream.of(dates).min().get(DateUtil::formatDate),
-                DateUtil.formatDate(DateUtil.yesterday())
+                Ztream.of(dates).min().get(ZtreamTest::formatDate),
+                ZtreamTest.formatDate(yesterday)
         );
     }
 
@@ -379,23 +380,23 @@ class ZtreamTest {
 
     @Test
     void append() {
-        List<Integer> list = ListUtil.of(1, 2, 3, 4, 5, 6);
+        List<Integer> list = newList(1, 2, 3, 4, 5, 6);
         equals(
                 Ztream.of(list).distinct().append(Ztream.of(7, 8, 9)),
-                ListUtil.of(1, 2, 3, 4, 5, 6, 7, 8, 9)
+                newList(1, 2, 3, 4, 5, 6, 7, 8, 9)
         );
         equals(
                 Ztream.of(list).distinct().append(7, 8, 9),
-                ListUtil.of(1, 2, 3, 4, 5, 6, 7, 8, 9)
+                newList(1, 2, 3, 4, 5, 6, 7, 8, 9)
         );
         equals(
-                Ztream.of(list).append(SetUtil.of(7, 8, 8, 9)),
-                ListUtil.of(1, 2, 3, 4, 5, 6, 7, 8, 9)
+                Ztream.of(list).append(newSet(7, 8, 8, 9)),
+                newList(1, 2, 3, 4, 5, 6, 7, 8, 9)
         );
 
         equals(
                 Ztream.of(list).append(Ztream.of(7, 8, 9)),
-                ListUtil.of(1, 2, 3, 4, 5, 6, 7, 8, 9)
+                newList(1, 2, 3, 4, 5, 6, 7, 8, 9)
         );
     }
 
@@ -425,7 +426,7 @@ class ZtreamTest {
     void query() {
         equals(
                 Ztream.of(testList).last().orElse(null),
-                CollUtil.getLast(Ztream.of(testList).toList())
+                testList.get(testList.size() - 1)
         );
     }
 
@@ -453,4 +454,20 @@ class ZtreamTest {
         equals(ztream.toList(), coll);
     }
 
+    public static <T> List<T> newList(T... values) {
+        List<T> list = new ArrayList<>();
+        list.addAll(Arrays.asList(values));
+        return list;
+    }
+
+    public static <T> Set<T> newSet(T... values) {
+        Set<T> set = new HashSet<>();
+        set.addAll(Arrays.asList(values));
+        return set;
+    }
+
+    public static String formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(date);
+    }
 }
