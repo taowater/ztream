@@ -29,9 +29,9 @@
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <maven-javadoc-plugin.version>3.7.0</maven-javadoc-plugin.version>
         <maven-gpg-plugin.version>3.2.4</maven-gpg-plugin.version>
-        <lombok.version>1.18.34</lombok.version>
-        <junit.version>5.11.0-M2</junit.version>
-        <taol.version>0.0.7</taol.version>
+        <lombok.version>1.18.36</lombok.version>
+        <junit.version>5.11.4</junit.version>
+        <taol.version>0.0.8</taol.version>
     </properties>
 
     <dependencies>
