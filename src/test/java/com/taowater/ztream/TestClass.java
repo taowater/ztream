@@ -3,8 +3,8 @@ package com.taowater.ztream;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.UtilityClass;
-import org.dromara.hutool.core.collection.ListUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -32,16 +32,19 @@ public class TestClass {
         private Long money;
     }
 
-    public static List<Student> testList = ListUtil.of(
-            new Student().setName("小猪").setAge(1),
-            new Student().setName("小狗").setAge(2),
-            null,
-            new Student().setName(null).setAge(3),
-            new Student().setName(" ").setAge(9),
-            new Student().setName("小狗").setAge(null),
-            new Student().setName(null).setAge(4),
-            new Student().setName("").setAge(89),
-            new Student().setName("小猪").setAge(50),
-            new Student().setName("小猪").setAge(7)
-    );
+
+    public static List<Student> testList = new ArrayList<>();
+
+    static {
+        testList.add(new Student().setName("小猪").setAge(1));
+        testList.add(new Student().setName("小狗").setAge(2));
+        testList.add(null);
+        testList.add(new Student().setName(null).setAge(3));
+        testList.add(new Student().setName(" ").setAge(9));
+        testList.add(new Student().setName("小狗").setAge(null));
+        testList.add(new Student().setName(null).setAge(4));
+        testList.add(new Student().setName("").setAge(89));
+        testList.add(new Student().setName("小猪").setAge(50));
+        testList.add(new Student().setName("小猪").setAge(7));
+    }
 }

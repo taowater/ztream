@@ -32,15 +32,9 @@
         <lombok.version>1.18.36</lombok.version>
         <junit.version>5.11.4</junit.version>
         <taol.version>0.0.8</taol.version>
-        <huool.version>6.0.0-M18</huool.version>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.dromara.hutool</groupId>
-            <artifactId>hutool-core</artifactId>
-            <version>${huool.version}</version>
-        </dependency>
         <!--lombok-->
         <dependency>
             <groupId>org.projectlombok</groupId>

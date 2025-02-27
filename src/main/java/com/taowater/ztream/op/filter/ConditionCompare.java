@@ -2,7 +2,6 @@ package com.taowater.ztream.op.filter;
 
 import com.taowater.taol.core.util.EmptyUtil;
 import com.taowater.ztream.Any;
-import org.dromara.hutool.core.text.StrValidator;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -181,7 +180,7 @@ public interface ConditionCompare<T, W> {
      * @param fun 属性
      */
     default W isBlank(boolean condition, Function<? super T, CharSequence> fun) {
-        return filter(condition, fun, StrValidator::isBlank);
+        return filter(condition, fun, s -> EmptyUtil.isEmpty(s) || s.toString().trim().isEmpty());
     }
 
     /**
@@ -190,7 +189,7 @@ public interface ConditionCompare<T, W> {
      * @param fun 属性
      */
     default W nonBlank(boolean condition, Function<? super T, CharSequence> fun) {
-        return filter(condition, fun, StrValidator::isNotBlank);
+        return filter(condition, fun, s -> EmptyUtil.isNotEmpty(s) && !s.toString().trim().isEmpty());
     }
 
     /**

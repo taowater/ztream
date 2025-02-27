@@ -6,8 +6,8 @@ import com.taowater.ztream.IZtream;
 import com.taowater.ztream.assist.ExCollectors;
 import io.vavr.Function1;
 import lombok.var;
-import org.dromara.hutool.core.math.NumberUtil;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
@@ -38,8 +38,8 @@ public interface Math<T, S extends IZtream<T, S>> extends IZtream<T, S> {
     default <N extends Number> N sum(Function1<? super T, ? extends N> fun, N defaultValue) {
         var result = filter(Objects::nonNull)
                 .map(fun)
-                .map(NumberUtil::toBigDecimal)
-                .reduce(NumberUtil::add)
+                .map(BigDecimalStrategy::toBigDecimal)
+                .reduce((a, b) -> Any.of(a).map(e -> e.add(Any.of(b).orElse(BigDecimal.ZERO))).orElse(BigDecimal.ZERO))
                 .map(b -> BigDecimalStrategy.getValue(b, fun));
         if (result.isPresent()) {
             return result.get();

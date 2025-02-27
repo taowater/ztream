@@ -8,7 +8,6 @@ import com.taowater.ztream.op.math.Peak;
 import com.taowater.ztream.op.sort.Sorter;
 import io.vavr.Function1;
 import lombok.experimental.UtilityClass;
-import org.dromara.hutool.core.math.NumberUtil;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -107,7 +106,7 @@ public class ExCollectors {
                     if (Objects.isNull(sum) || count == 0) {
                         return null;
                     }
-                    BigDecimal avgValue = NumberUtil.toBigDecimal(sum).divide(BigDecimal.valueOf(count), 4, RoundingMode.HALF_UP);
+                    BigDecimal avgValue = BigDecimalStrategy.toBigDecimal(sum).divide(BigDecimal.valueOf(count), 4, RoundingMode.HALF_UP);
                     return BigDecimalStrategy.getValue(avgValue, fun);
                 },
                 Collections.emptySet()

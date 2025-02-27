@@ -2,9 +2,9 @@ package com.taowater.ztream.op.sort;
 
 import com.taowater.ztream.IZtream;
 import com.taowater.ztream.assist.Box;
-import org.dromara.hutool.core.util.RandomUtil;
 
 import java.util.Comparator;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -88,7 +88,7 @@ public interface Sort<T, S extends IZtream<T, S>> extends IZtream<T, S>, Asc<T, 
         if (!condition) {
             return ztream(this);
         }
-        return ztream(map(e -> new Box.PairBox<>(e, RandomUtil.randomInt())).sorted(Comparator.comparing(Box.PairBox::getB)).map(Box::getA));
+        return ztream(map(e -> new Box.PairBox<>(e, ThreadLocalRandom.current().nextInt())).sorted(Comparator.comparing(Box.PairBox::getB)).map(Box::getA));
     }
 
     /**
