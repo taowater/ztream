@@ -4,6 +4,9 @@
 	<a target="_blank" href="https://central.sonatype.com/artifact/io.github.taowater/ztream">
 		<img src="https://img.shields.io/maven-central/v/io.github.taowater/ztream.svg?label=Maven%20Central" />
 	</a>
+	<a target="_blank" href="https://github.com/taowater/ztream/releases/latest">
+		<img src="https://img.shields.io/github/downloads/taowater/ztream/total?label=Downloads" />
+	</a>
 	<a target="_blank" href="https://github.com/taowater/ztream/blob/main/LICENSE">
 		<img src="https://img.shields.io/github/license/taowater/ztream.svg" />
 	</a>
