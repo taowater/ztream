@@ -1,9 +1,9 @@
 package com.taowater.ztream.assist;
 
 
+import com.taowater.taol.core.util.NumberUtil;
 import com.taowater.ztream.Any;
 import com.taowater.ztream.Ztream;
-import com.taowater.ztream.op.math.BigDecimalStrategy;
 import com.taowater.ztream.op.math.Peak;
 import com.taowater.ztream.op.sort.Sorter;
 import io.vavr.Function1;
@@ -106,8 +106,8 @@ public class ExCollectors {
                     if (Objects.isNull(sum) || count == 0) {
                         return null;
                     }
-                    BigDecimal avgValue = BigDecimalStrategy.toBigDecimal(sum).divide(BigDecimal.valueOf(count), 4, RoundingMode.HALF_UP);
-                    return BigDecimalStrategy.getValue(avgValue, fun);
+                    BigDecimal avgValue = NumberUtil.toBigDecimal(sum).divide(BigDecimal.valueOf(count), 4, RoundingMode.HALF_UP);
+                    return NumberUtil.getValue(avgValue, fun);
                 },
                 Collections.emptySet()
         );
@@ -148,7 +148,7 @@ public class ExCollectors {
                     if (Objects.isNull(max) || finalComparator.compare(max, a) < 0) {
                         p.setMax(a);
                     }
-                    if (Objects.isNull(max) || finalComparator.compare(min, a) > 0) {
+                    if (Objects.isNull(min) || finalComparator.compare(min, a) > 0) {
                         p.setMin(a);
                     }
                 },

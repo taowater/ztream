@@ -1,6 +1,7 @@
 package com.taowater.ztream.op.math;
 
 
+import com.taowater.taol.core.util.NumberUtil;
 import com.taowater.ztream.Any;
 import com.taowater.ztream.IZtream;
 import com.taowater.ztream.assist.ExCollectors;
@@ -38,9 +39,9 @@ public interface Math<T, S extends IZtream<T, S>> extends IZtream<T, S> {
     default <N extends Number> N sum(Function1<? super T, ? extends N> fun, N defaultValue) {
         var result = filter(Objects::nonNull)
                 .map(fun)
-                .map(BigDecimalStrategy::toBigDecimal)
+                .map(NumberUtil::toBigDecimal)
                 .reduce((a, b) -> Any.of(a).map(e -> e.add(Any.of(b).orElse(BigDecimal.ZERO))).orElse(BigDecimal.ZERO))
-                .map(b -> BigDecimalStrategy.getValue(b, fun));
+                .map(b -> NumberUtil.getValue(b, fun));
         if (result.isPresent()) {
             return result.get();
         }

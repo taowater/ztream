@@ -180,7 +180,7 @@ public interface ConditionCompare<T, W> {
      * @param fun 属性
      */
     default W isBlank(boolean condition, Function<? super T, CharSequence> fun) {
-        return filter(condition, fun, s -> EmptyUtil.isEmpty(s) || s.toString().trim().isEmpty());
+        return filter(condition, fun, EmptyUtil::isBlank);
     }
 
     /**
@@ -189,7 +189,7 @@ public interface ConditionCompare<T, W> {
      * @param fun 属性
      */
     default W nonBlank(boolean condition, Function<? super T, CharSequence> fun) {
-        return filter(condition, fun, s -> EmptyUtil.isNotEmpty(s) && !s.toString().trim().isEmpty());
+        return filter(condition, fun, EmptyUtil::isNotBlank);
     }
 
     /**
