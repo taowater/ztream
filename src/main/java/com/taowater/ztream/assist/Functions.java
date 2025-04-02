@@ -6,10 +6,7 @@ import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.ObjIntConsumer;
+import java.util.function.*;
 
 /**
  * 函数
@@ -40,6 +37,22 @@ public class Functions {
         public void accept(T t) {
             consumer.accept(t, index.getAndAdd(1));
         }
+    }
+
+    /**
+     * 把一个返回布尔值的方法包装成一个拆箱安全的判断方法
+     *
+     * @param fun 方法
+     * @return {@link Predicate }<{@link T }>
+     */
+    public static <T> Predicate<T> of(Function<T, Boolean> fun) {
+        return e -> {
+            Boolean result = fun.apply(e);
+            if (Objects.isNull(result)) {
+                return false;
+            }
+            return result;
+        };
     }
 
     /**

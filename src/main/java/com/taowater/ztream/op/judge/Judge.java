@@ -1,7 +1,8 @@
-package com.taowater.ztream.op;
+package com.taowater.ztream.op.judge;
 
 import com.taowater.ztream.Any;
 import com.taowater.ztream.IZtream;
+import com.taowater.ztream.assist.Functions;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -46,7 +47,7 @@ public interface Judge<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      * @param predicate 条件
      * @return 判断结果
      */
-    default <V> boolean anyMatch(Function<? super T, ? extends V> fun, Predicate<? super V> predicate) {
+    default <V> boolean anyMatch(Function<? super T, ? extends V> fun, Function<? super V, Boolean> predicate) {
         return judge(Stream::anyMatch, fun, predicate);
     }
 
@@ -57,7 +58,7 @@ public interface Judge<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      * @param predicate 条件
      * @return 判断结果
      */
-    default <V> boolean allMatch(Function<? super T, ? extends V> fun, Predicate<? super V> predicate) {
+    default <V> boolean allMatch(Function<? super T, ? extends V> fun, Function<? super V, Boolean> predicate) {
         return judge(Stream::allMatch, fun, predicate);
     }
 
@@ -68,7 +69,7 @@ public interface Judge<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      * @param predicate 条件
      * @return 判断结果
      */
-    default <V> boolean noneMatch(Function<? super T, ? extends V> fun, Predicate<? super V> predicate) {
+    default <V> boolean noneMatch(Function<? super T, ? extends V> fun, Function<? super V, Boolean> predicate) {
         return judge(Stream::noneMatch, fun, predicate);
     }
 
@@ -80,8 +81,8 @@ public interface Judge<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      * @param predicate 条件
      * @return 判断结果
      */
-    default <V> boolean judge(BiPredicate<? super S, Predicate<? super T>> handle, Function<? super T, ? extends V> fun, Predicate<? super V> predicate) {
-        return handle.test(ztream(this), e -> predicate.test(Any.of(e).get(fun)));
+    default <V> boolean judge(BiPredicate<? super S, Predicate<? super T>> handle, Function<? super T, ? extends V> fun, Function<? super V, Boolean> predicate) {
+        return handle.test(ztream(this), e -> Functions.of(predicate).test(Any.of(e).get(fun)));
     }
 
     /**

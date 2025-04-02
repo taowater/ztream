@@ -2,6 +2,7 @@ package com.taowater.ztream;
 
 import com.taowater.taol.core.util.EmptyUtil;
 import com.taowater.ztream.TestClass.Student;
+import com.taowater.ztream.assist.Functions;
 import lombok.SneakyThrows;
 import lombok.var;
 import org.junit.jupiter.api.Assertions;
@@ -419,6 +420,7 @@ class ZtreamTest {
         Assertions.assertTrue(Ztream.of(null, null).nonNull().isEmpty());
         Assertions.assertTrue(Ztream.of(null, null).isNotEmpty());
 
+        Assertions.assertFalse(Ztream.of((Boolean) null, null).allMatch(Functions.of(e -> e)));
 
     }
 
