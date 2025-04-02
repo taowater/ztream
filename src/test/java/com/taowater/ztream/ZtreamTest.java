@@ -79,9 +79,14 @@ class ZtreamTest {
                 list.stream().distinct()
         );
 
+        Map<Integer, Integer> map = new LinkedHashMap<>();
+        for (Integer i : list) {
+            map.putIfAbsent(i % 3, i);
+        }
+
         equals(
                 Ztream.of(list).distinct(i -> i % 3, false),
-                io.vavr.collection.Stream.ofAll(list).distinctBy(i -> i % 3).toJavaList()
+                map.values().stream()
         );
     }
 

@@ -1,12 +1,12 @@
 package com.taowater.ztream.assist;
 
 
+import com.taowater.taol.core.function.Function1;
 import com.taowater.taol.core.util.NumberUtil;
 import com.taowater.ztream.Any;
 import com.taowater.ztream.Ztream;
 import com.taowater.ztream.op.math.Peak;
 import com.taowater.ztream.op.sort.Sorter;
-import io.vavr.Function1;
 import lombok.experimental.UtilityClass;
 
 import java.math.BigDecimal;

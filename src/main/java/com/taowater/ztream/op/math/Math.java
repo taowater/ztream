@@ -1,11 +1,11 @@
 package com.taowater.ztream.op.math;
 
 
+import com.taowater.taol.core.function.Function1;
 import com.taowater.taol.core.util.NumberUtil;
 import com.taowater.ztream.Any;
 import com.taowater.ztream.IZtream;
 import com.taowater.ztream.assist.ExCollectors;
-import io.vavr.Function1;
 import lombok.var;
 
 import java.math.BigDecimal;
