@@ -7,8 +7,8 @@ import java.util.function.Function;
  * 降序排序方法
  *
  * @author zhu56
- * @date 2024/10/24 00:47
  */
+@SuppressWarnings("unused")
 public interface Desc<T, S> {
 
 

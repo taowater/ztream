@@ -10,8 +10,8 @@ import java.util.function.UnaryOperator;
  * 排序器
  *
  * @author zhu56
- * @date 2024/05/22 00:56
  */
+@SuppressWarnings("unused")
 @NoArgsConstructor
 public class Sorter<T> implements Asc<T, Sorter<T>>, Desc<T, Sorter<T>> {
 
@@ -102,6 +102,7 @@ public class Sorter<T> implements Asc<T, Sorter<T>>, Desc<T, Sorter<T>> {
      *
      * @return {@link Sorter }<{@link T }>
      */
+    @SuppressWarnings("UnusedReturnValue")
     public Sorter<T> nullLast() {
         this.nullFirst = false;
         return this;

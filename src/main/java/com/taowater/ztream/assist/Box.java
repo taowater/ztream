@@ -11,11 +11,11 @@ import java.util.function.Consumer;
  * 包装类
  *
  * @author zhu56
- * @date 2024/07/13 16:41
  */
+@Setter
+@Getter
+@SuppressWarnings("unused")
 public class Box<A> implements Consumer<A> {
-    @Getter
-    @Setter
     private A a;
 
     Box() {
@@ -30,8 +30,8 @@ public class Box<A> implements Consumer<A> {
         this.a = a;
     }
 
+    @Getter
     public static class PairBox<A, B> extends Box<A> {
-        @Getter
         private B b;
 
         public PairBox(A a, B b) {

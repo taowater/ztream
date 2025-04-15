@@ -12,7 +12,6 @@ import java.util.stream.*;
  * ztream 接口
  *
  * @author Zhu56
- * @date 2022/11/13 21:37:12
  */
 public interface IZtream<T, S extends Stream<T>> extends Stream<T>, Iterable<T> {
 

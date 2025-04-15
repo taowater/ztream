@@ -16,8 +16,8 @@ import java.util.stream.Stream;
  * 抽象增强流
  *
  * @author Zhu56
- * @date 2022/11/13 21:37:12
  */
+@SuppressWarnings("unused")
 public abstract class AbstractZtream<T, S extends AbstractZtream<T, S>> implements Filter<T, S>, Sort<T, S>, Collect<T>,
         Math<T, S>,
         Join<T>,

@@ -10,9 +10,9 @@ import java.util.function.Predicate;
  * 条件
  *
  * @author zhu56
- * @date 2024/09/16 01:43
  */
 @Getter
+@SuppressWarnings("unused")
 public class Wrapper<T> implements Compare<T, Wrapper<T>> {
 
     private Predicate<T> condition = o -> true;
@@ -36,6 +36,7 @@ public class Wrapper<T> implements Compare<T, Wrapper<T>> {
     /**
      * 或
      */
+    @SuppressWarnings("UnusedReturnValue")
     public Wrapper<T> or(Consumer<Wrapper<T>> consumer) {
         Wrapper<T> wrapper = new Wrapper<>();
         consumer.accept(wrapper);

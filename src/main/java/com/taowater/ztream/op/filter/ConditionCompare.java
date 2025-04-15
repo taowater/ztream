@@ -15,7 +15,6 @@ import java.util.stream.Stream;
  * 比较操作
  *
  * @author zhu56
- * @date 2024/10/24 23:48
  */
 @SuppressWarnings("unchecked")
 public interface ConditionCompare<T, W> {

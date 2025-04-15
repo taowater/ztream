@@ -12,7 +12,6 @@ import java.util.function.*;
  * 函数
  *
  * @author zhu56
- * @date 2024/07/04 23:50
  */
 @UtilityClass
 public class Functions {
@@ -22,7 +21,6 @@ public class Functions {
      *
      * @author zhu56
      * @version 1.0
-     * @date 2023/4/18 16:29
      */
     public static class IndexedConsumer<T> implements Consumer<T> {
         private final AtomicInteger index = new AtomicInteger(0);
@@ -60,7 +58,6 @@ public class Functions {
      *
      * @author zhu56
      * @version 1.0
-     * @date 2023/05/11 00:03
      */
     public static class IndexedFunction<T, R> implements Function<T, R> {
         private final AtomicInteger index = new AtomicInteger(0);

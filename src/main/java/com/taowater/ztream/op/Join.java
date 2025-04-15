@@ -14,6 +14,7 @@ import java.util.stream.Stream;
  * @author Zhu56
  * @since 0.0.1
  */
+@SuppressWarnings("unused")
 public interface Join<T> extends Stream<T> {
 
     /**

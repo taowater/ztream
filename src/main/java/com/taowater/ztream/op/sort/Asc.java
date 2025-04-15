@@ -7,8 +7,8 @@ import java.util.function.Function;
  * 升序排序方法
  *
  * @author zhu56
- * @date 2024/10/24 00:46
  */
+@SuppressWarnings("unused")
 public interface Asc<T, S> {
 
 
@@ -28,6 +28,7 @@ public interface Asc<T, S> {
      * @param keyExtractor 属性
      * @param nullFirst    是否null值前置
      */
+    @SuppressWarnings("UnusedReturnValue")
     default <U extends Comparable<? super U>> S asc(Function<? super T, ? extends U> keyExtractor, boolean nullFirst) {
         return asc(true, keyExtractor, nullFirst);
     }

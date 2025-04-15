@@ -15,6 +15,7 @@ import java.util.function.Function;
  * @author zhu56
  * @since 0.0.3
  */
+@SuppressWarnings("unused")
 public interface Sort<T, S extends IZtream<T, S>> extends IZtream<T, S>, Asc<T, S>, Desc<T, S> {
 
     /**

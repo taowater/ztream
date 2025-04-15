@@ -21,9 +21,8 @@ import java.util.stream.StreamSupport;
  * 增强流
  *
  * @author Zhu56
- * @date 2022/11/13 01:11:56
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unused", "unchecked"})
 public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements GroupBy<T>,
         ToMap<T> {
 
@@ -224,7 +223,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
     /**
      * 收集某个集合类型的属性并展开
      *
-     * @param mapper
+     * @param mapper 属性
      * @return {@link Ztream}<{@link N}>
      */
     public <N, C extends Collection<N>> Ztream<N> flat(Function<? super T, ? extends C> mapper) {

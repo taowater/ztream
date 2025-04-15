@@ -9,8 +9,8 @@ import java.util.function.Function;
  * 比较操作
  *
  * @author zhu56
- * @date 2024/10/24 23:48
  */
+@SuppressWarnings("unused")
 public interface CompareX<T, W> extends ConditionCompare<T, W> {
 
     /**

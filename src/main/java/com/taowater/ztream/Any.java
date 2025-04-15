@@ -18,9 +18,8 @@ import java.util.stream.Stream;
  * 自定义Optional
  *
  * @author Zhu56
- * @date 2023/03/15 23:19:46
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unused", "unchecked"})
 public final class Any<T> {
 
     private static final Any<?> EMPTY = new Any<>(null);

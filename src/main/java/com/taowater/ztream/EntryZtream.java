@@ -14,9 +14,8 @@ import java.util.stream.Stream;
  * 键值对ztream
  *
  * @author zhu56
- * @date 2024/07/04 21:49
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unused", "unchecked"})
 public final class EntryZtream<K, V> extends AbstractZtream<Entry<K, V>, EntryZtream<K, V>> {
 
     @SuppressWarnings("unchecked")
