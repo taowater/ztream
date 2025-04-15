@@ -15,8 +15,6 @@
 	</a>
 </p>
 
-[![Star History Chart](https://api.star-history.com/svg?repos=taowater/ztream&type=Date)](https://star-history.com/#taowater/ztream&Date)
-
 Java Stream 增强
 
 ### 🍊Maven
@@ -51,6 +49,8 @@ Java8流操作的出现使得在业务中处理集合的一些操作逻辑变得
 * stream-query https://github.com/dromara/stream-query
 
 若拙库可取则取之，如其不才，君可自取。
+
+[![Star History Chart](https://api.star-history.com/svg?repos=taowater/ztream&type=Date)](https://star-history.com/#taowater/ztream&Date)
 
 ### 示例
 
