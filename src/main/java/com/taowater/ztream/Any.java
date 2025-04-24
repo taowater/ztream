@@ -2,16 +2,14 @@ package com.taowater.ztream;
 
 
 import com.taowater.taol.core.convert.ConvertUtil;
+import com.taowater.taol.core.function.Function2;
 import com.taowater.taol.core.util.EmptyUtil;
 import lombok.var;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.function.*;
 import java.util.stream.Stream;
 
 /**
@@ -203,15 +201,45 @@ public final class Any<T> {
     public String toString() {
         return isPresent() ? value.toString() : null;
     }
-
+ 
     /**
      * 转换类型
      *
      * @param clazz clazz
-     * @return {@link Any}<{@link N}>
      */
     public <N> Any<N> convert(Class<N> clazz) {
-        return this.map(e -> ConvertUtil.convert(e, clazz));
+        return convert(clazz, ConvertUtil::convert, null);
+    }
+
+
+    /**
+     * 转换元素类型
+     *
+     * @param clazz      类型
+     * @param convertFun 转换方法
+     */
+    public <N> Any<N> convert(Class<N> clazz, Function2<T, Class<N>, N> convertFun) {
+        return convert(clazz, convertFun, null);
+    }
+
+    /**
+     * 转换元素类型，按新旧元素入参的消费方法处理元素
+     *
+     * @param clazz    clazz
+     * @param consumer 处理函数
+     */
+    public <N> Any<N> convert(Class<N> clazz, BiConsumer<T, N> consumer) {
+        return convert(clazz, ConvertUtil::convert, consumer);
+    }
+
+    public <N> Any<N> convert(Class<N> clazz, Function2<T, Class<N>, N> convertFun, BiConsumer<T, N> consumer) {
+        return map(e -> {
+            N n = convertFun.apply(e, clazz);
+            if (Objects.nonNull(consumer)) {
+                consumer.accept(e, n);
+            }
+            return n;
+        });
     }
 
     /**

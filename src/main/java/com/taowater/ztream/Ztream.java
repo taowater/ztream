@@ -1,6 +1,7 @@
 package com.taowater.ztream;
 
 import com.taowater.taol.core.convert.ConvertUtil;
+import com.taowater.taol.core.function.Function2;
 import com.taowater.taol.core.util.EmptyUtil;
 import com.taowater.ztream.assist.BreakException;
 import com.taowater.ztream.assist.Functions;
@@ -131,26 +132,47 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
     }
 
     /**
-     * 转换
+     * 转换类型
      *
      * @param clazz clazz
-     * @return {@link Ztream}<{@link N}>
      */
     public <N> Ztream<N> convert(Class<N> clazz) {
-        return map(e -> ConvertUtil.convert(e, clazz));
+        return convert(clazz, ConvertUtil::convert, null);
+    }
+
+    /**
+     * 转换元素类型
+     *
+     * @param clazz      类型
+     * @param convertFun 转换方法
+     */
+    public <N> Ztream<N> convert(Class<N> clazz, Function2<T, Class<N>, N> convertFun) {
+        return convert(clazz, convertFun, null);
     }
 
     /**
      * 转换元素类型，按新旧元素入参的消费方法处理元素
      *
      * @param clazz    clazz
-     * @param consumer 消费者
-     * @return {@link Ztream}<{@link N}>
+     * @param consumer 处理函数
      */
     public <N> Ztream<N> convert(Class<N> clazz, BiConsumer<T, N> consumer) {
+        return convert(clazz, ConvertUtil::convert, consumer);
+    }
+
+    /**
+     * 转换
+     *
+     * @param clazz      转换类型
+     * @param convertFun 转换方法
+     * @param consumer   新旧对象的上下文处理函数
+     */
+    public <N> Ztream<N> convert(Class<N> clazz, Function2<T, Class<N>, N> convertFun, BiConsumer<T, N> consumer) {
         return map(e -> {
-            N n = ConvertUtil.convert(e, clazz);
-            consumer.accept(e, n);
+            N n = convertFun.apply(e, clazz);
+            if (Objects.nonNull(consumer)) {
+                consumer.accept(e, n);
+            }
             return n;
         });
     }
@@ -159,7 +181,6 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
      * 追加元素
      *
      * @param values 值
-     * @return {@link Ztream}<{@link T}>
      */
     @SafeVarargs
     public final Ztream<T> append(T... values) {
@@ -173,7 +194,6 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
      * 追加元素
      *
      * @param iterable iterable 可迭代元素
-     * @return {@link Ztream}<{@link T}>
      */
     public Ztream<T> append(Iterable<? extends T> iterable) {
         if (Objects.isNull(iterable)) {
@@ -186,7 +206,6 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
      * 追加元素
      *
      * @param spliterator 分割器
-     * @return {@link Ztream }<{@link T }>
      */
     public Ztream<T> append(Spliterator<? extends T> spliterator) {
         if (EmptyUtil.isEmpty(spliterator)) {
@@ -224,7 +243,6 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
      * 收集某个集合类型的属性并展开
      *
      * @param mapper 属性
-     * @return {@link Ztream}<{@link N}>
      */
     public <N, C extends Collection<N>> Ztream<N> flat(Function<? super T, ? extends C> mapper) {
         return this.map(mapper).flatMap(Ztream::of);
@@ -234,7 +252,6 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
      * 强转元素类型
      *
      * @param clazz 目标类型
-     * @return {@link Ztream}<{@link N}>
      */
     public <N> Ztream<N> cast(Class<N> clazz) {
         return map(clazz::cast);
@@ -245,7 +262,6 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
      *
      * @param no   页码
      * @param size 页长
-     * @return {@link Ztream }<{@link T }>
      */
     public Ztream<T> page(long no, long size) {
         return skip((no - 1) * size).limit(size);
