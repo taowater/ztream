@@ -37,4 +37,24 @@ public interface Filter<T, S extends IZtream<T, S>> extends IZtream<T, S>, Compa
         consumer.accept(wrapper);
         return ztream(filter(e -> e, wrapper.getCondition()));
     }
+
+    /**
+     * 过滤条件为假
+     *
+     * @param predicate 谓语
+     * @return {@link S }
+     */
+    default S isFalse(Predicate<? super T> predicate) {
+        return filter(predicate.negate());
+    }
+
+    /**
+     * 过滤条件为真
+     *
+     * @param predicate 谓语
+     * @return {@link S }
+     */
+    default S isTrue(Predicate<? super T> predicate) {
+        return filter(predicate);
+    }
 }

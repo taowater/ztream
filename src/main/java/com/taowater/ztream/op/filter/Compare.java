@@ -10,7 +10,7 @@ import java.util.function.Predicate;
  * @author zhu56
  */
 @SuppressWarnings("unused")
-public interface Compare<T, W> extends ConditionCompare<T, W> {
+public interface Compare<T, W> extends CompareX<T, W> {
 
     W filter(Predicate<? super T> predicate);
 
