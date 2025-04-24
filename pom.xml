@@ -31,7 +31,7 @@
         <maven-gpg-plugin.version>3.2.4</maven-gpg-plugin.version>
         <lombok.version>1.18.38</lombok.version>
         <junit.version>5.11.4</junit.version>
-        <taol.version>0.1.1</taol.version>
+        <taol.version>0.2.0</taol.version>
     </properties>
 
     <dependencies>
