@@ -112,6 +112,57 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
         return Any.of(stream).map(Ztream::new).orElseGet(Ztream::empty);
     }
 
+
+    /**
+     * 分割
+     *
+     * @param obj 源对象
+     */
+    public static Ztream<String> split(Object obj) {
+        return split(obj, ",");
+    }
+
+    /**
+     * 分割
+     *
+     * @param obj       源对象
+     * @param delimiter 分隔符
+     */
+    public static Ztream<String> split(Object obj, String delimiter) {
+        return split(obj, delimiter, String::valueOf);
+    }
+
+    /**
+     * 分割
+     *
+     * @param obj       源对象
+     * @param delimiter 分隔符
+     * @param action    元素转换方法
+     */
+    public static <O> Ztream<O> split(Object obj, String delimiter, Function<String, O> action) {
+        return split(obj, delimiter, action, true);
+    }
+
+    /**
+     * 分割
+     *
+     * @param obj       源对象
+     * @param delimiter 分隔符
+     * @param action    元素转换方法
+     * @param distinct  是否去重
+     */
+    public static <O> Ztream<O> split(Object obj, String delimiter, Function<String, O> action, boolean distinct) {
+        String str = Any.of(obj).get(String::valueOf);
+        if (Objects.isNull(str)) {
+            return empty();
+        }
+        Ztream<O> ztream = Ztream.of(str.split(delimiter)).map(String::trim).map(action);
+        if (distinct) {
+            ztream = ztream.distinct();
+        }
+        return ztream;
+    }
+
     /**
      * 遍历
      *
