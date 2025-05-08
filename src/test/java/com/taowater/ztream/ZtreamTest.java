@@ -143,7 +143,7 @@ class ZtreamTest {
                 Ztream.of(testList).sort(r -> r
                         .desc(Student::getName, false)
                         .asc(false, Student::getAge)
-                        .nullLast()
+                        .nullFirst(false)
                 ),
                 testList.stream().sorted(
                         Comparator.nullsLast(
@@ -156,7 +156,7 @@ class ZtreamTest {
                 Ztream.of(testList).sort(r -> r
                         .desc(Student::getName, false)
                         .asc(Student::getAge)
-                        .nullLast()
+                        .nullFirst(false)
                 ),
                 testList.stream().sorted(
                         Comparator.nullsLast(
@@ -170,7 +170,7 @@ class ZtreamTest {
         equals(
                 Ztream.of(testList).sort(r -> r
                         .desc(e -> Objects.nonNull(e.getName()))
-                        .nullLast()
+                        .nullFirst(false)
                 ),
                 testList.stream().sorted(
                         Comparator.nullsLast(Comparator.comparing(e -> Objects.nonNull(e.getName()), Comparator.nullsFirst(Comparator.reverseOrder())))

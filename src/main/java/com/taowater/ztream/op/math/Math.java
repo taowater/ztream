@@ -167,7 +167,7 @@ public interface Math<T, S extends IZtream<T, S>> extends IZtream<T, S> {
     default Any<T> min(boolean nullMin) {
         return this.collect(ExCollectors.peak(
                 (a, b) -> {
-                    if (a instanceof Comparable) {
+                    if (a instanceof Comparable<?>) {
                         return ((Comparable<T>) a).compareTo(b);
                     }
                     return a.toString().compareTo(b.toString());
