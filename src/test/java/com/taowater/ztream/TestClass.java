@@ -22,8 +22,11 @@ public class TestClass {
         private Integer age;
     }
 
+    @Data
     public static class Person {
         private String sex;
+        private Boolean flag;
+        private boolean flag2;
     }
 
     @Data

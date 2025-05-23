@@ -280,6 +280,25 @@ class ZtreamTest {
                         .in(Student::getName, "123")
                 )
         ).toList();
+
+        equals(
+                Ztream.of(testList).filter(Objects::isNull),
+                testList.stream().filter(Objects::isNull)
+        );
+
+        equals(
+                Ztream.of(testList).nonNull().isTrue(TestClass.Person::getFlag),
+                testList.stream().filter(e -> {
+                    if (e == null) {
+                        return false;
+                    }
+                    Boolean flag = Any.of(e).get(TestClass.Person::getFlag);
+                    if (flag == null) {
+                        return false;
+                    }
+                    return flag;
+                })
+        );
     }
 
     @Test

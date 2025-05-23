@@ -1,8 +1,10 @@
 package com.taowater.ztream.op.filter;
 
 import com.taowater.ztream.IZtream;
+import com.taowater.ztream.assist.Functions;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -11,6 +13,7 @@ import java.util.function.Predicate;
  * @author zhu56
  * @see 0.0.3
  */
+@SuppressWarnings("unused")
 public interface Filter<T, S extends IZtream<T, S>> extends IZtream<T, S>, Compare<T, S> {
 
     @Override
@@ -44,8 +47,8 @@ public interface Filter<T, S extends IZtream<T, S>> extends IZtream<T, S>, Compa
      * @param predicate 谓语
      * @return {@link S }
      */
-    default S isFalse(Predicate<? super T> predicate) {
-        return filter(predicate.negate());
+    default S isFalse(Function<? super T, Boolean> predicate) {
+        return filter(Functions.of(predicate).negate());
     }
 
     /**
@@ -54,7 +57,7 @@ public interface Filter<T, S extends IZtream<T, S>> extends IZtream<T, S>, Compa
      * @param predicate 谓语
      * @return {@link S }
      */
-    default S isTrue(Predicate<? super T> predicate) {
-        return filter(predicate);
+    default S isTrue(Function<? super T, Boolean> predicate) {
+        return filter(Functions.of(predicate));
     }
 }

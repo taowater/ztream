@@ -4,7 +4,6 @@ package com.taowater.ztream;
 import com.taowater.taol.core.convert.ConvertUtil;
 import com.taowater.taol.core.function.Function2;
 import com.taowater.taol.core.util.EmptyUtil;
-import lombok.var;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
@@ -56,7 +55,7 @@ public final class Any<T> {
         if (!isPresent()) {
             return defaultValue;
         }
-        var val = mapper.apply(value);
+        U val = mapper.apply(value);
         return Objects.nonNull(val) ? val : defaultValue;
     }
 
@@ -201,7 +200,7 @@ public final class Any<T> {
     public String toString() {
         return isPresent() ? value.toString() : null;
     }
- 
+
     /**
      * 转换类型
      *

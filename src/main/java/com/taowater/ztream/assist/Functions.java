@@ -1,10 +1,15 @@
 package com.taowater.ztream.assist;
 
+import com.taowater.ztream.Any;
 import lombok.experimental.UtilityClass;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
 
@@ -15,6 +20,8 @@ import java.util.function.*;
  */
 @UtilityClass
 public class Functions {
+
+    private final static Map<Class<?>, Predicate<?>> CACHE = new ConcurrentHashMap<>();
 
     /**
      * 索引消费者
@@ -72,6 +79,38 @@ public class Functions {
         public R apply(T t) {
             return fun.apply(t, index.getAndAdd(1));
         }
+    }
+
+
+    /**
+     * 将一个判断函数包装为空安全的判断函数
+     * 注意缓存内存消耗
+     *
+     * @param predicate 谓语
+     * @return {@link Predicate }<{@link ? } {@link super } {@link T }>
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> Predicate<? super T> safe(Predicate<? super T> predicate) {
+        return (Predicate<? super T>) CACHE.computeIfAbsent(predicate.getClass(), k -> {
+            try {
+                MethodHandle mh = MethodHandles.lookup().unreflect(predicate.getClass()
+                                .getMethod("test", Object.class))
+                        .bindTo(predicate);
+                return t -> {
+                    if (t == null) {
+                        return false;
+                    }
+                    try {
+                        Boolean result = (Boolean) mh.invoke(t);
+                        return Any.of(result).orElse(false);
+                    } catch (Throwable e) {
+                        throw new RuntimeException(e);
+                    }
+                };
+            } catch (Exception e) {
+                return predicate;
+            }
+        });
     }
 
     /**
