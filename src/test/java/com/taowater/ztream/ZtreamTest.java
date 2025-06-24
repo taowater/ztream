@@ -86,7 +86,7 @@ class ZtreamTest {
         }
 
         equals(
-                Ztream.of(list).distinct(i -> i % 3, false),
+                Ztream.of(list).distinct(i -> i % 3),
                 map.values().stream()
         );
     }
@@ -98,12 +98,20 @@ class ZtreamTest {
         Map<String, Student> oMap = new HashMap<>();
         for (var item : testList) {
             if (item == null) {
-                map.put(null, null);
-                oMap.put(null, null);
+                if (!map.containsKey(null)) {
+                    map.put(null, null);
+                }
+                if (!oMap.containsKey(null)) {
+                    oMap.put(null, null);
+                }
                 continue;
             }
-            map.put(item.getName(), item.getAge());
-            oMap.put(item.getName(), item);
+            if (!map.containsKey(item.getName())) {
+                map.put(item.getName(), item.getAge());
+            }
+            if (!oMap.containsKey(item.getName())) {
+                oMap.put(item.getName(), item);
+            }
         }
 
         equals(

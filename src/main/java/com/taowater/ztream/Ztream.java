@@ -8,13 +8,10 @@ import com.taowater.ztream.assist.Functions;
 import com.taowater.ztream.assist.Spliterators;
 import com.taowater.ztream.op.GroupBy;
 import com.taowater.ztream.op.ToMap;
-import lombok.var;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -316,72 +313,5 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
      */
     public Ztream<T> page(long no, long size) {
         return skip((no - 1) * size).limit(size);
-    }
-
-    /**
-     * 映射
-     *
-     * @param funK 键函数
-     * @return {@link EntryZtream }<{@link K }, {@link T }>
-     */
-    public <K> EntryZtream<K, T> hash(Function<? super T, K> funK) {
-        return hash(funK, Function.identity());
-    }
-
-    /**
-     * 映射
-     *
-     * @param funK     键函数
-     * @param funV     值函数
-     * @param override 是否向前覆盖
-     * @return {@link EntryZtream }<{@link K }, {@link V }>
-     */
-    public <K, V> EntryZtream<K, V> hash(Function<? super T, K> funK, Function<? super T, V> funV, boolean override) {
-        return EntryZtream.of(map(e -> Functions.entry(e, funK, funV)).distinct(Map.Entry::getKey, override));
-    }
-
-    /**
-     * 映射-重复会向前覆盖
-     *
-     * @param funK 键函数
-     * @param funV 值函数
-     * @return {@link EntryZtream }<{@link K }, {@link V }>
-     */
-    public <K, V> EntryZtream<K, V> hash(Function<? super T, K> funK, Function<? super T, V> funV) {
-        return hash(funK, funV, true);
-    }
-
-    /**
-     * 分组
-     *
-     * @param funK       键函数
-     * @param funV       值函数
-     * @param downstream 组元素处理
-     * @return {@link EntryZtream }<{@link K }, {@link D }>
-     */
-    public <K, V, A, D> EntryZtream<K, D> group(Function<? super T, K> funK, Function<? super T, V> funV, Collector<? super V, A, D> downstream) {
-        var spliterator = new Spliterators.GroupSpliterator<>(spliterator(), funK, funV, downstream);
-        return EntryZtream.of(StreamSupport.stream(spliterator, isParallel()));
-    }
-
-    /**
-     * 分组
-     *
-     * @param funK 键函数
-     * @param funV 值函数
-     * @return {@link EntryZtream }<{@link K }, {@link List }<{@link V }>>
-     */
-    public <K, V> EntryZtream<K, List<V>> group(Function<? super T, K> funK, Function<? super T, V> funV) {
-        return group(funK, funV, Collectors.toList());
-    }
-
-    /**
-     * 分组
-     *
-     * @param funK 键函数
-     * @return {@link EntryZtream }<{@link K }, {@link List }<{@link T }>>
-     */
-    public <K> EntryZtream<K, List<T>> group(Function<? super T, K> funK) {
-        return group(funK, Function.identity());
     }
 }

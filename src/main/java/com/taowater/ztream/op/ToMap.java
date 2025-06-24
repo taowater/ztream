@@ -71,7 +71,9 @@ public interface ToMap<T> extends Stream<T> {
                         key = funK.apply(item);
                         value = funV.apply(item);
                     }
-                    map.put(key, value);
+                    if (!map.containsKey(key)) {
+                        map.put(key, value);
+                    }
                 },
                 Map::putAll);
     }
