@@ -48,7 +48,6 @@ public class Functions {
      * 把一个返回布尔值的方法包装成一个拆箱安全的判断方法
      *
      * @param fun 方法
-     * @return {@link Predicate }<{@link T }>
      */
     public static <T> Predicate<T> of(Function<T, Boolean> fun) {
         return e -> {
@@ -87,7 +86,6 @@ public class Functions {
      * 注意缓存内存消耗
      *
      * @param predicate 谓语
-     * @return {@link Predicate }<{@link ? } {@link super } {@link T }>
      */
     @SuppressWarnings("unchecked")
     public static <T> Predicate<? super T> safe(Predicate<? super T> predicate) {
@@ -119,7 +117,6 @@ public class Functions {
      * @param obj  元素
      * @param funK 键函数
      * @param funV 值函数
-     * @return {@link Entry }<{@link K }, {@link V }>
      */
     public static <T, K, V> Entry<K, V> entry(T obj, Function<? super T, ? extends K> funK, Function<? super T, ? extends V> funV) {
         K key = null;
@@ -137,7 +134,6 @@ public class Functions {
      * @param entry entry
      * @param funK  键函数
      * @param funV  值函数
-     * @return {@link Entry }<{@link NK }, {@link NV }>
      */
     public static <K, V, NK, NV> Entry<NK, NV> entryKeyValue(Entry<K, V> entry, Function<? super K, ? extends NK> funK, Function<? super V, ? extends NV> funV) {
         Function<Entry<K, V>, K> key = Entry::getKey;
@@ -149,7 +145,6 @@ public class Functions {
      * 反转键值对
      *
      * @param entry entry
-     * @return {@link Entry }<{@link V }, {@link K }>
      */
     public static <K, V> Entry<V, K> flip(Entry<K, V> entry) {
         return entry(entry, Entry::getValue, Entry::getKey);
