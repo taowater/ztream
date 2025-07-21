@@ -153,11 +153,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
         if (Objects.isNull(str)) {
             return empty();
         }
-        Ztream<O> ztream = Ztream.of(str.split(delimiter)).map(String::trim).map(action);
-        if (distinct) {
-            ztream = ztream.distinct();
-        }
-        return ztream;
+        return Ztream.of(str.split(delimiter)).map(String::trim).map(action).distinct(distinct);
     }
 
     /**

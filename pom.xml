@@ -22,7 +22,7 @@
 
 
     <properties>
-        <revision>0.2.1</revision>
+        <revision>0.2.2</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>8</java.version>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
@@ -32,7 +32,7 @@
         <central-publishing-maven-plugin.version>0.7.0</central-publishing-maven-plugin.version>
         <lombok.version>1.18.38</lombok.version>
         <junit.version>5.11.4</junit.version>
-        <taol.version>0.2.1</taol.version>
+        <taol.version>0.2.2</taol.version>
     </properties>
 
     <dependencies>

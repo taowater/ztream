@@ -13,16 +13,11 @@ import java.util.stream.Stream;
 
 /**
  * 判断操作
- *
- * @author zhu56
- * @since 0.1.13
  */
 public interface Judge<T, S extends IZtream<T, S>> extends IZtream<T, S> {
 
     /**
      * 判断元素是否重复
-     *
-     * @return 判断结果
      */
     default boolean hadRepeat() {
         Set<T> set = new HashSet<>();
@@ -33,7 +28,6 @@ public interface Judge<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      * 判断元素某属性是重复
      *
      * @param fun 属性
-     * @return 判断结果
      */
     default <V> boolean hadRepeat(Function<? super T, ? extends V> fun) {
         Set<V> set = new HashSet<>();
@@ -45,7 +39,6 @@ public interface Judge<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      *
      * @param fun       属性
      * @param predicate 条件
-     * @return 判断结果
      */
     default <V> boolean anyMatch(Function<? super T, ? extends V> fun, Function<? super V, Boolean> predicate) {
         return judge(Stream::anyMatch, fun, predicate);
@@ -56,7 +49,7 @@ public interface Judge<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      *
      * @param fun       属性
      * @param predicate 条件
-     * @return 判断结果
+     * @return boolean
      */
     default <V> boolean allMatch(Function<? super T, ? extends V> fun, Function<? super V, Boolean> predicate) {
         return judge(Stream::allMatch, fun, predicate);

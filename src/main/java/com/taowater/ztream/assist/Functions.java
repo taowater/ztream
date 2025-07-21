@@ -1,6 +1,7 @@
 package com.taowater.ztream.assist;
 
 import com.taowater.ztream.Any;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
 
 import java.lang.invoke.MethodHandle;
@@ -29,14 +30,11 @@ public class Functions {
      * @author zhu56
      * @version 1.0
      */
+    @RequiredArgsConstructor
     public static class IndexedConsumer<T> implements Consumer<T> {
         private final AtomicInteger index = new AtomicInteger(0);
 
         private final ObjIntConsumer<? super T> consumer;
-
-        public IndexedConsumer(ObjIntConsumer<T> consumer) {
-            this.consumer = consumer;
-        }
 
         @Override
         public void accept(T t) {
@@ -65,14 +63,11 @@ public class Functions {
      * @author zhu56
      * @version 1.0
      */
+    @RequiredArgsConstructor
     public static class IndexedFunction<T, R> implements Function<T, R> {
         private final AtomicInteger index = new AtomicInteger(0);
 
         private final BiFunction<T, Integer, R> fun;
-
-        public IndexedFunction(BiFunction<T, Integer, R> fun) {
-            this.fun = fun;
-        }
 
         @Override
         public R apply(T t) {
