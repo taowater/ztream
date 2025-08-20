@@ -111,6 +111,15 @@ public final class EntryZtream<K, V> extends AbstractZtream<Entry<K, V>, EntryZt
         return filter(e -> predicate.test(e.getKey(), e.getValue()));
     }
 
+
+    public EntryZtream<K, V> filterKey(Predicate<? super K> predicate) {
+        return filter(e -> predicate.test(e.getKey()));
+    }
+
+    public EntryZtream<K, V> filterValue(Predicate<? super V> predicate) {
+        return filter(e -> predicate.test(e.getValue()));
+    }
+
     public boolean anyMatch(BiPredicate<? super K, ? super V> predicate) {
         return anyMatch(e -> predicate.test(e.getKey(), e.getValue()));
     }

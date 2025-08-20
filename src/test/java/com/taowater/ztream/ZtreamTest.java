@@ -314,6 +314,28 @@ class ZtreamTest {
         Ztream.of(testList).query(w -> w
                 .gt(Student::getAge, 20)
         ).forEach(System.out::println);
+
+
+        equals(
+                Ztream.of(testList)
+                        .hash(Student::getName, Student::getAge)
+                        .nonNullKey()
+                        .nonNullValue()
+                        .filterKey(k -> k.startsWith("小"))
+                        .toMap(),
+                testList.stream()
+                        .filter(e -> !(e == null || e.getName() == null || e.getAge() == null))
+                        .filter(e -> e.getName().startsWith("小"))
+                        .collect(HashMap::new, (map, item) -> {
+                                    String key = item.getName();
+                                    Integer value = item.getAge();
+                                    if (!map.containsKey(key)) {
+                                        map.put(key, value);
+                                    }
+                                },
+                                Map::putAll)
+        );
+
     }
 
     @Test
