@@ -11,9 +11,7 @@ import java.util.function.*;
 import java.util.stream.Stream;
 
 /**
- * 键值对ztream
- *
- * @author zhu56
+ * 键值对流
  */
 @SuppressWarnings({"unused", "unchecked"})
 public final class EntryZtream<K, V> extends AbstractZtream<Entry<K, V>, EntryZtream<K, V>> {
@@ -42,12 +40,12 @@ public final class EntryZtream<K, V> extends AbstractZtream<Entry<K, V>, EntryZt
 
     @Override
     public <R> Ztream<R> map(Function<? super Entry<K, V>, ? extends R> mapper) {
-        return Ztream.of(stream.map(mapper));
+        return Ztream.of(stream().map(mapper));
     }
 
     @Override
     public <R> Ztream<R> flatMap(Function<? super Entry<K, V>, ? extends Stream<? extends R>> mapper) {
-        return Ztream.of(stream.flatMap(mapper));
+        return Ztream.of(stream().flatMap(mapper));
     }
 
     public Ztream<K> keys() {
@@ -75,7 +73,11 @@ public final class EntryZtream<K, V> extends AbstractZtream<Entry<K, V>, EntryZt
                 });
     }
 
-    public void forEachKeyValue(BiConsumer<K, V> consumer) {
+    public <R> Ztream<R> map(BiFunction<? super K, ? super V, ? extends R> mapper) {
+        return map(entry -> mapper.apply(entry.getKey(), entry.getValue()));
+    }
+
+    public void forEachKeyValue(BiConsumer<? super K, ? super V> consumer) {
         forEach(e -> consumer.accept(e.getKey(), e.getValue()));
     }
 
@@ -111,7 +113,6 @@ public final class EntryZtream<K, V> extends AbstractZtream<Entry<K, V>, EntryZt
         return filter(e -> predicate.test(e.getKey(), e.getValue()));
     }
 
-
     public EntryZtream<K, V> filterKey(Predicate<? super K> predicate) {
         return filter(e -> predicate.test(e.getKey()));
     }
@@ -133,7 +134,7 @@ public final class EntryZtream<K, V> extends AbstractZtream<Entry<K, V>, EntryZt
     }
 
     public <N> EntryZtream<N, V> mapKey(Function<? super K, ? extends N> funK) {
-        return (EntryZtream<N, V>) new EntryZtream<>(map(e -> Functions.entryKeyValue(e, funK, Function.identity()))).distinctKey();
+        return new EntryZtream<>(map(e -> Functions.entryKeyValue(e, funK, Function.identity())));
     }
 
     public <N> EntryZtream<K, N> mapValue(Function<? super V, ? extends N> funV) {
@@ -147,11 +148,6 @@ public final class EntryZtream<K, V> extends AbstractZtream<Entry<K, V>, EntryZt
 
     public EntryZtream<V, K> flip() {
         return new EntryZtream<>(map(Functions::flip));
-    }
-
-
-    public EntryZtream<K, V> distinctKey() {
-        return distinct(Entry::getKey);
     }
 
     public EntryZtream<K, V> distinctValue() {
