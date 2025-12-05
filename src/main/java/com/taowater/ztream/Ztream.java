@@ -12,6 +12,8 @@ import com.taowater.ztream.op.ToMap;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -309,5 +311,53 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
      */
     public Ztream<T> page(long no, long size) {
         return skip((no - 1) * size).limit(size);
+    }
+
+    /**
+     * 数字范围构建流
+     *
+     * @param start 开始
+     * @param end   结束
+     *
+     */
+    public static Ztream<Integer> range(int start, int end) {
+        return Ztream.range(start, end, false);
+    }
+
+    /**
+     * 数字范围构建流
+     *
+     * @param start  开始
+     * @param end    结束
+     * @param closed 是否包含尾数
+     *
+     */
+    public static Ztream<Integer> range(int start, int end, boolean closed) {
+        BiFunction<Integer, Integer, IntStream> fun = closed ? IntStream::rangeClosed : IntStream::range;
+        return Ztream.of(fun.apply(start, end).boxed());
+    }
+
+    /**
+     * 数字范围构建流
+     *
+     * @param start 开始
+     * @param end   结束
+     *
+     */
+    public static Ztream<Long> range(long start, long end) {
+        return Ztream.range(start, end, false);
+    }
+
+    /**
+     * 数字范围构建流
+     *
+     * @param start  开始
+     * @param end    结束
+     * @param closed 是否包含尾数
+     *
+     */
+    public static Ztream<Long> range(long start, long end, boolean closed) {
+        BiFunction<Long, Long, LongStream> fun = closed ? LongStream::rangeClosed : LongStream::range;
+        return Ztream.of(fun.apply(start, end).boxed());
     }
 }

@@ -21,6 +21,8 @@ class ZtreamTest {
 
     @Test
     void group() {
+        Ztream.range(0, 10).forEach(i -> {
+        });
         var group = Ztream.of(testList).groupBy(Student::getName, Student::getAge, HashMap::new, Collectors.toSet());
 
         Map<String, Set<Integer>> group2 = new HashMap<>();
