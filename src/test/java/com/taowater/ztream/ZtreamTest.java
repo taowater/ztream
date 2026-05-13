@@ -495,6 +495,15 @@ class ZtreamTest {
         );
     }
 
+    @Test
+    void map() {
+        Function<Student, List<String>> fun = e -> TestUtil.<Function<Student, String>>initList(Student::getName, Student::getSex).stream().map(m -> Optional.ofNullable(e).map(m).orElse(null)).collect(Collectors.toList());
+        equals(
+                Ztream.of(testList).map(Student::getName, Student::getSex).toList(),
+                testList.stream().map(fun).flatMap(List::stream).collect(Collectors.toList())
+        );
+    }
+
     public static <T> void equals(T o1, T o2) {
         Assertions.assertEquals(o1, o2);
     }

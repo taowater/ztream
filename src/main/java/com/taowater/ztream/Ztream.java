@@ -41,6 +41,15 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
     }
 
     /**
+     * 收集多个类型一样的属性为一个流
+     */
+    @SafeVarargs
+    public final <R> Ztream<R> map(Function<? super T, ? extends R>... mappers) {
+        Function<? super T, List<R>> fun = e -> of(mappers).toList(m -> Any.of(e).get(m));
+        return map(fun).flat(e -> e);
+    }
+
+    /**
      * 带索引的元素映射
      *
      * @param mapper 映射器
