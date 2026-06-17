@@ -48,7 +48,7 @@ Java8流操作的出现使得在业务中处理集合的一些操作逻辑变得
 * seq https://github.com/wolray/seq
 * stream-query https://github.com/dromara/stream-query
 
-若拙库可取则取之，如其不才，君可自取。
+倘拙库可用，用之；如其不才，君可自取。
 
 [![Star History Chart](https://api.star-history.com/svg?repos=taowater/ztream&type=Date)](https://star-history.com/#taowater/ztream&Date)
 
