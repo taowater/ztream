@@ -1,4 +1,6 @@
-# Ztream
+<p align="center">
+	<img src="assets/ztream-logo.png" alt="Ztream" width="420" />
+</p>
 
 <p align="center">
 	<a target="_blank" href="https://central.sonatype.com/artifact/io.github.taowater/ztream">
