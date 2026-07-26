@@ -3,24 +3,25 @@
 </p>
 
 <p align="center">
-	<a target="_blank" href="https://www.codefactor.io/repository/github/taowater/ztream">
-		<img src="https://www.codefactor.io/repository/github/taowater/ztream/badge" alt="Code Quality" />
-	</a>
-	<a target="_blank" href="https://codecov.io/gh/taowater/ztream">
-		<img src="https://codecov.io/gh/taowater/ztream/branch/main/graph/badge.svg" alt="Codecov" />
-	</a>
-	<a target="_blank" href="https://central.sonatype.com/artifact/io.github.taowater/ztream">
+    <a target="_blank" href="https://central.sonatype.com/artifact/io.github.taowater/ztream">
 		<img src="https://img.shields.io/maven-central/v/io.github.taowater/ztream.svg?label=Maven%20Central" />
 	</a>
-	<a target="_blank" href="https://github.com/taowater/ztream/blob/main/LICENSE">
+    <a target="_blank" href="https://github.com/taowater/ztream/blob/main/LICENSE">
 		<img src="https://img.shields.io/github/license/taowater/ztream.svg" />
 	</a>
     <a target="_blank" href="https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html">
 		<img src="https://img.shields.io/badge/JDK-8+-green.svg" />
 	</a>
+	<a href="https://www.codefactor.io/repository/github/taowater/ztream">
+        <img src="https://www.codefactor.io/repository/github/taowater/ztream/badge" alt="CodeFactor" />    
+    </a>
+	<a target="_blank" href="https://codecov.io/gh/taowater/ztream">
+		<img src="https://codecov.io/gh/taowater/ztream/branch/main/graph/badge.svg" alt="Codecov" />
+	</a>
 	<a target="_blank" href='https://github.com/taowater/ztream'>
 		<img src="https://img.shields.io/github/stars/taowater/ztream.svg?style=social" alt="github star"/>
 	</a>
+	
 </p>
 
 Java Stream 增强库。在标准 Stream 之上补充常用 API，减少样板代码，对空值更友好。
