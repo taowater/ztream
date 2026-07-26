@@ -1,7 +1,6 @@
 package com.taowater.ztream;
 
 import com.taowater.ztream.assist.Functions;
-import lombok.var;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -60,17 +59,16 @@ public final class EntryZtream<K, V> extends AbstractZtream<Entry<K, V>, EntryZt
         return toMap(HashMap::new);
     }
 
+    /**
+     * 收集为 Map。并行流中工厂会为各分区分别创建容器。
+     *
+     * @param supplier Map 容器工厂，每次调用应返回新容器
+     */
     public Map<K, V> toMap(Supplier<? extends Map<K, V>> supplier) {
-        var map = supplier.get();
-        return reduce(map,
-                (m, e) -> {
-                    m.put(e.getKey(), e.getValue());
-                    return m;
-                },
-                (m1, m2) -> {
-                    m1.putAll(m2);
-                    return m1;
-                });
+        Supplier<Map<K, V>> mapFactory = supplier::get;
+        return collect(mapFactory,
+                (map, entry) -> map.put(entry.getKey(), entry.getValue()),
+                Map::putAll);
     }
 
     public <R> Ztream<R> map(BiFunction<? super K, ? super V, ? extends R> mapper) {
