@@ -3,6 +3,12 @@
 </p>
 
 <p align="center">
+	<a target="_blank" href="https://www.codefactor.io/repository/github/taowater/ztream">
+		<img src="https://www.codefactor.io/repository/github/taowater/ztream/badge" alt="Code Quality" />
+	</a>
+	<a target="_blank" href="https://codecov.io/gh/taowater/ztream">
+		<img src="https://codecov.io/gh/taowater/ztream/branch/main/graph/badge.svg" alt="Codecov" />
+	</a>
 	<a target="_blank" href="https://central.sonatype.com/artifact/io.github.taowater/ztream">
 		<img src="https://img.shields.io/maven-central/v/io.github.taowater/ztream.svg?label=Maven%20Central" />
 	</a>
