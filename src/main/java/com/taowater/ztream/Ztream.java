@@ -127,7 +127,18 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
      * @param obj 源对象
      */
     public static Ztream<String> split(Object obj) {
-        return split(obj, ",");
+        return split(obj, true);
+    }
+
+    /**
+     * 分割
+     *
+     * @param obj      源对象
+     * @param distinct 是否去重
+     *
+     */
+    public static Ztream<String> split(Object obj, boolean distinct) {
+        return split(obj, ",", distinct);
     }
 
     /**
@@ -137,7 +148,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
      * @param delimiter 分隔符
      */
     public static Ztream<String> split(Object obj, String delimiter) {
-        return split(obj, delimiter, String::valueOf);
+        return split(obj, delimiter, true);
     }
 
     /**
@@ -145,26 +156,14 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
      *
      * @param obj       源对象
      * @param delimiter 分隔符
-     * @param action    元素转换方法
-     */
-    public static <O> Ztream<O> split(Object obj, String delimiter, Function<String, O> action) {
-        return split(obj, delimiter, action, true);
-    }
-
-    /**
-     * 分割
-     *
-     * @param obj       源对象
-     * @param delimiter 分隔符
-     * @param action    元素转换方法
      * @param distinct  是否去重
      */
-    public static <O> Ztream<O> split(Object obj, String delimiter, Function<String, O> action, boolean distinct) {
+    public static Ztream<String> split(Object obj, String delimiter, boolean distinct) {
         String str = Any.of(obj).get(String::valueOf);
         if (Objects.isNull(str)) {
             return empty();
         }
-        return Ztream.of(str.split(delimiter)).map(String::trim).map(action).distinct(distinct);
+        return Ztream.of(str.split(delimiter)).distinct(distinct);
     }
 
     /**

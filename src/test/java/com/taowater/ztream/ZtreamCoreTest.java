@@ -2,22 +2,12 @@ package com.taowater.ztream;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Spliterator;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.DoubleStream;
-import java.util.stream.IntStream;
-import java.util.stream.LongStream;
-import java.util.stream.Stream;
+import java.util.stream.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -42,17 +32,18 @@ class ZtreamCoreTest {
     }
 
     @Test
-    void splitSupportsDefaultsMappingDistinctAndNull() {
-        assertEquals(Arrays.asList("a", "b"), Ztream.split(" a,b,a ").toList());
-        assertEquals(Arrays.asList("a", "b"), Ztream.split("a|b", "\\|").toList());
-        assertEquals(Arrays.asList(1, 2), Ztream.split("1, 2,1", ",", Integer::valueOf).toList());
-        assertEquals(Arrays.asList(1, 1), Ztream.split("1,1", ",", Integer::valueOf, false).toList());
+    void splitSupportsAllOverloadsAndNull() {
+        assertEquals(Arrays.asList("a", "b"), Ztream.split("a,b,a").toList());
+        assertEquals(Arrays.asList("a", "b", "a"), Ztream.split("a,b,a", false).toList());
+        assertEquals(Arrays.asList("a", "b"), Ztream.split("a|b|a", "\\|").toList());
+        assertEquals(Arrays.asList("a", "b", "a"), Ztream.split("a|b|a", "\\|", false).toList());
+        assertEquals(Arrays.asList(" a", "b", "a "), Ztream.split(" a,b,a ").toList());
         assertTrue(Ztream.split(null).toList().isEmpty());
     }
 
     @Test
     void mappingAndPrimitiveMappingDelegateToTheUnderlyingStream() {
-        assertEquals(Arrays.asList("1", "2"), Ztream.of(1, 2).map(String::valueOf).toList());
+        assertEquals(Arrays.asList("1", "2"), Ztream.of(1, 2).map(e -> String.valueOf(e)).toList());
         assertEquals(Arrays.asList("a", "A", "b", "B"),
                 Ztream.of("a", "b").map(v -> v, String::toUpperCase).toList());
         assertEquals(Arrays.asList("a0", "b1"),
@@ -192,8 +183,8 @@ class ZtreamCoreTest {
         assertEquals(Arrays.asList(2, 3), Ztream.of("1", "2")
                 .convert(Integer.class, (source, target) -> Integer.valueOf(source) + 1).toList());
         assertEquals("Ada", Ztream.of(student).convert(TestFixtures.Teacher.class,
-                (BiConsumer<TestFixtures.Student, TestFixtures.Teacher>)
-                        (source, result) -> context.set(source.getName() + ":" + result.getName()))
+                        (BiConsumer<TestFixtures.Student, TestFixtures.Teacher>)
+                                (source, result) -> context.set(source.getName() + ":" + result.getName()))
                 .getFirst().getName());
         assertEquals("Ada:Ada", context.get());
         assertEquals(Arrays.asList(3), Ztream.of("2").convert(Integer.class,
