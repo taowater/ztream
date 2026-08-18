@@ -1,6 +1,5 @@
 package com.taowater.ztream.op.judge;
 
-import com.taowater.ztream.Any;
 import com.taowater.ztream.IZtream;
 import com.taowater.ztream.assist.Functions;
 
@@ -31,7 +30,7 @@ public interface Judge<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      */
     default <V> boolean hadRepeat(Function<? super T, ? extends V> fun) {
         Set<V> set = new HashSet<>();
-        return anyMatch(x -> !set.add(Any.of(x).get(fun)));
+        return anyMatch(x -> !set.add(x == null ? null : fun.apply(x)));
     }
 
     /**
@@ -75,7 +74,7 @@ public interface Judge<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      * @return 判断结果
      */
     default <V> boolean judge(BiPredicate<? super S, Predicate<? super T>> handle, Function<? super T, ? extends V> fun, Function<? super V, Boolean> predicate) {
-        return handle.test(ztream(this), e -> Functions.of(predicate).test(Any.of(e).get(fun)));
+        return handle.test(ztream(this), e -> Functions.of(predicate).test(e == null ? null : fun.apply(e)));
     }
 
     /**

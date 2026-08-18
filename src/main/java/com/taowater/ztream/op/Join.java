@@ -1,7 +1,6 @@
 package com.taowater.ztream.op;
 
 
-import com.taowater.ztream.Any;
 import com.taowater.ztream.assist.ExCollectors;
 
 import java.util.Objects;
@@ -54,7 +53,7 @@ public interface Join<T> extends Stream<T> {
      * @return 拼接后的字符串
      */
     default String join(Function<? super T, ?> fun, CharSequence delimiter) {
-        return map(e -> Any.of(e).get(fun)).collect(ExCollectors.join(delimiter));
+        return map(e -> e == null ? null : fun.apply(e)).collect(ExCollectors.join(delimiter));
     }
 
     /**

@@ -1,6 +1,5 @@
 package com.taowater.ztream.assist;
 
-import com.taowater.ztream.Any;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
 
@@ -95,7 +94,10 @@ public class Functions {
                     }
                     try {
                         Boolean result = (Boolean) mh.invoke(t);
-                        return Any.of(result).orElse(false);
+                        if (Objects.isNull(result)) {
+                            return false;
+                        }
+                        return result;
                     } catch (Throwable e) {
                         throw new RuntimeException(e);
                     }

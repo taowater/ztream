@@ -1,15 +1,15 @@
 package com.taowater.ztream.op.filter;
 
 import com.taowater.taol.core.util.EmptyUtil;
-import com.taowater.ztream.Any;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 比较操作
@@ -28,7 +28,7 @@ public interface ConditionCompare<T, W> {
      * @param predicate 判断函数
      */
     default <V> W filter(boolean condition, Function<? super T, ? extends V> fun, Predicate<? super V> predicate) {
-        return filter(condition, e -> predicate.test(Any.of(e).get(fun)));
+        return filter(condition, e -> predicate.test(Objects.isNull(e) ? null : fun.apply(e)));
     }
 
     /**
@@ -38,7 +38,7 @@ public interface ConditionCompare<T, W> {
      * @param value 值
      */
     default <V> W eq(boolean condition, Function<? super T, ? extends V> fun, V value) {
-        return filter(condition, e -> Objects.equals(value, Any.of(e).get(fun)));
+        return filter(condition, e -> Objects.equals(value, Objects.isNull(e) ? null : fun.apply(e)));
     }
 
 
@@ -49,7 +49,7 @@ public interface ConditionCompare<T, W> {
      * @param values 值
      */
     default <V> W in(boolean condition, Function<? super T, ? extends V> fun, Collection<? extends V> values) {
-        return filter(condition, fun, Any.of(values).orElse(new ArrayList<>())::contains);
+        return filter(condition, fun, (Objects.nonNull(values) ? values : new ArrayList<>())::contains);
     }
 
     /**
@@ -60,7 +60,10 @@ public interface ConditionCompare<T, W> {
      */
     @SuppressWarnings("unchecked")
     default <V> W in(boolean condition, Function<? super T, ? extends V> fun, V... values) {
-        return in(condition, fun, Any.of(values).map(Stream::of).orElse(Stream.empty()).collect(Collectors.toSet()));
+
+        return in(condition, fun, values == null
+                ? Collections.emptySet()
+                : Arrays.stream(values).collect(Collectors.toSet()));
     }
 
     /**
@@ -69,7 +72,7 @@ public interface ConditionCompare<T, W> {
      * @param c c
      */
     default W in(boolean condition, Collection<? extends T> c) {
-        return filter(condition, Any.of(c).orElse(new ArrayList<>())::contains);
+        return filter(condition, (Objects.nonNull(c) ? c : Collections.emptySet())::contains);
     }
 
     /**
@@ -79,7 +82,9 @@ public interface ConditionCompare<T, W> {
      */
     @SuppressWarnings("all")
     default W in(boolean condition, T... values) {
-        return in(condition, Any.of(values).map(Stream::of).orElse(Stream.empty()).collect(Collectors.toSet()));
+        return in(condition, values == null
+                ? Collections.emptySet()
+                : Arrays.stream(values).collect(Collectors.toSet()));
     }
 
     /**
@@ -88,7 +93,7 @@ public interface ConditionCompare<T, W> {
      * @param c c
      */
     default W notIn(boolean condition, Collection<? extends T> c) {
-        return filter(condition, e -> !Any.of(c).orElse(new ArrayList<>()).contains(e));
+        return filter(condition, e -> !(Objects.nonNull(c) ? c : Collections.emptySet()).contains(e));
     }
 
     /**
@@ -98,7 +103,9 @@ public interface ConditionCompare<T, W> {
      */
     @SuppressWarnings("all")
     default W notIn(boolean condition, T... values) {
-        return notIn(condition, Any.of(values).map(Stream::of).orElse(Stream.empty()).collect(Collectors.toSet()));
+        return notIn(condition, values == null
+                ? Collections.emptySet()
+                : Arrays.stream(values).collect(Collectors.toSet()));
     }
 
     /**
@@ -108,7 +115,7 @@ public interface ConditionCompare<T, W> {
      * @param values 值
      */
     default <V> W notIn(boolean condition, Function<? super T, ? extends V> fun, Collection<? extends V> values) {
-        return filter(condition, fun, v -> !Any.of(values).orElse(new ArrayList<>()).contains(v));
+        return filter(condition, fun, v -> !(Objects.nonNull(values) ? values : Collections.emptySet()).contains(v));
     }
 
     /**
@@ -119,7 +126,9 @@ public interface ConditionCompare<T, W> {
      */
     @SuppressWarnings("unchecked")
     default <V> W notIn(boolean condition, Function<? super T, ? extends V> fun, V... values) {
-        return notIn(condition, fun, Any.of(values).map(Stream::of).orElse(Stream.empty()).collect(Collectors.toSet()));
+        return notIn(condition, fun, values == null
+                ? Collections.emptySet()
+                : Arrays.stream(values).collect(Collectors.toSet()));
     }
 
     /**
@@ -200,7 +209,7 @@ public interface ConditionCompare<T, W> {
     default <N extends Comparable<? super N>> W lt(boolean condition, Function<? super T, ? extends N> fun, N value) {
         Objects.requireNonNull(value);
         return filter(condition, e -> {
-            N v = Any.of(e).get(fun);
+            N v = e == null ? null : fun.apply(e);
             if (Objects.isNull(v)) {
                 return false;
             }
@@ -217,7 +226,7 @@ public interface ConditionCompare<T, W> {
     default <N extends Comparable<? super N>> W le(boolean condition, Function<? super T, ? extends N> fun, N value) {
         Objects.requireNonNull(value);
         return filter(condition, e -> {
-            N v = Any.of(e).get(fun);
+            N v = e == null ? null : fun.apply(e);
             if (Objects.isNull(v)) {
                 return false;
             }
@@ -234,7 +243,7 @@ public interface ConditionCompare<T, W> {
     default <N extends Comparable<? super N>> W gt(boolean condition, Function<? super T, ? extends N> fun, N value) {
         Objects.requireNonNull(value);
         return filter(condition, e -> {
-            N v = Any.of(e).get(fun);
+            N v = e == null ? null : fun.apply(e);
             if (Objects.isNull(v)) {
                 return false;
             }
@@ -251,7 +260,7 @@ public interface ConditionCompare<T, W> {
     default <N extends Comparable<? super N>> W ge(boolean condition, Function<? super T, ? extends N> fun, N value) {
         Objects.requireNonNull(value);
         return filter(condition, e -> {
-            N v = Any.of(e).get(fun);
+            N v = e == null ? null : fun.apply(e);
             if (Objects.isNull(v)) {
                 return false;
             }
@@ -274,7 +283,7 @@ public interface ConditionCompare<T, W> {
         Predicate<T> predicate = e -> true;
         if (Objects.nonNull(leftValue)) {
             predicate = predicate.and(e -> {
-                N v = Any.of(e).get(fun);
+                N v = e == null ? null : fun.apply(e);
                 if (Objects.isNull(v)) {
                     return false;
                 }
@@ -283,7 +292,7 @@ public interface ConditionCompare<T, W> {
         }
         if (Objects.nonNull(rightValue)) {
             predicate = predicate.and(e -> {
-                N v = Any.of(e).get(fun);
+                N v = e == null ? null : fun.apply(e);
                 if (Objects.isNull(v)) {
                     return false;
                 }
@@ -301,7 +310,7 @@ public interface ConditionCompare<T, W> {
      */
     default W rightLike(boolean condition, Function<? super T, String> fun, String value) {
         return filter(condition, e -> {
-            String str = Any.of(e).get(fun);
+            String str = e == null ? null : fun.apply(e);
             if (Objects.isNull(str)) {
                 return Objects.isNull(value);
             }
@@ -314,7 +323,7 @@ public interface ConditionCompare<T, W> {
 
     default W like(boolean condition, Function<? super T, String> fun, String value) {
         return filter(condition, e -> {
-            String str = Any.of(e).get(fun);
+            String str = e == null ? null : fun.apply(e);
             if (Objects.isNull(str)) {
                 return Objects.isNull(value);
             }

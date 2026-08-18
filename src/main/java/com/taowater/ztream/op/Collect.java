@@ -1,8 +1,6 @@
 package com.taowater.ztream.op;
 
 import com.taowater.taol.core.convert.ConvertUtil;
-import com.taowater.ztream.Any;
-
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -35,7 +33,7 @@ public interface Collect<T> extends Stream<T> {
      * @return 集合
      */
     default <V, C extends Collection<V>> C collect(Function<? super T, ? extends V> fun, Supplier<? extends C> collectionFactory) {
-        return this.map(e -> Any.of(e).get(fun)).collect(Collectors.toCollection(collectionFactory));
+        return this.map(e -> e == null ? null : fun.apply(e)).collect(Collectors.toCollection(collectionFactory));
     }
 
     /**
@@ -46,7 +44,7 @@ public interface Collect<T> extends Stream<T> {
      * @return 集合
      */
     default <N, C extends Collection<N>> C collect(Class<N> clazz, Supplier<? extends C> collectionFactory) {
-        return this.map(e -> Any.of(e).get(o -> ConvertUtil.convert(o, clazz))).collect(Collectors.toCollection(collectionFactory));
+        return this.map(e -> e == null ? null : ConvertUtil.convert(e, clazz)).collect(Collectors.toCollection(collectionFactory));
     }
 
     /**

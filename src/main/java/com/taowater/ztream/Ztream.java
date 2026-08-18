@@ -2,7 +2,6 @@ package com.taowater.ztream;
 
 import com.taowater.taol.core.convert.ConvertUtil;
 import com.taowater.taol.core.function.Function2;
-import com.taowater.taol.core.util.EmptyUtil;
 import com.taowater.ztream.assist.BreakException;
 import com.taowater.ztream.assist.Functions;
 import com.taowater.ztream.assist.Spliterators;
@@ -45,8 +44,12 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
      */
     @SafeVarargs
     public final <R> Ztream<R> map(Function<? super T, ? extends R>... mappers) {
-        Function<? super T, List<R>> fun = e -> of(mappers).toList(m -> Any.of(e).get(m));
-        return map(fun).flat(e -> e);
+        Objects.requireNonNull(mappers, "mappers");
+        for (int i = 0; i < mappers.length; i++) {
+            Objects.requireNonNull(mappers[i], "mappers[" + i + "]");
+        }
+        return flatMap(e -> Arrays.stream(mappers)
+                .map(mapper -> e == null ? null : mapper.apply(e)));
     }
 
     /**
@@ -74,7 +77,10 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
     }
 
     public static <K, V> EntryZtream<K, V> of(Map<K, V> map) {
-        return EmptyUtil.isEmpty(map) ? EntryZtream.empty() : EntryZtream.of(map.entrySet());
+        if (Objects.isNull(map)) {
+            return EntryZtream.empty();
+        }
+        return EntryZtream.of(map.entrySet());
     }
 
     /**
@@ -86,7 +92,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
     @SafeVarargs
     @SuppressWarnings("varargs")
     public static <T> Ztream<T> of(T... values) {
-        return EmptyUtil.isEmpty(values) ? empty() : of(Stream.of(values));
+        return Objects.isNull(values) ? empty() : of(Stream.of(values));
     }
 
     /**
@@ -107,7 +113,10 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
      * @return {@link Ztream}<{@link T}>
      */
     public static <T> Ztream<T> of(Iterable<T> iterable, boolean parallel) {
-        return Any.of(iterable).map(Iterable::spliterator).map(spliterator -> StreamSupport.stream(spliterator, parallel)).map(Ztream::new).orElseGet(Ztream::empty);
+        if (Objects.isNull(iterable)) {
+            return Ztream.empty();
+        }
+        return new Ztream<>(StreamSupport.stream(iterable.spliterator(), parallel));
     }
 
     /**
@@ -117,7 +126,10 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
      * @return {@link Ztream}<{@link T}>
      */
     public static <T> Ztream<T> of(Stream<T> stream) {
-        return Any.of(stream).map(Ztream::new).orElseGet(Ztream::empty);
+        if (Objects.isNull(stream)) {
+            return Ztream.empty();
+        }
+        return new Ztream<>(stream);
     }
 
 
@@ -159,7 +171,10 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
      * @param distinct  是否去重
      */
     public static Ztream<String> split(Object obj, String delimiter, boolean distinct) {
-        String str = Any.of(obj).get(String::valueOf);
+        if (Objects.isNull(obj)) {
+            return empty();
+        }
+        String str = obj.toString();
         if (Objects.isNull(str)) {
             return empty();
         }
@@ -238,7 +253,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
      */
     @SafeVarargs
     public final Ztream<T> append(T... values) {
-        if (EmptyUtil.isEmpty(values)) {
+        if (Objects.isNull(values)) {
             return this;
         }
         return append(Arrays.spliterator(values));
@@ -262,7 +277,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
      * @param spliterator 分割器
      */
     public Ztream<T> append(Spliterator<? extends T> spliterator) {
-        if (EmptyUtil.isEmpty(spliterator)) {
+        if (Objects.isNull(spliterator)) {
             return this;
         }
         Spliterator<T> left = spliterator();
@@ -299,7 +314,7 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
      * @param mapper 属性
      */
     public <N, C extends Collection<N>> Ztream<N> flat(Function<? super T, ? extends C> mapper) {
-        return this.map(mapper).flatMap(Ztream::of);
+        return map(mapper).flatMap(Ztream::of);
     }
 
     /**

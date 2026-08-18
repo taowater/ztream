@@ -40,7 +40,9 @@ public interface Math<T, S extends IZtream<T, S>> extends IZtream<T, S> {
         var result = filter(Objects::nonNull)
                 .map(fun)
                 .map(NumberUtil::toBigDecimal)
-                .reduce((a, b) -> Any.of(a).map(e -> e.add(Any.of(b).orElse(BigDecimal.ZERO))).orElse(BigDecimal.ZERO))
+                .reduce((a, b) -> a == null
+                        ? BigDecimal.ZERO
+                        : a.add(b == null ? BigDecimal.ZERO : b))
                 .map(b -> NumberUtil.getValue(b, fun));
         if (result.isPresent()) {
             return result.get();
@@ -196,7 +198,7 @@ public interface Math<T, S extends IZtream<T, S>> extends IZtream<T, S> {
      */
     default <N extends Number> N avg(Function1<? super T, ? extends N> fun, N defaultValue, boolean nullCount) {
         var result = collect(ExCollectors.avg(fun, nullCount));
-        return Any.of(result).orElse(defaultValue);
+        return result == null ? defaultValue : result;
     }
 
     /**

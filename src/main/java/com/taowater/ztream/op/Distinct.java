@@ -1,6 +1,5 @@
 package com.taowater.ztream.op;
 
-import com.taowater.ztream.Any;
 import com.taowater.ztream.IZtream;
 import com.taowater.ztream.assist.Box;
 
@@ -32,7 +31,7 @@ public interface Distinct<T, S extends IZtream<T, S>> extends IZtream<T, S> {
         if (!condition) {
             return ztream(this);
         }
-        return ztream(map(t -> new Box.PairBox<>(t, Any.of(t).get(fun)))
+        return ztream(map(t -> new Box.PairBox<>(t, t == null ? null : fun.apply(t)))
                 .distinct()
                 .map(Box::getA));
     }
