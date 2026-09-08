@@ -162,6 +162,12 @@ class ZtreamCoreTest {
                 .append(java.util.Spliterators.<Integer>emptySpliterator()).toList());
         assertEquals(Arrays.asList(1), Ztream.of(1).append((Spliterator<Integer>) null).toList());
         assertEquals(Arrays.asList(1), Ztream.of(1).append((Iterable<Integer>) null).toList());
+        assertEquals(Arrays.asList(1, 2, 3),
+                Ztream.of(1).append(Arrays.asList("2", "3"), Integer::valueOf).toList());
+        assertThrows(NullPointerException.class,
+                () -> Ztream.of(1).append(Arrays.asList("2"), null));
+        assertEquals(Arrays.asList(1),
+                Ztream.of(1).append((Iterable<String>) null, Integer::valueOf).toList());
         assertEquals(2, Ztream.of(4, 5, 6).firstIdx(v -> v == 6));
         assertEquals(-1, Ztream.of(4, 5, 6).firstIdx(v -> false));
         assertEquals(Arrays.asList(1, 2, 3),

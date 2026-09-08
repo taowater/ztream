@@ -274,6 +274,22 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
     /**
      * 追加元素
      *
+     * @param iterable 迭代内容
+     * @param mapper   迭代元素的转换方法
+     */
+    public <S> Ztream<T> append(Iterable<? extends S> iterable, Function<S, T> mapper) {
+        if (Objects.isNull(iterable)) {
+            return this;
+        }
+        Objects.requireNonNull(mapper, "mapper");
+        return append(StreamSupport.stream(iterable.spliterator(), isParallel())
+                .map(mapper)
+                .spliterator());
+    }
+
+    /**
+     * 追加元素
+     *
      * @param spliterator 分割器
      */
     public Ztream<T> append(Spliterator<? extends T> spliterator) {
