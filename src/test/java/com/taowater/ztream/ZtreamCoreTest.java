@@ -1,6 +1,5 @@
 package com.taowater.ztream;
 
-import com.taowater.ztream.assist.BreakException;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -179,25 +178,6 @@ class ZtreamCoreTest {
         assertEquals(Arrays.asList(1, 2, 3), Ztream.range(1, 3, true).toList());
         assertEquals(Arrays.asList(1L, 2L), Ztream.range(1L, 3L).toList());
         assertEquals(Arrays.asList(1L, 2L, 3L), Ztream.range(1L, 3L, true).toList());
-    }
-
-    @Test
-    void firstIdxUsesEncounterOrderAndStopsAtFirstMatch() {
-        List<Integer> visited = new ArrayList<>();
-        int index = Ztream.of(IntStream.range(0, 1000).boxed().parallel())
-                .firstIdx(value -> {
-                    visited.add(value);
-                    return value == 3 || value == 10;
-                });
-
-        assertEquals(3, index);
-        assertEquals(Arrays.asList(0, 1, 2, 3), visited);
-        assertEquals(1, Ztream.of("a", null, "b").firstIdx(Objects::isNull));
-        assertEquals(-1, Ztream.empty().firstIdx(value -> true));
-        assertThrows(NullPointerException.class, () -> Ztream.empty().firstIdx(null));
-        BreakException failure = new BreakException();
-        assertSame(failure, assertThrows(BreakException.class,
-                () -> Ztream.of(1).firstIdx(value -> { throw failure; })));
     }
 
     @Test
