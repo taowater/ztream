@@ -2,14 +2,12 @@ package com.taowater.ztream;
 
 import com.taowater.taol.core.convert.ConvertUtil;
 import com.taowater.taol.core.function.Function2;
-import com.taowater.ztream.assist.BreakException;
 import com.taowater.ztream.assist.Functions;
 import com.taowater.ztream.assist.Spliterators;
 import com.taowater.ztream.op.GroupBy;
 import com.taowater.ztream.op.ToMap;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
@@ -307,21 +305,23 @@ public final class Ztream<T> extends AbstractZtream<T, Ztream<T>> implements Gro
     /**
      * 找到符合条件的第一个元素的下标
      *
-     * @param predicate 判断函数
-     * @return int 下标
+     * 并行流也按顺序遍历；无序流的下标取决于实际遍历顺序。
+     *
+     * @param predicate 判断函数，不能为 null
+     * @return 匹配元素的下标，未匹配时返回 -1
+     * @throws ArithmeticException 匹配元素的下标超出 int 范围
      */
-    public int firstIdx(Predicate<T> predicate) {
-        AtomicInteger index = new AtomicInteger(-1);
-        try {
-            this.forEach((e, i) -> {
-                if (predicate.test(e)) {
-                    index.set(i);
-                    throw new BreakException();
-                }
-            });
-        } catch (BreakException ignore) {
+    public int firstIdx(Predicate<? super T> predicate) {
+        Objects.requireNonNull(predicate, "predicate");
+        Iterator<T> iterator = stream.sequential().iterator();
+        long index = 0;
+        while (iterator.hasNext()) {
+            if (predicate.test(iterator.next())) {
+                return Math.toIntExact(index);
+            }
+            index++;
         }
-        return index.get();
+        return -1;
     }
 
     /**
